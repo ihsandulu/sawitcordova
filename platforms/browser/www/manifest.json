@@ -1,0 +1,17 @@
+{
+  "background_color": "#FFF",
+  "display": "standalone",
+  "name": "TPH Digital",
+  "short_name": "TPH Digital",
+  "version": "com.qithy.tphdigital",
+  "description": "TPH Digital",
+  "author": "Ihsandulu",
+  "icons": [
+    {
+      "src": "www/res/logo.png",
+      "type": "image/png",
+      "sizes": "undefinedxundefined"
+    }
+  ],
+  "start_url": "dashboard.html"
+}

@@ -1,0 +1,20 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="750dp"
+    android:height="1334dp"
+    android:viewportWidth="750"
+    android:viewportHeight="1334">
+
+    <group
+        android:pivotX="243"
+        android:pivotY="256"
+        android:scaleX="0.5"
+        android:scaleY="0.5">
+
+        <!-- Menampilkan gambar logo.png sebagai elemen bitmap -->
+        <bitmap
+            android:src="@drawable/screen"
+            android:gravity="center"
+            android:tileMode="disabled"
+            android:antialias="true"/>
+    </group>
+</vector>

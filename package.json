@@ -1,0 +1,44 @@
+{
+  "cordova": {
+    "platforms": [
+      "android",
+      "browser"
+    ],
+    "plugins": {
+      "cordova-plugin-geolocation": {},
+      "cordova-plugin-camera": {
+        "ANDROIDX_CORE_VERSION": "1.6.+"
+      },
+      "cordova-plugin-file": {},
+      "cordova-plugin-network-information": {},
+      "cordova-plugin-advanced-http": {
+        "ANDROIDBLACKLISTSECURESOCKETPROTOCOLS": "SSLv3,TLSv1"
+      },
+      "phonegap-nfc": {},
+      "cordova-plugin-splashscreen": {},
+      "cordova-plugin-media": {}
+    }
+  },
+  "dependencies": {
+    "@npmcli/fs": "^3.1.0",
+    "@npmcli/move-file": "^3.0.0",
+    "@npmcli/package-json": "^5.0.0",
+    "cordova-sqlite-storage": "6.1.0",
+    "har-validator": "^5.1.5",
+    "stringify-package": "^1.0.1",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "cordova-android": "^12.0.1",
+    "cordova-browser": "^7.0.0",
+    "cordova-plugin-advanced-http": "^3.3.1",
+    "cordova-plugin-camera": "^7.0.0",
+    "cordova-plugin-dialogs": "^2.0.2",
+    "cordova-plugin-file": "^8.0.1",
+    "cordova-plugin-geolocation": "^5.0.0",
+    "cordova-plugin-media": "^7.0.0",
+    "cordova-plugin-network-information": "^3.0.0",
+    "cordova-plugin-splashscreen": "^6.0.1",
+    "phonegap-nfc": "^1.2.0"
+  }
+}

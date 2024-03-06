@@ -1,0 +1,66 @@
+body {
+  margin: 0;
+  padding: 0px;
+  background-image: url("../res/background_kepala.png");
+  background-position: top right;
+  background-attachment: fixed;
+}
+
+.hidden {
+  opacity: 0;
+}
+
+#top{height:60px;}
+
+.navbar{background-color: rgba(255, 255, 255, 0.8); z-index: 100000; position: fixed; width:100%; left:0px; top:0px;}
+.navbar-brand{font-weight: bold;}        
+.border{border: black solid 1px !important; }
+
+.text-hijau{color:#47f65ec9;}
+.text-kuning{color:#fffc5cd2;}
+.text-biru{color:#5cdcffd2;}
+.text-ungu{color:#f7a4ffd2;}
+.text-merah{color:#ffa4a4d2;}
+
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: rgba(12, 160, 21, 0.726);
+    color: white !important;
+    text-align: center;
+    height:25px;
+    font-size: 10px;
+    padding: 4px;
+}
+#qithy:active{color: white!important;}
+#qithy:link{color: white!important;}
+#qithy:hover{color: white!important;}
+#qithy:active{color: white!important;}
+.mdl {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    width: 70%;
+    height: 100px;
+    transform: translate(-50%,-50%);
+    background-color: rgba(254, 254, 254, 0.990);
+    color: rgb(32, 4, 4) !important;
+    text-align: left;
+    padding: 15px;
+    z-index: 1000000000;
+    box-shadow: #124419 0 0 30px 5px;
+    border-radius: 5px;
+}
+.mdl-title{ text-align: left; font-weight: bold; color: #a52628; margin-bottom: 5px;}
+.mdl-dialog{ padding: 10px; background-color: rgba(255, 255, 255, 0.902); margin-bottom: 5px; border: rgba(159, 159, 159, 0.902) dashed 1px; border-radius: 5px;}
+#header{padding: 0px!important;}
+table, th, td {
+  border: 1px solid black !important;
+}
+.text-left{text-align: left!important;}
+.ballon{border-radius: 5px; box-shadow: #124419 0px 0px 30px 5px; padding: 15px; margin: 15px;}
+marquee{padding: 2px; background-color: rgba(255, 255, 255, 0.8); font-size: 15px; bottom: 30px;
+  position: fixed;}
+.navbar-collapse{padding: 5px; background-color: rgba(254, 254, 254, 1);}

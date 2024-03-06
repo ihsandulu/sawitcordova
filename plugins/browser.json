@@ -1,0 +1,54 @@
+{
+  "prepare_queue": {
+    "installed": [],
+    "uninstalled": []
+  },
+  "config_munge": {
+    "files": {}
+  },
+  "installed_plugins": {
+    "cordova-plugin-advanced-http": {
+      "ANDROIDBLACKLISTSECURESOCKETPROTOCOLS": "SSLv3,TLSv1",
+      "PACKAGE_NAME": "com.qithy.tphdigital"
+    },
+    "cordova-plugin-camera": {
+      "PACKAGE_NAME": "com.qithy.tphdigital"
+    },
+    "cordova-plugin-dialogs": {
+      "PACKAGE_NAME": "com.qithy.tphdigital"
+    },
+    "cordova-plugin-file": {
+      "PACKAGE_NAME": "com.qithy.tphdigital"
+    },
+    "cordova-plugin-geolocation": {
+      "GPS_REQUIRED": "true",
+      "PACKAGE_NAME": "com.qithy.tphdigital"
+    },
+    "cordova-plugin-network-information": {
+      "PACKAGE_NAME": "com.qithy.tphdigital"
+    },
+    "cordova-plugin-splashscreen": {
+      "PACKAGE_NAME": "com.qithy.tphdigital"
+    },
+    "cordova-sqlite-storage": {
+      "PACKAGE_NAME": "com.qithy.tphdigital"
+    },
+    "phonegap-nfc": {
+      "PACKAGE_NAME": "com.qithy.tphdigital"
+    },
+    "cordova-plugin-media": {
+      "PACKAGE_NAME": "com.qithy.tphdigital"
+    }
+  },
+  "dependent_plugins": {
+    "com.blackberry.invoke": {
+      "PACKAGE_NAME": "com.qithy.tphdigital"
+    },
+    "org.apache.cordova.device": {
+      "PACKAGE_NAME": "com.qithy.tphdigital"
+    },
+    "org.apache.cordova.vibration": {
+      "PACKAGE_NAME": "com.qithy.tphdigital"
+    }
+  }
+}

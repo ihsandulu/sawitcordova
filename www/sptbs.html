@@ -1,0 +1,507 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;"> -->
+    <meta http-equiv="Content-Security-Policy" content="default-src * data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src * 'unsafe-inline'; media-src *; img-src * data: content:; script-src * 'unsafe-eval' 'unsafe-inline';">
+    
+
+
+
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
+    <meta name="color-scheme" content="light dark">
+
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> -->
+
+    <link rel="stylesheet" href="css/all.min.css"/>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/umum.css">
+
+
+    <title>PT. PAM</title>
+    <style>   
+        #datanfcjadi{
+            height: 300px !important; 
+            width: 300px; 
+            position: relative;
+            left: 50%;
+            top:0px;
+            transform: translate(-50%,0);
+        } 
+    </style>
+    <script>
+    </script>
+</head>
+
+<body>    
+    <div id="header">
+        
+    </div>
+    <div id="frame1" class="text-center " > 
+        <div class="row p-3 ballon">                        
+            <H1 class="col-12 alert alert-success">Data SPTBS</H1>         
+            <div class="col-5 mb-4 text-left">SPTBS Card</div><div class="col-7 text-left">
+                <input readonly id="sptbs_card" class="form-control">
+            </div>              
+            <div class="col-5 mb-4 text-left">Vendor</div><div class="col-7 text-left">
+                <select id="vendor_id" class="form-control">
+
+                </select>
+            </div>         
+            <div class="col-5 mb-4 text-left">Material</div><div class="col-7 text-left">
+                <select id="material_id" class="form-control">
+
+                </select>
+            </div>         
+            <div class="col-5 mb-4 text-left">Kecamatan</div><div class="col-7 text-left">
+                <select id="kecamatan_id" class="form-control">
+
+                </select>
+            </div>      
+            <div class="col-5 mb-4 text-left">Driver</div><div class="col-7 text-left">
+                <select id="sptbs_driver" class="form-control">
+
+                </select>
+            </div>
+            <button onclick="isikartu()" type="button" class="btn btn-primary">Isi Kartu</button>
+            <input id="sptbs_date" type="hidden">
+            <input id="sptbs_createdby" type="hidden">
+            <input id="estate_id" type="hidden">
+            <input id="divisi_id" type="hidden">
+            <input id="sptbs_createdname" type="hidden">
+            <input id="sptbs_drivername" type="hidden">
+            <input id="estate_name" type="hidden">
+            <input id="divisi_name" type="hidden">
+        </div>
+        <div class="">  
+            <div class="row">  
+                <textarea id="datanfcjadi" class="form-control col-12 hide"></textarea>
+            </div>
+        </div>
+        <div class="" id="panen">  
+        
+        </div>
+    </div>
+
+    <marquee width="100%" direction="left">Pastikan Kartu Telah Kosong!</marquee>
+
+    <div id="footer"></div>
+    <script type="text/javascript" src="cordova.js"></script>  
+    <script type="text/javascript" src="js/jquery.min.js"></script>    
+    <script type="text/javascript" src="js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="js/umum.js"></script>
+    <script type="text/javascript" src="js/data.js"></script>
+    <script type="text/javascript" src="js/nfc.js"></script>
+    <script>
+        //device ready 
+        document.addEventListener('deviceready', function () {             
+            $("#datanfcjadi").val('');                
+            $("#datanfcjadi").hide();
+            notif('Tempelkan Kartu!');
+            cekkartupanen();
+            ambildata('panen','semua');
+          
+            // nfc.addNdefListener(onNdef, notifikasi("Tempelkan Kartu!"), onFailure);
+            
+            if(username==null){
+                window.location.href='login.html';
+            }else{
+                $(".username").text(username); 
+                blok();
+                tph(); 
+                $("#panen_date").val(now());
+                $("#user_id").val(userid);
+                $("#estate_id").val(estateid);
+                $("#divisi_id").val(divisiid);
+                $("#seksi_id").val(seksiid);
+                $("#user_name").val(username);
+                $("#estate_name").val(estatename);
+                $("#divisi_name").val(divisiname);
+                $("#seksi_name").val(seksiname);
+            }                      
+        }); 
+        function inputdatapanen(table,data){
+            db.transaction(function (tx) {
+
+                var dataArray = data.replace(/[^\w,=:\-()']/g, '').split(',');
+                var columns = [];
+                var values = [];
+                dataArray.forEach(function (item) {
+                    var pair = item.split('=');
+                    if(pair[0]!='panen_id'){
+                        columns.push(pair[0]);
+                        let isi = (pair[1] === 'null') ? "NULL" : "'" + pair[1].trim() + "'";
+                        values.push(isi);
+
+                    }
+                });
+                var query = "INSERT INTO " + table + " (" + columns.join(',') + ") VALUES (" + values.join(',') + ")";
+                // notiftext(query);
+                tx.executeSql(query, [], function (tx, res) {
+                    ambildata(table,'semua');
+                    notif('Record Data Berhasil!');
+                },
+                function (tx, error) {
+                    notif('Record Data Error: ' + error.message);
+                });
+            }, function (error) {
+                notif('Transaction Error: ' + error.message);
+                // notiftext('Transaction Error: ' + error.message);
+            }, function () {
+                // notif('Data Telah Terhapus!');
+            });
+        }
+        
+
+
+        function onConfirminputpanen(pilihannya,table,data) {
+            if(pilihannya=='1'){
+                inputdatapanen(table,data);
+            }else{
+                // alert('You selected button ' + jenis);
+            }
+        }
+
+        function confirminputpanen(message,title,table,data) {
+            let arraynya = ['Record','Cancel'];
+            navigator.notification.confirm(
+                message, // message
+                (buttonIndex) => onConfirminputpanen(buttonIndex, table, data),            
+                title,           // title
+                arraynya     // buttonLabels
+            );
+        }
+        function datanfcjadiPanen(nfcData) {
+            var ndefMessage = nfcData.ndefMessage;
+            var resultString = "";
+            for (var i = 0; i < ndefMessage.length; i++) {
+                var payload = ndefMessage[i].payload;
+                var payloadString = String.fromCharCode.apply(null, payload);
+                resultString += payloadString + "\n";
+            }
+            resultString = resultString.replace("en", "");
+            var kalimatTanpaSpasi = resultString.replace(/\s/g, '');
+            if(kalimatTanpaSpasi!=""){
+                var kalimatTanpaSpasi = kalimatTanpaSpasi.split(',');
+                var kalimatTanpaSpasi = kalimatTanpaSpasi.map(function(attribute) {
+                    return attribute.trim(); // Hapus spasi tambahan jika ada
+                }).join(',\n');
+                //konfirmasi masukkan data panen
+                confirminputpanen('Record Data dari Kartu?','Data Panen','panen',kalimatTanpaSpasi);
+                $("#datanfcjadi").val(kalimatTanpaSpasi);                
+                $("#datanfcjadi").show();
+                setTimeout(function(){
+                    $("#datanfcjadi").hide();
+                },60000);
+            }else{
+                $("#datanfcjadi").val('');                
+                $("#datanfcjadi").hide();
+                notif('Tidak Ada Data!'); 
+            }
+            // notif(resultString);
+        }
+        function onNdefcekpanen(nfcEvent) {
+            // notif(JSON.stringify(nfcEvent.tag));
+            
+            var tag = nfcEvent.tag;
+            ndefMessage = nfcEvent.tag.ndefMessage;
+            if(ndefMessage.length>0){             
+                     
+                tag.id = cardrandom();
+                tag.isWritable = !tag.isLocked;
+                tag.canMakeReadOnly = tag.isLockable;   
+                if(tag.serialNumber) {
+                    tag.serialNumber = tag.id;            
+                }
+                datanfcjadiPanen(nfcEvent.tag)
+                navigator.notification.vibrate(100);
+            }else{
+            }
+        }
+        function cekkartupanen() {
+            nfc.addNdefListener(onNdefcekpanen, notifbacakartu("Tempelkan Kartu!"), onFailurebacakartu);
+        }
+
+        function isikartu(){
+            let panen_date = $("#panen_date").val();
+            let user_id = $("#user_id").val();
+            let estate_id = $("#estate_id").val();
+            let divisi_id = $("#divisi_id").val();
+            let seksi_id = $("#seksi_id").val();
+            let user_name = $("#user_name").val();
+            let estate_name = $("#estate_name").val();
+            let divisi_name = $("#divisi_name").val();
+            let seksi_name = $("#seksi_name").val();
+            let blok_name = $("#blok_name").val();
+            let tph_name = $("#tph_name").val();
+            
+            let blok_id = $("#blok_id").val();
+            let tph_id = $("#tph_id").val();
+            let tph_thntanam = $("#tph_thntanam").val();
+            let panen_jml = $("#panen_jml").val();
+
+            let masterarray = [
+                'panen_date',
+                'user_id',
+                'estate_id',
+                'divisi_id',
+                'seksi_id',
+                'user_name',
+                'estate_name',
+                'divisi_name',
+                'seksi_name',
+                'blok_name',
+                'tph_name',
+                'blok_id',
+                'tph_id',
+                'tph_thntanam',
+                'panen_jml'
+            ];
+            let isiarray = [
+                panen_date,
+                user_id,
+                estate_id,
+                divisi_id,
+                seksi_id,
+                user_name,
+                estate_name,
+                divisi_name,
+                seksi_name,
+                blok_name,
+                tph_name,
+                blok_id,
+                tph_id,
+                tph_thntanam,
+                panen_jml
+            ];
+            addItemPanen('panen', masterarray, isiarray)
+        }
+
+        function addItemPanen(table, columns, input) {
+            let insertID;
+            db.transaction(function (tx) {
+                /* if (!Array.isArray(values)) {
+                    notif('Array values tidak valid');
+                    return;
+                } */
+                var columnString = columns.join(', ');
+                var values = Array.isArray(input) ? input : (input ? input.split(',') : []);
+                var formattedArray = values.map(function (item) {
+                    // Menggunakan operator nullish coalescing (??) untuk mengubah nilai kosong menjadi NULL
+                    var formattedValue = (item.trim() === ''||item.trim() === 'null') ? 'NULL' : "'" + item.trim() + "'";
+                    return formattedValue;
+                });
+                var resultString = '(' + formattedArray.join(', ') + ')';
+
+                var query = "INSERT INTO " + table + " (" + columnString + ") VALUES " + resultString + "";          
+                // $("#test").text(query);      
+                tx.executeSql(query, [], function (tx, res) {
+                    insertID = res.insertId;
+                    ambildata('panen','terakhir');
+                },
+                function (tx, error) {
+                    notif('Kesalahan INSERT: ' + error.message);
+                });
+            }, function (error) {
+                notif('Kesalahan transaksi: ' + error.message);
+            }, function () {
+                // Transaksi selesai
+            });
+        }
+
+        function deletedatatph(table,id){
+            db.transaction(function (tx) {
+
+            var query = "DELETE FROM " + table + " WHERE " + table + "_id = ?";
+
+            tx.executeSql(query, [id], function (tx, res) {
+                ambildata(table,'semua');
+            },
+            function (tx, error) {
+                notif('DELETE error: ' + error.message);
+            });
+            }, function (error) {
+            notif('transaction error: ' + error.message);
+            }, function () {
+            notif('Data Telah Terhapus!');
+            });
+        }
+
+        function onConfirm(pilihannya,table,id) {
+            if(pilihannya=='1'){
+                deletedatatph(table,id);
+            }else{
+                // alert('You selected button ' + jenis);
+            }
+        }
+
+        function confirmdeletetph(message,title,table,id) {
+            let arraynya = ['Delete','Cancel'];
+            navigator.notification.confirm(
+                message, // message
+                (buttonIndex) => onConfirm(buttonIndex, table, id),            
+                title,           // title
+                arraynya     // buttonLabels
+            );
+        }
+
+        function ambildata(table,status) {
+            db.transaction(function (tx) {
+                var query = "SELECT * FROM " + table+" ORDER BY "+table+"_id DESC";
+                if(status=="terakhir"){
+                    query += " LIMIT 1";
+                }
+                // notif(query);
+                $("#"+table).html('');
+                var cell ='';
+                tx.executeSql(query, [], function (tx, resultSet) {                    
+                    let no=1;
+                    // notif(resultSet.rows.length);
+                    for (var x = 0; x < resultSet.rows.length; x++) {
+                        cell += '<div class="row p-3 ballon">';                        
+                        cell += '<H1 class="col-12 alert alert-success" id="judulpanen">Data Terekam di Handphone</H1>';        
+                        
+                        cell += '<div class="col-5 text-left">Date</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['panen_date']+'</div>';
+                        cell += '<div class="col-5 text-left">Checker</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['user_name']+'</div>';
+                        cell += '<div class="col-5 text-left">Estate</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['estate_name']+'</div>';
+                        cell += '<div class="col-5 text-left">Divisi</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['divisi_name']+'</div>';
+                        cell += '<div class="col-5 text-left">Seksi</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['seksi_name']+'</div>';
+                        cell += '<div class="col-5 text-left">Blok</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['blok_name']+'</div>';
+                        cell += '<div class="col-5 text-left">TPH</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['tph_name']+'</div>';
+                        cell += '<div class="col-5 text-left">Thn Tanam</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['tph_thntanam']+'</div>';
+                        cell += '<div class="col-5 text-left">Jumlah</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['panen_jml']+'</div>';   
+
+                        cell += '<div onclick="confirmdeletetph(\'Yakin di Delete?\',\'Delete Data Panen\',\'panen\','+resultSet.rows.item(x)['panen_id']+')" class="col-12  mt-5 mb-5 text-danger"> >>> &nbsp;&nbsp;<button class="btn btn-danger btn-block"><i class="fas fa-window-close"></i> Delete</button>&nbsp;&nbsp; <<< </div>';             
+
+                        cell +='</div>';
+                        if(resultSet.rows.length == no){
+                            $("#"+table).append(cell);   
+                            //hapus kartu
+                            // nfc.erase(successhapuskartupanen, failurehapuskartupanen);                         
+                            //membuat json
+                            var isidata = [];
+                            for (var i = 0; i < resultSet.rows.length; i++) {
+                                var row = resultSet.rows.item(i);
+                                isidata.push(row);
+                            }
+                            var textString = isidata.map(function(row) {
+                                return Object.entries(row).map(function([key, value]) {
+                                    return key + '=' + value;
+                                }).join(', ');
+                            }).join('\n');
+                            // notif(textString);
+                            var message = [
+                                ndef.textRecord(textString)
+                            ];
+                            nfc.write(message, ()=>{notif('Penyimpanan Berhasil!');$("#judulpanen").text("Data Terekam di HP dan Kartu");}, ()=>{});
+                        }
+                        no++;
+                        
+                    }
+                    if (x < 1) {
+                        notif("Tidak Ada Data di Database!");
+                    }
+                },
+                function (tx, error) {
+                    notif('SELECT error: ' + error.message);
+                });
+                
+            }, function (error) {
+                notif('transaction error: ' + error.message);
+            }, function () {
+                // notif('transaction ok');
+            });
+        }
+        function failurehapuskartupanen(reason) {
+            // alert('failurehapus');
+            // notif(reason);
+            notif('Data Gagal Dihapus!');
+            
+        }
+        function successhapuskartupanen() {
+            // alert('successhapus');
+            // notif('Data Terhapus!');
+            $("#datanfcjadi").val('');
+            
+        }
+        function blok() {
+            db.transaction(function (tx) {
+                var query = "SELECT * FROM blok WHERE divisi_id='"+divisiid+"'";
+                // notif(query);
+                $("#blok_id").html('');
+                var cell ='';
+                tx.executeSql(query, [], function (tx, resultSet) {
+                    let no=1;
+                    // notif(resultSet.rows.length);     
+                    cell += '<option value="">Pilih Blok</option>';
+                    for (var x = 0; x < resultSet.rows.length; x++) {   
+                        cell += '<option blok_name="'+resultSet.rows.item(x)['blok_name']+'" value="'+resultSet.rows.item(x)['blok_id']+'">'+resultSet.rows.item(x)['blok_name']+'</div>';
+                        if(resultSet.rows.length == no){
+                            $("#blok_id").append(cell);
+                        }
+                        no++;
+                        
+                    }
+                    if (x < 1) {
+                        // notif("Tidak ada data!");
+                    }
+                },
+                function (tx, error) {
+                    notif('SELECT error: ' + error.message);
+                });
+                
+            }, function (error) {
+                notif('transaction error: ' + error.message);
+            }, function () {
+                // notif('transaction ok');
+            });
+        }
+        function tph(){            
+            let blok_name = $("#blok_id").find(':selected').attr('blok_name');
+            $("#blok_name").val(blok_name);
+
+            db.transaction(function (tx) {
+                let blok_id = $("#blok_id").val();
+                var query = "SELECT * FROM tph WHERE blok_id='"+blok_id+"'";
+                // notif(query);
+                $("#tph_id").html('');
+                var cell ='';
+                tx.executeSql(query, [], function (tx, resultSet) {
+                    let no=1;
+                    // notif(resultSet.rows.length);     
+                    cell += '<option value="">Pilih TPH</option>';
+                    for (var x = 0; x < resultSet.rows.length; x++) {   
+                        cell += '<option tph_name="'+resultSet.rows.item(x)['tph_name']+'" thntnm="'+resultSet.rows.item(x)['tph_thntanam']+'" value="'+resultSet.rows.item(x)['tph_id']+'">'+resultSet.rows.item(x)['tph_name']+'</div>';
+                        if(resultSet.rows.length == no){
+                            $("#tph_id").append(cell);
+                        }
+                        no++;
+                        
+                    }
+                    if (x < 1) {
+                        // notif("Tidak ada data!");
+                    }
+                },
+                function (tx, error) {
+                    notif('SELECT error: ' + error.message);
+                });
+                
+            }, function (error) {
+                notif('transaction error: ' + error.message);
+            }, function () {
+                // notif('transaction ok');
+            });
+        }
+        function thntnm(){
+            let tph_name = $("#tph_id").find(':selected').attr('tph_name'); 
+            $("#tph_name").val(tph_name);
+            let datatph = $("#tph_id").find(':selected').attr('thntnm');
+            $("#tph_thntanam").val(datatph);
+        }
+    </script>
+</body>
+
+</html>

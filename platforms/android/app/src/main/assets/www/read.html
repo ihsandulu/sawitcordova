@@ -1,0 +1,199 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <!--
+        Customize this policy to fit your own app's needs. For more guidance, please refer to the docs:
+            https://cordova.apache.org/docs/en/latest/
+        Some notes:
+            * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+            * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+                * Enable inline JS: add 'unsafe-inline' to default-src
+        -->
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;"> -->
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src; style-src * 'unsafe-inline'; media-src *; img-src * data: content:; script-src * 'unsafe-eval' 'unsafe-inline';">
+
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
+    <meta name="color-scheme" content="light dark">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="css/umum.css">
+
+
+    <title>PT. PAM</title>
+</head>
+
+<body>
+    <h1>NFC</h1>
+    <div>
+        <form action="">
+            <div class="mb-3 mt-3">
+                <label for="email" class="form-label">Isikan Data Anda:</label>
+                <textarea id="isi" class="form-control">
+
+                </textarea>
+            </div>
+            <button type="button" onclick="writedata()" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+    <div class="mt-4 p-5 bg-secondary text-white rounded">
+        <h1>Data Kartu</h1>
+        <div id="isimanusia">
+        </div>
+    </div>
+    <button type="button" onclick="bacakartu()" class="btn btn-success mt-3">Baca Kartu</button>
+    <button type="button" onclick="geolocation()" class="btn btn-success mt-3">Baca Geolocation</button>
+    <div class="alert alert-warning mt-3">
+        <textarea id="mentahan" class="form-control">
+
+        </textarea>
+    </div>
+    <div id="notifikasi" class="alert alert-success mt-3">
+
+    </div>
+
+    <div>
+        <img id="gambar" src="res/no_picture.png" class="img-thumbnail">
+        <div>
+            <textarea id="srcimg" class="form-control">
+
+            </textarea>
+        </div>
+        <button type="button" onclick="ambilgambar()" class="btn btn-success mt-3">Take Picture</button>
+    </div>
+
+
+    <script type="text/javascript" src="cordova.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script type="text/javascript" src="js/umum.js"></script>
+    <script>
+        //gambar 
+        function onSuccessimg(imageURI) {
+            let src =  "data:image/jpeg;base64," + imageURI;
+            $("#gambar").attr("src", src); 
+            $("#srcimg").val(src);
+        }
+        function onFailimg(message) {
+            notif('Failed because: ' + message);
+        }
+        function setOptionsimg(srcType) {
+            var options = {
+                // Some common settings are 20, 50, and 100
+                quality: 50,
+                destinationType: Camera.DestinationType.FILE_URI,
+                // In this app, dynamically set the picture source, Camera or photo gallery
+                sourceType: srcType,
+                encodingType: Camera.EncodingType.JPEG,
+                mediaType: Camera.MediaType.PICTURE,
+                allowEdit: true,
+                correctOrientation: true
+            }
+            return options;
+        } 
+        function ambilgambar() {
+            navigator.camera.getPicture(onSuccessimg, onFailimg, { quality: 50, destinationType: Camera.DestinationType.DATA_URL });
+            // navigator.camera.getPicture(onSuccessimg, onFailimg, setOptionsimg);
+        }
+
+
+
+
+
+        function clearScreen() {
+            $("#isimanusia").html("");
+        }
+        function onNdef(nfcEvent) {
+            // notif(JSON.stringify(nfcEvent.tag));
+            clearScreen();
+            var tag = nfcEvent.tag;
+            // BB7 has different names, copy to Android names
+            if (tag.serialNumber) {
+                tag.id = tag.serialNumber;
+                tag.isWritable = !tag.isLocked;
+                tag.canMakeReadOnly = tag.isLockable;
+            }
+            let tagnya = JSON.stringify(nfcEvent.tag);
+            $("#mentahan").val(tagnya);
+            manusiaobject(nfcEvent.tag)
+            navigator.notification.vibrate(100);
+        }
+        function onSuccess(isi) {
+            notif(isi);
+        }
+        function notifikasi(isi) {
+            $("#notifikasi").show();
+            $("#notifikasi").html(isi);
+            setTimeout(function () {
+                $("#notifikasi").hide();
+            }, 30000);
+        }
+        function onFailure(reason) {
+            notifikasi(reason);
+        }
+        function bacakartu() {
+            nfc.addNdefListener(onNdef, notifikasi("Tempelkan Kartu!"), onFailure);
+        }
+        $(document).ready(function () {
+            // alert("Ready");
+            $("#notifikasi").hide();
+            // bacakartu();
+        });
+
+        //write
+        function writedata() {
+            let isidata = $("#isi").val();
+            var message = [
+                ndef.textRecord(isidata)
+            ];
+            nfc.write(message, onSuccess("Sukses Menulis Data."), onFailure);
+            bacakartu();
+        }
+
+        //membaca manusia
+        function manusiaobject(nfcData) {
+            var ndefMessage = nfcData.ndefMessage;
+            var resultString = "";
+            for (var i = 0; i < ndefMessage.length; i++) {
+                var payload = ndefMessage[i].payload;
+                var payloadString = String.fromCharCode.apply(null, payload);
+                resultString += payloadString + "\n";
+            }
+            resultString = resultString.replace("en", "");
+            $("#isimanusia").html(resultString);
+        }
+        function manusiastring(nfcDataString) {
+            var nfcData = JSON.parse(nfcDataString);
+            manusiaobject(nfcData);
+        }
+
+        //geolocation
+        var onSuccessgeo = function (position) {
+            alert('Latitude: ' + position.coords.latitude + '\n' +
+                'Longitude: ' + position.coords.longitude + '\n' +
+                'Altitude: ' + position.coords.altitude + '\n' +
+                'Accuracy: ' + position.coords.accuracy + '\n' +
+                'Altitude Accuracy: ' + position.coords.altitudeAccuracy + '\n' +
+                'Heading: ' + position.coords.heading + '\n' +
+                'Speed: ' + position.coords.speed + '\n' +
+                'Timestamp: ' + position.timestamp + '\n');
+        };
+        function onErrorgeo(error) {
+            alert('code: ' + error.code + '\n' +
+                'message: ' + error.message + '\n');
+        }
+        function geolocation() {
+            navigator.geolocation.getCurrentPosition(onSuccessgeo, onErrorgeo);
+        }
+        $(document).ready(function(){
+            // alert();
+            navigator.splashscreen.hide();
+        });
+    </script>
+</body>
+
+</html>

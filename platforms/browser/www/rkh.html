@@ -1,0 +1,116 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;"> -->
+    <meta http-equiv="Content-Security-Policy" content="default-src * data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src * 'unsafe-inline'; media-src *; img-src * data: content:; script-src * 'unsafe-eval' 'unsafe-inline';">
+    
+
+
+
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
+    <meta name="color-scheme" content="light dark">
+
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> -->
+
+    <link rel="stylesheet" href="css/all.min.css"/>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/umum.css">
+
+
+    <title>PT. PAM</title>
+    <style>
+        #frame1{
+           
+        }
+        
+    </style>
+    <script>
+    </script>
+</head>
+
+<body>    
+    <div id="header">
+        
+    </div>
+    <div id="frame1" class="text-center " > 
+        <div id="rkh" class="">
+             
+        </div>
+    </div>
+
+    <marquee width="100%" direction="left">Jika terjadi perubahan, harap hubungi admin yang bersangkutan!</marquee>
+    <div id="footer"></div>
+    <script type="text/javascript" src="cordova.js"></script>  
+    <script type="text/javascript" src="js/jquery.min.js"></script>    
+    <script type="text/javascript" src="js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="js/umum.js"></script>
+    <script type="text/javascript" src="js/data.js"></script>
+    <script type="text/javascript" src="js/nfc.js"></script>
+    <script>           
+        var userName = localStorage.getItem('user_name'); 
+        var divisiid = localStorage.getItem('divisi_id');  
+            
+        //device ready 
+        document.addEventListener('deviceready', function () { 
+            
+            if(userName==null){
+                window.location.href='login.html';
+            }else{
+                $(".username").text(userName); 
+
+                //isi rkh
+                let kolomisi = ["rkh_rdate","rkh_job","estate_name","divisi_name","seksi_name","blok_name","blok_ha","tph_name","rkh_masuk","rkh_tmasuk","rkh_date","username"];
+                let kolomtitle = ["Date","Job","Estate","Divisi","Seksi","Blok","Luas (Ha)","TPH","TK Masuk","TK Tdk Masuk","Created Date","Created By"];
+                ambildata('rkh',kolomtitle,kolomisi);
+            }   
+            
+        }); 
+
+        function ambildata(table,kolomtitle,kolomisi) {
+            db.transaction(function (tx) {
+                var query = "SELECT * FROM " + table+" WHERE divisi_id='"+divisiid+"' AND rkh_rdate>='"+now()+"'";
+                // notif(query);
+                $("#"+table).html('');
+                var cell ='';
+                tx.executeSql(query, [], function (tx, resultSet) {
+                    let no=1;
+                    // notif(resultSet.rows.length);
+                    for (var x = 0; x < resultSet.rows.length; x++) {
+                        cell += '<div class="row p-3 ballon">';                        
+                        cell += '<H1 class="col-12 alert alert-success">'+ no +'</H1>';
+                        
+                        for (let i = 0; i < kolomtitle.length; i++) {
+                            cell += '<div class="col-5 text-left">'+kolomtitle[i]+'</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)[kolomisi[i]]+'</div>';
+                            // notif(resultSet.rows.item(x)[kolomisi[i]]);
+                        }
+
+                        cell +='</div>';
+                        if(resultSet.rows.length == no){
+                            $("#"+table).append(cell);
+                        }
+                        no++;
+                        
+                    }
+                    if (x < 1) {
+                        notif("Tidak ada data!");
+                    }
+                },
+                function (tx, error) {
+                    notif('SELECT error: ' + error.message);
+                });
+                
+            }, function (error) {
+                notif('transaction error: ' + error.message);
+            }, function () {
+                // notif('transaction ok');
+            });
+        }
+        
+    </script>
+</body>
+
+</html>

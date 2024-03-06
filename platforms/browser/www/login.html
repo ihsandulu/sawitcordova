@@ -1,0 +1,181 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <!--
+        Customize this policy to fit your own app's needs. For more guidance, please refer to the docs:
+            https://cordova.apache.org/docs/en/latest/
+        Some notes:
+            * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+            * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+                * Enable inline JS: add 'unsafe-inline' to default-src
+        -->
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;"> -->
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src * data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src * 'unsafe-inline'; media-src *; img-src * data: content:; script-src * 'unsafe-eval' 'unsafe-inline';"> -->
+    
+
+
+
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
+    <meta name="color-scheme" content="light dark">
+
+    
+    <link rel="stylesheet" href="css/all.min.css"/>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/umum.css">
+
+
+    <title>PT. PAM</title>
+
+    <style>
+        .gradient-custom-2 {
+            /* fallback for old browsers */
+            background: #fccb90;
+
+            /* Chrome 10-25, Safari 5.1-6 */
+            background: -webkit-linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);
+
+            /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+            background: linear-gradient(to right, #ee7724, #d8363a, #dd3675, #b44593);
+        }
+        .gradient-custom-3 {
+            /* fallback for old browsers */
+            background: #fccb90;
+
+            /* Chrome 10-25, Safari 5.1-6 */
+            background: -webkit-linear-gradient(to right, #2aa43a, #38c552, #25c241, #47f65e);
+
+            /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+            background: linear-gradient(to right, #2aa43a, #38c552, #25c241, #47f65e);
+        }
+        .card1{
+            background-color:rgba(255, 255, 255, 0.5) !important;
+        }
+        .card-body1{position: fixed; top: 50%; left:50%; transform: translate(-50%,-50%); width:70%;}
+
+        @media (min-width: 768px) {
+            .gradient-form {
+                height: 100vh !important;
+            }
+        }
+        @media (min-width: 769px) {
+            .gradient-custom-2 {
+                border-top-right-radius: .3rem;
+                border-bottom-right-radius: .3rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <span id="test"></span>
+    <div class="card-body1 p-0">            
+        <div class="text-center pt-3">
+            <img src="res/logo.png"
+            style="width: 100px;" alt="logo">
+            <h4 class="mt-1 mb-3 pb-1">PT.PAM</h4>
+        </div>
+
+        <form class="p-0">
+            <p>Please login to your account</p>
+
+            <div class="form-outline mb-4">
+            <input onkeypress="pencetlogin()" type="text" id="user_nik" class="form-control"
+                placeholder="" />
+            <label class="form-label" for="form2Example11">NIK</label>
+            </div>
+
+            <div class="form-outline mb-4">
+            <input onkeypress="pencetlogin()" type="password" id="user_password" class="form-control" />
+            <label class="form-label" for="form2Example22">PASSWORD</label>
+            </div>
+
+            <div class="text-center pt-1 mb-2 pb-1 d-grid">
+                <button id="loginButton" class="btn btn-primary btn-block fa-lg gradient-custom-3 mb-3" type="button">Log in</button>
+                <button onclick="konfirmasisingkron()" id="btn-singkron" status="" class="btn btn-primary btn-block fa-lg gradient-custom-3 p-0 progress" style="height:40px" type="button">
+                    <div id="singkron" class="progress-bar progress-bar-striped bg-success m-0" style="width:100%; height:100%;">Sync?</div>
+                </button>
+            </div>          
+        </form>        
+    </div>
+
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="js/umum.js"></script>
+    <script type="text/javascript" src="js/data.js"></script>
+    <script type="text/javascript" src="js/sync.js"></script>
+    <script>  
+
+        //device ready  
+        document.addEventListener('deviceready', function () {
+            logout()
+            db = window.sqlitePlugin.openDatabase({
+                name: 'my.db',
+                location: 'default',
+            });
+
+            // login
+            $('#user_nik, #user_password').on('keypress', function(e) {
+                if (e.which === 13) {
+                    login();
+                }
+            });
+            $('#loginButton').on('click', function() {
+                login();
+            });
+        });   
+        function logout(){
+            localStorage.clear();
+        }
+        function login(){  
+            db.transaction(function (tx) {
+                let user_nik = $("#user_nik").val();
+                let user_password = $("#user_password").val();
+                var query = "SELECT * FROM user WHERE user_nik = ? AND user_password = ?";
+                tx.executeSql(query, [user_nik, user_password], function (tx, resultSet) {
+                    let panjangdata = resultSet.rows.length;
+                    if(panjangdata>0){
+                        // notif(panjangdata);
+                        for (var x = 0; x < panjangdata; x++) {
+                            // notif(resultSet.rows.item(x).user_nik + ',' +resultSet.rows.item(x).user_password + ',' +resultSet.rows.item(x).user_name + ',' +resultSet.rows.item(x).position_id);
+                            localStorage.setItem('tph_name', resultSet.rows.item(x).tph_name);
+                            localStorage.setItem('blok_name', resultSet.rows.item(x).blok_name);
+                            localStorage.setItem('seksi_name', resultSet.rows.item(x).seksi_name);
+                            localStorage.setItem('divisi_name', resultSet.rows.item(x).divisi_name);
+                            localStorage.setItem('estate_name', resultSet.rows.item(x).estate_name);
+                            localStorage.setItem('tph_id', resultSet.rows.item(x).tph_id);
+                            localStorage.setItem('blok_id', resultSet.rows.item(x).blok_id);
+                            localStorage.setItem('seksi_id', resultSet.rows.item(x).seksi_id);
+                            localStorage.setItem('divisi_id', resultSet.rows.item(x).divisi_id);
+                            localStorage.setItem('estate_id', resultSet.rows.item(x).estate_id);
+                            localStorage.setItem('position_id', resultSet.rows.item(x).position_id);
+                            localStorage.setItem('user_id', resultSet.rows.item(x).user_id);
+                            localStorage.setItem('user_name', resultSet.rows.item(x).user_name);
+                            localStorage.setItem('user_password', resultSet.rows.item(x).user_password);
+                            localStorage.setItem('user_nik', resultSet.rows.item(x).user_nik);
+                            // notif("ID: " + resultSet.rows.item(x).user_id);
+                        }
+                        // notif('login ok');
+                        pindahHalaman('dashboard.html');
+                    }else{
+                        notif('Login Gagal!');
+                    }
+                    
+                },
+                function (tx, error) {
+                    notif('SELECT error: ' + error.message);
+                });
+            }, function (error) {
+                notif('login error: ' + error.message);
+            }, function () {
+                // notif('login ok');
+            });
+        }
+    </script>
+</body>
+
+</html>

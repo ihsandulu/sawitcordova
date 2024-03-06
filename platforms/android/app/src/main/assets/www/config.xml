@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="com.qithy.tphdigital" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>TPH Digital</name>
+    <description>
+        TPH Digital
+    </description>
+    <author email="ihsan.dulu@gmail.com" href="https://qithy.com">
+        Ihsandulu
+    </author>
+    <access origin="*" />
+    <preference name="fullscreen" value="true" />
+    <preference name="webviewbounce" value="true" />
+    <content src="dashboard.html" /> 
+    <preference name="AndroidPersistentFileLocation" value="Compatibility" />
+    <platform name="android">
+        <allow-intent href="market:*" />
+        <icon src="www/res/logo.png"/>
+        <access origin="*" />
+        <preference name="AndroidExtraFilesystems" value="files,files-external,documents,sdcard,cache,cache-external,assets,root" />
+
+        <!-- <preference name="android-targetSdkVersion" value="32" /> -->
+
+        <plugin name="cordova-plugin-splashscreen" spec="6.0.0" />
+
+        <preference name="AndroidWindowSplashScreenAnimatedIcon" value="www/res/logo.png" />
+        <!-- <preference name="SplashScreen" value="true" />  -->
+        <preference name="AutoHideSplashScreen" value="true" /> <!-- defaults to "true" -->
+        <preference name="SplashScreenDelay" value="1000" /> <!-- defaults to "3000" -->
+        <preference name="FadeSplashScreen" value="true"/>
+        <preference name="FadeSplashScreenDuration" value="150"/>
+        <preference name="SplashScreenBackgroundColor" value="#464646" /> <!-- defaults to "#464646" -->
+        <preference name="ShowSplashScreen" value="true" /> <!-- defaults to "true" -->
+
+        <preference name="SplashMaintainAspectRatio" value="true" />
+        <preference name="SplashShowOnlyFirstTime" value="true" />
+        <preference name="SplashScreenSpinnerColor" value="white" />
+    </platform>
+    <platform name="browser">
+        <allow-intent href="market:*" />
+        <icon src="www/res/logo.png"/>
+        <access origin="*" />
+        <preference name="AndroidExtraFilesystems" value="files,files-external,documents,sdcard,cache,cache-external,assets,root" />
+
+        <!-- <preference name="android-targetSdkVersion" value="32" /> -->
+
+        <plugin name="cordova-plugin-splashscreen" spec="6.0.0" />
+
+        <preference name="AndroidWindowSplashScreenAnimatedIcon" value="true" />
+        <!-- <preference name="SplashScreen" value="res/screen/screen.png" />  -->
+        <preference name="AutoHideSplashScreen" value="true" /> <!-- defaults to "true" -->
+        <preference name="SplashScreenDelay" value="3000" /> <!-- defaults to "3000" -->
+        <preference name="FadeSplashScreen" value="true"/>
+        <preference name="FadeSplashScreenDuration" value="750"/>
+        <preference name="SplashScreenBackgroundColor" value="#464646" /> <!-- defaults to "#464646" -->
+        <preference name="ShowSplashScreen" value="true" /> <!-- defaults to "true" -->
+
+        <preference name="SplashMaintainAspectRatio" value="true" />
+        <preference name="SplashShowOnlyFirstTime" value="true" />
+        <preference name="SplashScreenSpinnerColor" value="white" />
+    </platform>
+    <allow-navigation href="*" />
+
+</widget>
