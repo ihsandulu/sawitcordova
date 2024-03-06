@@ -325,6 +325,22 @@ cordova.define('cordova/plugin_list', function(require, exports, module) {
       "runs": true
     },
     {
+      "id": "cordova-plugin-media.MediaError",
+      "file": "plugins/cordova-plugin-media/www/MediaError.js",
+      "pluginId": "cordova-plugin-media",
+      "clobbers": [
+        "window.MediaError"
+      ]
+    },
+    {
+      "id": "cordova-plugin-media.Media",
+      "file": "plugins/cordova-plugin-media/www/Media.js",
+      "pluginId": "cordova-plugin-media",
+      "clobbers": [
+        "window.Media"
+      ]
+    },
+    {
       "id": "cordova-plugin-network-information.network",
       "file": "plugins/cordova-plugin-network-information/www/network.js",
       "pluginId": "cordova-plugin-network-information",
@@ -377,22 +393,6 @@ cordova.define('cordova/plugin_list', function(require, exports, module) {
       "file": "plugins/phonegap-nfc/www/phonegap-nfc.js",
       "pluginId": "phonegap-nfc",
       "runs": true
-    },
-    {
-      "id": "cordova-plugin-media.MediaError",
-      "file": "plugins/cordova-plugin-media/www/MediaError.js",
-      "pluginId": "cordova-plugin-media",
-      "clobbers": [
-        "window.MediaError"
-      ]
-    },
-    {
-      "id": "cordova-plugin-media.Media",
-      "file": "plugins/cordova-plugin-media/www/Media.js",
-      "pluginId": "cordova-plugin-media",
-      "clobbers": [
-        "window.Media"
-      ]
     }
   ];
   module.exports.metadata = {
@@ -402,12 +402,12 @@ cordova.define('cordova/plugin_list', function(require, exports, module) {
     "cordova-plugin-camera": "7.0.0",
     "cordova-plugin-dialogs": "2.0.2",
     "cordova-plugin-geolocation": "5.0.0",
+    "cordova-plugin-media": "7.0.0",
     "cordova-plugin-network-information": "3.0.0",
     "cordova-plugin-splashscreen": "6.0.1",
     "cordova-sqlite-storage": "6.1.0",
     "org.apache.cordova.device": "0.2.4",
     "org.apache.cordova.vibration": "0.3.4",
-    "phonegap-nfc": "1.2.0",
-    "cordova-plugin-media": "7.0.0"
+    "phonegap-nfc": "1.2.0"
   };
 });

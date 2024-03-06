@@ -1,0 +1,15 @@
+*Pake jdk jdk-8u401-windows-x64.exe untuk B4a
+*B4A gunanya untuk mengupdate sdk manager tanpa harus ke android studio
+*universaladbdriver_v6.0.exe gunanya untuk nginstalin driver hp otomatis
+*minimal_adb_fastboot_v1.4.3_setup.exe gunanya untuk mendeteksi apakah hp androidnya sudah terkoneksi dengan baik atau belum
+*scrcpy.exe gunanya untuk menampilkan layar hp kita di pc
+*Rubah <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;"> 
+menjadi
+        <meta http-equiv="Content-Security-Policy" content="default-src; style-src * 'unsafe-inline'; media-src *; img-src * data: content:; script-src * 'unsafe-eval' 'unsafe-inline';">
+* default-src = sumber url default...pilihannya bisa self atau bisa juga di open dengan *.
+* Adapun data pada default-src menandakan apakah dia bisa menerima data dari url tertentu atau tidak.
+* style-src akalu di setting 'self' berarti hanya bisa ngasih css dari file css di folder css (ga bisa inline)
+* kalau inline maka ganti 'self' dengan * atau dengan 'unsave-inline'...bedanya kalau * berarti semua sumber termasuk dari eksternal link semuanya tanpa batasan...dan kalai 'unsave-inline' berarti diizinkan bikin css dihalaman tersebut (tanpa harus dari folder css)
+* Adapun unsave-eval hanya ada di script aja, yaitu menandakan bolehnya mengeksekusi eval.
+
+*Kalau mau pake camera dan menyimpan file, jangan lupa ditambahkan di config.xml : <preference name="AndroidInsecureFileModeEnabled" value="true" />

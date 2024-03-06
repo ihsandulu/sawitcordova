@@ -27,6 +27,9 @@
       "GPS_REQUIRED": "true",
       "PACKAGE_NAME": "com.qithy.tphdigital"
     },
+    "cordova-plugin-media": {
+      "PACKAGE_NAME": "com.qithy.tphdigital"
+    },
     "cordova-plugin-network-information": {
       "PACKAGE_NAME": "com.qithy.tphdigital"
     },
@@ -37,9 +40,6 @@
       "PACKAGE_NAME": "com.qithy.tphdigital"
     },
     "phonegap-nfc": {
-      "PACKAGE_NAME": "com.qithy.tphdigital"
-    },
-    "cordova-plugin-media": {
       "PACKAGE_NAME": "com.qithy.tphdigital"
     }
   },

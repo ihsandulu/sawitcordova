@@ -33,6 +33,10 @@
               "count": 1
             },
             {
+              "xml": "<feature name=\"Media\"><param name=\"android-package\" value=\"org.apache.cordova.media.AudioHandler\" /></feature>",
+              "count": 1
+            },
+            {
               "xml": "<feature name=\"NetworkStatus\"><param name=\"android-package\" value=\"org.apache.cordova.networkinformation.NetworkManager\" /></feature>",
               "count": 1
             },
@@ -54,10 +58,6 @@
             },
             {
               "xml": "<feature name=\"NfcPlugin\"><param name=\"android-package\" value=\"com.chariotsolutions.nfc.plugin.NfcPlugin\" /><param name=\"onload\" value=\"true\" /></feature>",
-              "count": 1
-            },
-            {
-              "xml": "<feature name=\"Media\"><param name=\"android-package\" value=\"org.apache.cordova.media.AudioHandler\" /></feature>",
               "count": 1
             }
           ]
@@ -113,15 +113,15 @@
               "count": 1
             },
             {
-              "xml": "<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\" />",
-              "count": 1
-            },
-            {
               "xml": "<uses-permission android:name=\"android.permission.RECORD_AUDIO\" />",
               "count": 1
             },
             {
               "xml": "<uses-permission android:name=\"android.permission.MODIFY_AUDIO_SETTINGS\" />",
+              "count": 1
+            },
+            {
+              "xml": "<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\" />",
               "count": 1
             }
           ],
@@ -177,6 +177,9 @@
       "GPS_REQUIRED": "true",
       "PACKAGE_NAME": "com.qithy.tphdigital"
     },
+    "cordova-plugin-media": {
+      "PACKAGE_NAME": "com.qithy.tphdigital"
+    },
     "cordova-plugin-network-information": {
       "PACKAGE_NAME": "com.qithy.tphdigital"
     },
@@ -193,9 +196,6 @@
       "PACKAGE_NAME": "com.qithy.tphdigital"
     },
     "phonegap-nfc": {
-      "PACKAGE_NAME": "com.qithy.tphdigital"
-    },
-    "cordova-plugin-media": {
       "PACKAGE_NAME": "com.qithy.tphdigital"
     }
   },
@@ -526,6 +526,22 @@
       "runs": true
     },
     {
+      "id": "cordova-plugin-media.MediaError",
+      "file": "plugins/cordova-plugin-media/www/MediaError.js",
+      "pluginId": "cordova-plugin-media",
+      "clobbers": [
+        "window.MediaError"
+      ]
+    },
+    {
+      "id": "cordova-plugin-media.Media",
+      "file": "plugins/cordova-plugin-media/www/Media.js",
+      "pluginId": "cordova-plugin-media",
+      "clobbers": [
+        "window.Media"
+      ]
+    },
+    {
       "id": "cordova-plugin-network-information.network",
       "file": "plugins/cordova-plugin-network-information/www/network.js",
       "pluginId": "cordova-plugin-network-information",
@@ -578,22 +594,6 @@
       "file": "plugins/phonegap-nfc/www/phonegap-nfc.js",
       "pluginId": "phonegap-nfc",
       "runs": true
-    },
-    {
-      "id": "cordova-plugin-media.MediaError",
-      "file": "plugins/cordova-plugin-media/www/MediaError.js",
-      "pluginId": "cordova-plugin-media",
-      "clobbers": [
-        "window.MediaError"
-      ]
-    },
-    {
-      "id": "cordova-plugin-media.Media",
-      "file": "plugins/cordova-plugin-media/www/Media.js",
-      "pluginId": "cordova-plugin-media",
-      "clobbers": [
-        "window.Media"
-      ]
     }
   ],
   "plugin_metadata": {
@@ -603,12 +603,12 @@
     "cordova-plugin-camera": "7.0.0",
     "cordova-plugin-dialogs": "2.0.2",
     "cordova-plugin-geolocation": "5.0.0",
+    "cordova-plugin-media": "7.0.0",
     "cordova-plugin-network-information": "3.0.0",
     "cordova-plugin-splashscreen": "6.0.1",
     "cordova-sqlite-storage": "6.1.0",
     "org.apache.cordova.device": "0.2.4",
     "org.apache.cordova.vibration": "0.3.4",
-    "phonegap-nfc": "1.2.0",
-    "cordova-plugin-media": "7.0.0"
+    "phonegap-nfc": "1.2.0"
   }
 }

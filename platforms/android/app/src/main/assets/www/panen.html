@@ -84,6 +84,7 @@
                 <input id="panen_picture" type="text" class="form-control text-biru" placeholder="" aria-label="Geolocation" aria-describedby="btn_picture">
                 <button onclick="picturePanen()" class="btn btn-outline-secondary" type="button" id="btn_picture"><i class="fas fa-camera"></i></button>
                 <img id="panenPicture" src="res/no_picture.png" class="img-thumbnail">
+                <a id="panenPictureLink" href="res/no_picture.png">Link</a>
             </div> 
 
             <button onclick="isikartu()" type="button" class="btn btn-primary">Isi Kartu</button>
@@ -156,10 +157,15 @@
         function panenImg(imageURI) {
             // let src =  "data:image/jpeg;base64," + imageURI;
             // let src =  pathapps+'files/'+imageURI;
-            // moveImageToFilesDirectory(imageURI);
-            let src = imageURI;
+            // let src =  imageURI;
+            
+            let fileName = imageURI.substring(imageURI.lastIndexOf('/') + 1);
+            let src =  'file:///android_asset/www/cache/'+fileName;
+            src = imageURI;
             $("#panenPicture").attr("src", src); 
             $("#panen_picture").val(src);
+            $('#panenPictureLink').attr('href',src);
+            notif(src);            
         }
         function errorpanenImg(message) {
             notif('Failed because: ' + message);
@@ -167,57 +173,6 @@
         function picturePanen() {
             navigator.camera.getPicture(panenImg, errorpanenImg, { quality: 50, destinationType: Camera.DestinationType.FILE_URI });
         }
-
-        function moveImageToFilesDirectory(imagePath) {
-            window.resolveLocalFileSystemURL(
-                'file:///data/user/0/com.qithy.tphdigital/cache/',
-                function (directoryEntry) {
-                    // Membuat URL untuk file yang akan dipindahkan
-                    var sourceFile = directoryEntry.toURL() + imagePath;
-
-                    // Membuat URL tujuan untuk direktori www/files
-                    var destinationDirectory = cordova.file.applicationDirectory + 'www/files/';
-                    var destinationFile = destinationDirectory + imagePath;
-
-                    // Mengecek apakah direktori tujuan sudah ada, jika tidak, membuatnya
-                    window.resolveLocalFileSystemURL(destinationDirectory, function (dirEntry) {
-                        // Direktori sudah ada
-                        moveFile(sourceFile, destinationFile);
-                    }, function () {
-                        // Direktori belum ada, membuatnya
-                        window.resolveLocalFileSystemURL(cordova.file.applicationDirectory, function (rootDirEntry) {
-                            rootDirEntry.getDirectory('www/files', { create: true, exclusive: false }, function (newDirEntry) {
-                                moveFile(sourceFile, destinationFile);
-                            }, errorHandler);
-                        }, errorHandler);
-                    });
-                },
-                errorHandler
-            );
-        }
-
-        function moveFile(sourceFile, destinationFile) {
-            window.resolveLocalFileSystemURL(
-                sourceFile,
-                function (fileEntry) {
-                    // Memindahkan file ke direktori tujuan
-                    fileEntry.moveTo(
-                        cordova.file.externalRootDirectory,
-                        destinationFile,
-                        function (movedFileEntry) {
-                            console.log('File moved successfully to: ' + movedFileEntry.toURL());
-                        },
-                        errorHandler
-                    );
-                },
-                errorHandler
-            );
-        }
-
-        function errorHandler(error) {
-            console.error('File operation error: ' + error.code);
-        }
-
 
         //geolocation
         var panenGeo = function (position) {
