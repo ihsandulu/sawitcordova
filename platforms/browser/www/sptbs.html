@@ -31,7 +31,8 @@
             top:0px;
             transform: translate(-50%,0);
         } 
-    </style>
+        input .inputbox{background-color: antiquewhite!important; color: aliceblue!important;}
+    </style> 
     <script>
     </script>
 </head>
@@ -41,26 +42,31 @@
         
     </div>
     <div id="frame1" class="text-center " > 
-        <div class="row p-3 ballon">                        
+        <div class="row p-3 ballon">  <input class="inputbox" id="cekpanen-1" name="cekpanen-'+resultSet.rows.item(x)['panen_id']+'" type="checkbox" style="background-color: antiquewhite!important; color: aliceblue!important;"/>                      
             <H1 class="col-12 alert alert-success">Data SPTBS</H1>         
             <div class="col-5 mb-4 text-left">SPTBS Card</div><div class="col-7 text-left">
                 <input readonly id="sptbs_card" class="form-control">
             </div>              
             <div class="col-5 mb-4 text-left">Vendor</div><div class="col-7 text-left">
-                <select id="vendor_id" class="form-control">
+                <select id="sptbs_vendor" class="form-control">
 
                 </select>
             </div>         
             <div class="col-5 mb-4 text-left">Material</div><div class="col-7 text-left">
-                <select id="material_id" class="form-control">
+                <select id="sptbs_material" class="form-control">
 
                 </select>
             </div>         
             <div class="col-5 mb-4 text-left">Kecamatan</div><div class="col-7 text-left">
-                <select id="kecamatan_id" class="form-control">
+                <select id="sptbs_kecamatan" class="form-control">
 
                 </select>
             </div>      
+            <div class="col-5 mb-4 text-left">No.Plat</div><div class="col-7 text-left">
+                <select id="sptbs_plat" class="form-control">
+
+                </select>
+            </div>  
             <div class="col-5 mb-4 text-left">Driver</div><div class="col-7 text-left">
                 <select id="sptbs_driver" class="form-control">
 
@@ -97,12 +103,12 @@
     <script type="text/javascript" src="js/nfc.js"></script>
     <script>
         //device ready 
-        document.addEventListener('deviceready', function () {             
+        document.addEventListener('deviceready', function () {   
             $("#datanfcjadi").val('');                
             $("#datanfcjadi").hide();
             notif('Tempelkan Kartu!');
             cekkartupanen();
-            ambildata('panen','semua');
+            ambildata('panen','semua','');
           
             // nfc.addNdefListener(onNdef, notifikasi("Tempelkan Kartu!"), onFailure);
             
@@ -110,47 +116,98 @@
                 window.location.href='login.html';
             }else{
                 $(".username").text(username); 
-                blok();
-                tph(); 
-                $("#panen_date").val(now());
-                $("#user_id").val(userid);
+                vendor();           
+                material();           
+                kecamatan();           
+                driver();              
+                plat();          
+                $("#sptbs_date").val(now());
+                $("#sptbs_createdby").val(userid);
                 $("#estate_id").val(estateid);
                 $("#divisi_id").val(divisiid);
-                $("#seksi_id").val(seksiid);
-                $("#user_name").val(username);
+                $("#sptbs_createdname").val(username);
                 $("#estate_name").val(estatename);
                 $("#divisi_name").val(divisiname);
-                $("#seksi_name").val(seksiname);
             }                      
         }); 
-        function inputdatapanen(table,data){
-            db.transaction(function (tx) {
 
-                var dataArray = data.replace(/[^\w,=:\-()']/g, '').split(',');
+
+        function inputdatapanen(table,data){
+            data = data.replace(/[^ -~]/g, '');
+            // notif(data);
+            db.transaction(function (tx) {
+                var dataArray = data.split(',');
                 var columns = [];
                 var values = [];
+                var valuesupdate = [];
+
+                var panenCardToCheck = '';
+                let panenCardToCheckUpdate='';
                 dataArray.forEach(function (item) {
                     var pair = item.split('=');
-                    if(pair[0]!='panen_id'){
+                    if (pair[0] !== 'panen_id') {
                         columns.push(pair[0]);
-                        let isi = (pair[1] === 'null') ? "NULL" : "'" + pair[1].trim() + "'";
-                        values.push(isi);
-
+                        let isi;
+                        let isiupdate;
+                        let pair1 = pair[1];
+                        if(pair[1] === 'null'){
+                            isi = "NULL";
+                            isiupdate = "NULL";
+                        }else{
+                            isi = "'" + pair1.trim() + "' ";
+                            isiupdate = pair1.trim();
+                        }
+                        // let isi = (pair[1] === 'null') ? "NULL" : "'" + pair[1].trim() + "'";
+                        // isi = isi.replace(/(?<=\S)_|\b_|\b(?=\S)/g, ' ');
+                        values.push(isi);                 
+                        valuesupdate.push(isiupdate);                 
+                        if(pair[0] == 'panen_card'){
+                            panenCardToCheck=isi;   
+                            panenCardToCheckUpdate=isi;   
+                            // notif(isi);    
+                        }
                     }
+
                 });
-                var query = "INSERT INTO " + table + " (" + columns.join(',') + ") VALUES (" + values.join(',') + ")";
-                // notiftext(query);
-                tx.executeSql(query, [], function (tx, res) {
-                    ambildata(table,'semua');
-                    notif('Record Data Berhasil!');
-                },
-                function (tx, error) {
-                    notif('Record Data Error: ' + error.message);
+
+                // Mengecek apakah panen_card sudah ada dalam tabel
+                var checkQuery = "SELECT panen_card FROM " + table + " WHERE panen_card = "+panenCardToCheck;
+                // notif(checkQuery); 
+                tx.executeSql(checkQuery, [], function (tx, result) {
+                    let jmldata = result.rows.length;
+                    // notif(panenCardToCheck); 
+                    if (jmldata > 0) {
+                        // Jika panen_card sudah ada, lakukan UPDATE                        
+                        var updateQuery = "UPDATE " + table + " SET " + columns.join('=?, ') + "=? WHERE panen_card = " + panenCardToCheckUpdate;                               
+                        // notif(updateQuery);                          
+                        // notif(valuesupdate);
+                        tx.executeSql(updateQuery, valuesupdate, function (tx, res) {
+                            ambildata('panen','semua','');  
+                        }, function (tx, error) {
+                            notif('Kesalahan UPDATE: ' + error.message);            
+                            playAudio('gagal.mp3');
+                        });
+                    } else {
+                        // Jika panen_card belum ada, lakukan INSERT
+                        var insertQuery = "INSERT INTO " + table + " (" + columns.join(',') + ") VALUES (" + values.join(',') + ")";
+                        // notif(insertQuery);
+                        tx.executeSql(insertQuery, [], function (tx, res) {
+                            insertID = res.insertId;
+                            ambildata('panen','semua','');   
+                        }, function (tx, error) {
+                            notif('Kesalahan INSERT: ' + error.message);      
+                            playAudio('gagal.mp3');
+                        });
+                    }
+                }, function (tx, error) {
+                    notif('Kesalahan transaksi: ' + error.message);      
+                    playAudio('gagal.mp3');
                 });
             }, function (error) {
-                notif('Transaction Error: ' + error.message);
-                // notiftext('Transaction Error: ' + error.message);
+                notif('Transaction Error: ' + error.message);      
+                playAudio('gagal.mp3');
             }, function () {
+                // playAudio('berhasil.mp3');
                 // notif('Data Telah Terhapus!');
             });
         }
@@ -185,13 +242,12 @@
             resultString = resultString.replace("en", "");
             var kalimatTanpaSpasi = resultString.replace(/\s/g, '');
             if(kalimatTanpaSpasi!=""){
-                var kalimatTanpaSpasi = kalimatTanpaSpasi.split(',');
-                var kalimatTanpaSpasi = kalimatTanpaSpasi.map(function(attribute) {
-                    return attribute.trim(); // Hapus spasi tambahan jika ada
-                }).join(',\n');
+                var kalimatTanpaSpasi1 = kalimatTanpaSpasi.split(',');
+                let kalimatTanpaSpasi2 = kalimatTanpaSpasi1.join('\n');
                 //konfirmasi masukkan data panen
+                // notif('kalimatTanpaSpasi=>'+kalimatTanpaSpasi);
                 confirminputpanen('Record Data dari Kartu?','Data Panen','panen',kalimatTanpaSpasi);
-                $("#datanfcjadi").val(kalimatTanpaSpasi);                
+                $("#datanfcjadi").val(kalimatTanpaSpasi2);                
                 $("#datanfcjadi").show();
                 setTimeout(function(){
                     $("#datanfcjadi").hide();
@@ -226,89 +282,118 @@
         }
 
         function isikartu(){
-            let panen_date = $("#panen_date").val();
-            let user_id = $("#user_id").val();
+            let sptbs_code = $("#sptbs_code").val();
+            let sptbs_date = $("#sptbs_date").val();
+            let sptbs_vendor = $("#sptbs_vendor").val();
+            let sptbs_material = $("#sptbs_material").val();
+            let sptbs_kecamatan = $("#sptbs_kecamatan").val();
+            let sptbs_plat = $("#sptbs_plat").val();
+            let sptbs_driver = $("#sptbs_driver").val();
+            let sptbs_createdby = userid;
             let estate_id = $("#estate_id").val();
             let divisi_id = $("#divisi_id").val();
-            let seksi_id = $("#seksi_id").val();
-            let user_name = $("#user_name").val();
-            let estate_name = $("#estate_name").val();
-            let divisi_name = $("#divisi_name").val();
-            let seksi_name = $("#seksi_name").val();
-            let blok_name = $("#blok_name").val();
-            let tph_name = $("#tph_name").val();
-            
-            let blok_id = $("#blok_id").val();
-            let tph_id = $("#tph_id").val();
-            let tph_thntanam = $("#tph_thntanam").val();
-            let panen_jml = $("#panen_jml").val();
+            let sptbs_drivername = $("#sptbs_drivername").val();  
+            let sptbs_createdname = username;          
+            let estate_name = estatename;
+            let divisi_name = divisiname;
+            let sptbs_card = $("#sptbs_card").val();
 
-            let masterarray = [
-                'panen_date',
-                'user_id',
-                'estate_id',
-                'divisi_id',
-                'seksi_id',
-                'user_name',
-                'estate_name',
-                'divisi_name',
-                'seksi_name',
-                'blok_name',
-                'tph_name',
-                'blok_id',
-                'tph_id',
-                'tph_thntanam',
-                'panen_jml'
-            ];
-            let isiarray = [
-                panen_date,
-                user_id,
-                estate_id,
-                divisi_id,
-                seksi_id,
-                user_name,
-                estate_name,
-                divisi_name,
-                seksi_name,
-                blok_name,
-                tph_name,
-                blok_id,
-                tph_id,
-                tph_thntanam,
-                panen_jml
-            ];
-            addItemPanen('panen', masterarray, isiarray)
+            let data = 'sptbs_code='+sptbs_code+
+                ',sptbs_date='+sptbs_date+
+                ',sptbs_vendor='+sptbs_vendor+
+                ',sptbs_material='+sptbs_material+
+                ',sptbs_kecamatan='+sptbs_kecamatan+
+                ',sptbs_plat='+sptbs_plat+
+                ',sptbs_driver='+sptbs_driver+
+                ',sptbs_createdby='+sptbs_createdby+
+                ',estate_id='+estate_id+
+                ',divisi_id='+divisi_id+
+                ',sptbs_createdname='+sptbs_createdname+
+                ',sptbs_drivername='+sptbs_drivername+
+                ',estate_name='+estate_name+
+                ',divisi_name='+divisi_name+
+                ',sptbs_card='+sptbs_card;
+            deletepanenwherecard('sptbs',sptbs_card);
+            inputOrUpdateData('sptbs', data);
+        }        
+
+        function deletepanenwherecard(table,card){
+            db.transaction(function (tx) {
+
+            var query = "DELETE FROM " + table + " WHERE " + table + "_card = ?";
+
+            tx.executeSql(query, [card], function (tx, res) {
+                // ambildata(table,'semua','');
+            },
+            function (tx, error) {
+                notif('DELETE error: ' + error.message);      
+                playAudio('gagal.mp3');
+            });
+            }, function (error) {
+                notif('transaction error: ' + error.message);      
+                playAudio('gagal.mp3');
+            }, function () {
+                // notif('Data Telah Terhapus!');
+            });
         }
 
-        function addItemPanen(table, columns, input) {
-            let insertID;
+        function inputOrUpdateData(table, data) {
             db.transaction(function (tx) {
-                /* if (!Array.isArray(values)) {
-                    notif('Array values tidak valid');
-                    return;
-                } */
-                var columnString = columns.join(', ');
-                var values = Array.isArray(input) ? input : (input ? input.split(',') : []);
-                var formattedArray = values.map(function (item) {
-                    // Menggunakan operator nullish coalescing (??) untuk mengubah nilai kosong menjadi NULL
-                    var formattedValue = (item.trim() === ''||item.trim() === 'null') ? 'NULL' : "'" + item.trim() + "'";
-                    return formattedValue;
-                });
-                var resultString = '(' + formattedArray.join(', ') + ')';
+                var dataArray = data.split(',');
+                var columns = [];
+                var values = [];
 
-                var query = "INSERT INTO " + table + " (" + columnString + ") VALUES " + resultString + "";          
-                // $("#test").text(query);      
-                tx.executeSql(query, [], function (tx, res) {
-                    insertID = res.insertId;
-                    ambildata('panen','terakhir');
-                },
-                function (tx, error) {
-                    notif('Kesalahan INSERT: ' + error.message);
+                var panenCardToCheck = '';
+                dataArray.forEach(function (item) {
+                    var pair = item.split('=');
+                    if (pair[0] !== 'sptbs_id') {
+                        columns.push(pair[0]);
+                        let isi = (pair[1] === 'null') ? "NULL" : "'" + pair[1].trim() + "'";
+                        values.push(isi);                 
+                        if(pair[0] == 'panen_card'){
+                            panenCardToCheck=isi;   
+                            // notif(isi);    
+                        }
+                    }
+                });
+
+                // Mengecek apakah panen_card sudah ada dalam tabel
+                var checkQuery = "SELECT panen_card FROM " + table + " WHERE panen_card = ?";
+                // notif(checkQuery); 
+                tx.executeSql(checkQuery, [panenCardToCheck], function (tx, result) {
+                    let jmldata = result.rows.length;
+                    // notif(jmldata); 
+                    if (jmldata > 0) {
+                        // Jika panen_card sudah ada, lakukan UPDATE
+                        var updateQuery = "UPDATE " + table + " SET " + columns.join('=?, ') + "=? WHERE panen_card = '" + panenCardToCheck + "'";
+                        tx.executeSql(updateQuery, values, function (tx, res) {
+                            ambildata('panen','terakhir','isikartu');  
+                        }, function (tx, error) {
+                            notif('Kesalahan UPDATE: ' + error.message);            
+                            playAudio('gagal.mp3');
+                        });
+                    } else {
+                        // Jika panen_card belum ada, lakukan INSERT
+                        var insertQuery = "INSERT INTO " + table + " (" + columns.join(',') + ") VALUES (" + values.join(',') + ")";
+
+                        tx.executeSql(insertQuery, [], function (tx, res) {
+                            insertID = res.insertId;
+                            ambildata('panen','terakhir','isikartu');   
+                        }, function (tx, error) {
+                            notif('Kesalahan INSERT: ' + error.message);      
+                            playAudio('gagal.mp3');
+                        });
+                    }
+                }, function (tx, error) {
+                    notif('Kesalahan transaksi: ' + error.message);      
+                    playAudio('gagal.mp3');
                 });
             }, function (error) {
-                notif('Kesalahan transaksi: ' + error.message);
+                notif('Transaction Error: ' + error.message);      
+                playAudio('gagal.mp3');
             }, function () {
-                // Transaksi selesai
+                // playAudio('berhasil.mp3');
+                // notif('Data Telah Terhapus!');
             });
         }
 
@@ -318,7 +403,7 @@
             var query = "DELETE FROM " + table + " WHERE " + table + "_id = ?";
 
             tx.executeSql(query, [id], function (tx, res) {
-                ambildata(table,'semua');
+                ambildata(table,'semua','');
             },
             function (tx, error) {
                 notif('DELETE error: ' + error.message);
@@ -348,7 +433,11 @@
             );
         }
 
-        function ambildata(table,status) {
+        
+       
+
+        
+        function ambildata(table,status,perintahkartu) {
             db.transaction(function (tx) {
                 var query = "SELECT * FROM " + table+" ORDER BY "+table+"_id DESC";
                 if(status=="terakhir"){
@@ -364,6 +453,34 @@
                         cell += '<div class="row p-3 ballon">';                        
                         cell += '<H1 class="col-12 alert alert-success" id="judulpanen">Data Terekam di Handphone</H1>';        
                         
+                        cell += '<div class="col-5 text-left">ID Panen</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['panen_id']+' &nbsp;&nbsp;<input class="inputbox" id="cekpanen-'+resultSet.rows.item(x)['panen_id']+'" name="cekpanen-'+resultSet.rows.item(x)['panen_id']+'" type="checkbox" style="background-color: antiquewhite!important; color: aliceblue!important;"/></div>';
+                        
+                        cell += '<div class="col-12">&nbsp;&nbsp;<textarea class="form-control" id="'+resultSet.rows.item(x)['panen_id']+'" name="'+resultSet.rows.item(x)['panen_id']+'">['+
+                            'panen_card='+resultSet.rows.item(x)['panen_card']+
+                            ',panen_date='+resultSet.rows.item(x)['panen_date']+
+                            ',user_id='+resultSet.rows.item(x)['user_id']+
+                            ',estate_id='+resultSet.rows.item(x)['estate_id']+
+                            ',divisi_id='+resultSet.rows.item(x)['divisi_id']+
+                            ',seksi_id='+resultSet.rows.item(x)['seksi_id']+
+                            ',user_name='+resultSet.rows.item(x)['user_name']+
+                            ',estate_name='+resultSet.rows.item(x)['estate_name']+
+                            ',divisi_name='+resultSet.rows.item(x)['divisi_name']+
+                            ',seksi_name='+resultSet.rows.item(x)['seksi_name']+
+                            ',blok_name='+resultSet.rows.item(x)['blok_name']+
+                            ',tph_name='+resultSet.rows.item(x)['tph_name']+
+                            ',blok_id='+resultSet.rows.item(x)['blok_id']+
+                            ',tph_id='+resultSet.rows.item(x)['tph_id']+
+                            ',tph_thntanam='+resultSet.rows.item(x)['tph_thntanam']+
+                            ',panen_jml='+resultSet.rows.item(x)['panen_jml']+
+                            ',panen_tp='+resultSet.rows.item(x)['panen_tp']+
+                            ',panen_tpname='+resultSet.rows.item(x)['panen_tpname']+
+                            ',panen_brondol='+resultSet.rows.item(x)['panen_brondol']+
+                            ',panen_geo='+resultSet.rows.item(x)['panen_geo']+
+                            ',panen_picture='+resultSet.rows.item(x)['panen_picture']    
+                        +']</textarea></div>';
+
+                        cell += '<div class="col-5 text-left">Panen Card</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['panen_card']+'</div>';
+                        cell += '<div class="col-5 text-left">SPTBS Card</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['sptbs_card']+'</div>';
                         cell += '<div class="col-5 text-left">Date</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['panen_date']+'</div>';
                         cell += '<div class="col-5 text-left">Checker</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['user_name']+'</div>';
                         cell += '<div class="col-5 text-left">Estate</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['estate_name']+'</div>';
@@ -371,16 +488,28 @@
                         cell += '<div class="col-5 text-left">Seksi</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['seksi_name']+'</div>';
                         cell += '<div class="col-5 text-left">Blok</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['blok_name']+'</div>';
                         cell += '<div class="col-5 text-left">TPH</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['tph_name']+'</div>';
+                        cell += '<div class="col-5 text-left">Tenaga Panen</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['panen_tpname']+'</div>';
                         cell += '<div class="col-5 text-left">Thn Tanam</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['tph_thntanam']+'</div>';
-                        cell += '<div class="col-5 text-left">Jumlah</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['panen_jml']+'</div>';   
+                        if(resultSet.rows.item(x)['panen_brondol']==1){                            
+                            cell += '<div class="col-5 text-left">Brondolan</div><div class="col-7 text-left">: &nbsp;&nbsp;Ya</div>';               
+                            cell += '<div class="col-5 text-left">Karung</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['panen_jml']+'</div>'; 
+                        }else{
+                            cell += '<div class="col-5 text-left">Jumlah</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['panen_jml']+'</div>'; 
+                        }  
+                        cell += '<div class="col-5 text-left">Geolocation</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['panen_geo']+'</div>';
+                        let srcpic='';
+                        if(resultSet.rows.item(x)['panen_picture']==""){
+                            srcpic='res/no_picture.png';
+                        }else{
+                            srcpic=resultSet.rows.item(x)['panen_picture'];
+                        }
+                        cell += '<div class="col-5 text-left">Picture</div><div class="col-7 text-left">: &nbsp;&nbsp;<img src="'+srcpic+'" class="img-thumbnail"></div>';
 
                         cell += '<div onclick="confirmdeletetph(\'Yakin di Delete?\',\'Delete Data Panen\',\'panen\','+resultSet.rows.item(x)['panen_id']+')" class="col-12  mt-5 mb-5 text-danger"> >>> &nbsp;&nbsp;<button class="btn btn-danger btn-block"><i class="fas fa-window-close"></i> Delete</button>&nbsp;&nbsp; <<< </div>';             
 
                         cell +='</div>';
                         if(resultSet.rows.length == no){
-                            $("#"+table).append(cell);   
-                            //hapus kartu
-                            // nfc.erase(successhapuskartupanen, failurehapuskartupanen);                         
+                            $("#"+table).append(cell);                          
                             //membuat json
                             var isidata = [];
                             for (var i = 0; i < resultSet.rows.length; i++) {
@@ -393,90 +522,57 @@
                                 }).join(', ');
                             }).join('\n');
                             // notif(textString);
-                            var message = [
-                                ndef.textRecord(textString)
-                            ];
-                            nfc.write(message, ()=>{notif('Penyimpanan Berhasil!');$("#judulpanen").text("Data Terekam di HP dan Kartu");}, ()=>{});
+                            
+                            if(perintahkartu=='isikartu'){
+                                var message = [
+                                    ndef.textRecord(textString)
+                                ];
+                                nfc.write(message, ()=>{
+                                    notif('Penyimpanan Berhasil!');
+                                    $("#judulpanen").text("Data Terekam di HP dan Kartu");
+                                    playAudio('berhasil.mp3');
+                                }, ()=>{                                                                 
+                                    playAudio('datadirekam.mp3');
+                                });
+                            }
+                            
                         }
                         no++;
                         
                     }
                     if (x < 1) {
-                        notif("Tidak Ada Data di Database!");
+                        // notif("Tidak Ada Data di Database!");      
+                        // playAudio('datakosong.mp3');
                     }
                 },
                 function (tx, error) {
-                    notif('SELECT error: ' + error.message);
+                    notif('SELECT error: ' + error.message);    
+                    playAudio('gagal.mp3');
                 });
                 
             }, function (error) {
-                notif('transaction error: ' + error.message);
+                notif('transaction error: ' + error.message);   
+                playAudio('gagal.mp3');
             }, function () {
                 // notif('transaction ok');
             });
         }
-        function failurehapuskartupanen(reason) {
-            // alert('failurehapus');
-            // notif(reason);
-            notif('Data Gagal Dihapus!');
-            
-        }
-        function successhapuskartupanen() {
-            // alert('successhapus');
-            // notif('Data Terhapus!');
-            $("#datanfcjadi").val('');
-            
-        }
-        function blok() {
-            db.transaction(function (tx) {
-                var query = "SELECT * FROM blok WHERE divisi_id='"+divisiid+"'";
-                // notif(query);
-                $("#blok_id").html('');
-                var cell ='';
-                tx.executeSql(query, [], function (tx, resultSet) {
-                    let no=1;
-                    // notif(resultSet.rows.length);     
-                    cell += '<option value="">Pilih Blok</option>';
-                    for (var x = 0; x < resultSet.rows.length; x++) {   
-                        cell += '<option blok_name="'+resultSet.rows.item(x)['blok_name']+'" value="'+resultSet.rows.item(x)['blok_id']+'">'+resultSet.rows.item(x)['blok_name']+'</div>';
-                        if(resultSet.rows.length == no){
-                            $("#blok_id").append(cell);
-                        }
-                        no++;
-                        
-                    }
-                    if (x < 1) {
-                        // notif("Tidak ada data!");
-                    }
-                },
-                function (tx, error) {
-                    notif('SELECT error: ' + error.message);
-                });
-                
-            }, function (error) {
-                notif('transaction error: ' + error.message);
-            }, function () {
-                // notif('transaction ok');
-            });
-        }
-        function tph(){            
-            let blok_name = $("#blok_id").find(':selected').attr('blok_name');
-            $("#blok_name").val(blok_name);
 
+        
+        function vendor() {
             db.transaction(function (tx) {
-                let blok_id = $("#blok_id").val();
-                var query = "SELECT * FROM tph WHERE blok_id='"+blok_id+"'";
+                var query = "SELECT * FROM vendor";
                 // notif(query);
-                $("#tph_id").html('');
+                $("#sptbs_vendor").html('');
                 var cell ='';
                 tx.executeSql(query, [], function (tx, resultSet) {
                     let no=1;
                     // notif(resultSet.rows.length);     
-                    cell += '<option value="">Pilih TPH</option>';
+                    cell += '<option value="">Pilih Vendor</option>';
                     for (var x = 0; x < resultSet.rows.length; x++) {   
-                        cell += '<option tph_name="'+resultSet.rows.item(x)['tph_name']+'" thntnm="'+resultSet.rows.item(x)['tph_thntanam']+'" value="'+resultSet.rows.item(x)['tph_id']+'">'+resultSet.rows.item(x)['tph_name']+'</div>';
+                        cell += '<option vendor_name="'+resultSet.rows.item(x)['vendor_name']+'" value="'+resultSet.rows.item(x)['vendor_id']+'">'+resultSet.rows.item(x)['vendor_name']+'</div>';
                         if(resultSet.rows.length == no){
-                            $("#tph_id").append(cell);
+                            $("#sptbs_vendor").append(cell);
                         }
                         no++;
                         
@@ -495,12 +591,139 @@
                 // notif('transaction ok');
             });
         }
-        function thntnm(){
-            let tph_name = $("#tph_id").find(':selected').attr('tph_name'); 
-            $("#tph_name").val(tph_name);
-            let datatph = $("#tph_id").find(':selected').attr('thntnm');
-            $("#tph_thntanam").val(datatph);
+
+        function material() {
+            db.transaction(function (tx) {
+                var query = "SELECT * FROM material";
+                // notif(query);
+                $("#sptbs_material").html('');
+                var cell ='';
+                tx.executeSql(query, [], function (tx, resultSet) {
+                    let no=1;
+                    // notif(resultSet.rows.length);     
+                    cell += '<option value="">Pilih Material</option>';
+                    for (var x = 0; x < resultSet.rows.length; x++) {   
+                        cell += '<option material_name="'+resultSet.rows.item(x)['material_name']+'" value="'+resultSet.rows.item(x)['material_id']+'">'+resultSet.rows.item(x)['material_name']+'</div>';
+                        if(resultSet.rows.length == no){
+                            $("#sptbs_material").append(cell);
+                        }
+                        no++;
+                        
+                    }
+                    if (x < 1) {
+                        // notif("Tidak ada data!");
+                    }
+                },
+                function (tx, error) {
+                    notif('SELECT error: ' + error.message);
+                });
+                
+            }, function (error) {
+                notif('transaction error: ' + error.message);
+            }, function () {
+                // notif('transaction ok');
+            });
         }
+
+        function kecamatan() {
+            db.transaction(function (tx) {
+                var query = "SELECT * FROM kecamatan";
+                // notif(query);
+                $("#sptbs_kecamatan").html('');
+                var cell ='';
+                tx.executeSql(query, [], function (tx, resultSet) {
+                    let no=1;
+                    // notif(resultSet.rows.length);     
+                    cell += '<option value="">Pilih Kecamatan</option>';
+                    for (var x = 0; x < resultSet.rows.length; x++) {   
+                        cell += '<option kecamatan_name="'+resultSet.rows.item(x)['kecamatan_name']+'" value="'+resultSet.rows.item(x)['kecamatan_id']+'">'+resultSet.rows.item(x)['kecamatan_name']+'</div>';
+                        if(resultSet.rows.length == no){
+                            $("#sptbs_kecamatan").append(cell);
+                        }
+                        no++;
+                        
+                    }
+                    if (x < 1) {
+                        // notif("Tidak ada data!");
+                    }
+                },
+                function (tx, error) {
+                    notif('SELECT error: ' + error.message);
+                });
+                
+            }, function (error) {
+                notif('transaction error: ' + error.message);
+            }, function () {
+                // notif('transaction ok');
+            });
+        }
+
+        function driver() {
+            db.transaction(function (tx) {
+                var query = "SELECT * FROM driver";
+                // notif(query);
+                $("#sptbs_driver").html('');
+                var cell ='';
+                tx.executeSql(query, [], function (tx, resultSet) {
+                    let no=1;
+                    // notif(resultSet.rows.length);     
+                    cell += '<option value="">Pilih Driver</option>';
+                    for (var x = 0; x < resultSet.rows.length; x++) {   
+                        cell += '<option driver_name="'+resultSet.rows.item(x)['driver_name']+'" value="'+resultSet.rows.item(x)['driver_id']+'">'+resultSet.rows.item(x)['driver_name']+'</div>';
+                        if(resultSet.rows.length == no){
+                            $("#sptbs_driver").append(cell);
+                        }
+                        no++;
+                        
+                    }
+                    if (x < 1) {
+                        // notif("Tidak ada data!");
+                    }
+                },
+                function (tx, error) {
+                    notif('SELECT error: ' + error.message);
+                });
+                
+            }, function (error) {
+                notif('transaction error: ' + error.message);
+            }, function () {
+                // notif('transaction ok');
+            });
+        }
+
+        function plat() {
+            db.transaction(function (tx) {
+                var query = "SELECT * FROM truk";
+                // notif(query);
+                $("#sptbs_plat").html('');
+                var cell ='';
+                tx.executeSql(query, [], function (tx, resultSet) {
+                    let no=1;
+                    // notif(resultSet.rows.length);     
+                    cell += '<option value="">Pilih Plat</option>';
+                    for (var x = 0; x < resultSet.rows.length; x++) {   
+                        cell += '<option value="'+resultSet.rows.item(x)['no_polisi']+'">'+resultSet.rows.item(x)['no_polisi']+'</div>';
+                        if(resultSet.rows.length == no){
+                            $("#sptbs_plat").append(cell);
+                        }
+                        no++;
+                        
+                    }
+                    if (x < 1) {
+                        // notif("Tidak ada data!");
+                    }
+                },
+                function (tx, error) {
+                    notif('SELECT error: ' + error.message);
+                });
+                
+            }, function (error) {
+                notif('transaction error: ' + error.message);
+            }, function () {
+                // notif('transaction ok');
+            });
+        }
+       
     </script>
 </body>
 

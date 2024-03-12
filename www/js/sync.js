@@ -58,11 +58,12 @@ function syncronizing(){
         deleteTable('tph');
         deleteTable('tp');
         deleteTable('panen');
-        deleteTable('sptbh');
+        deleteTable('sptbs');
         deleteTable('vendor');
         deleteTable('material');
         deleteTable('driver');
         deleteTable('kecamatan');
+        deleteTable('truk');
 
         db.transaction((tx) => {
             /* tx.executeSql('DROP TABLE IF EXISTS user', [], function(tx, result) {
@@ -152,9 +153,9 @@ function syncronizing(){
                 'sptbs_id INTEGER PRIMARY KEY AUTOINCREMENT,' +
                 'sptbs_card TEXT,' +
                 'sptbs_date DATE,' +
-                'vendor_id INTEGER,' +
-                'material_id INTEGER,' +
-                'kecamatan_id INTEGER,' +
+                'sptbs_vendor INTEGER,' +
+                'sptbs_material INTEGER,' +
+                'sptbs_kecamatan INTEGER,' +
                 'sptbs_driver INTEGER,' +
                 'sptbs_createdby INTEGER,' +
                 'estate_id INTEGER,' +
@@ -162,7 +163,9 @@ function syncronizing(){
                 'sptbs_createdname TEXT,' +
                 'sptbs_drivername TEXT,' +
                 'estate_name TEXT,' +
-                'divisi_name TEXT' +
+                'divisi_name TEXT,' +
+                'sptbs_plat TEXT,' +
+                'sptbs_listcard TEXT' +
             ')'); 
             tx.executeSql('CREATE TABLE IF NOT EXISTS tp (' +
                 'tp_id INTEGER PRIMARY KEY AUTOINCREMENT,' +
@@ -170,7 +173,8 @@ function syncronizing(){
                 'position_id INTEGER,' +
                 'panen_tpname TEXT,' +
                 'panen_tpnik TEXT,' +
-                'divisi_id INTEGER' +
+                'divisi_id INTEGER,' +
+                'panen_placement TEXT' +
             ')');   
             tx.executeSql('CREATE TABLE IF NOT EXISTS vendor (' +
                 'vendor_id INTEGER PRIMARY KEY AUTOINCREMENT,' +
@@ -187,6 +191,9 @@ function syncronizing(){
             tx.executeSql('CREATE TABLE IF NOT EXISTS kecamatan (' +
                 'kecamatan_id INTEGER PRIMARY KEY AUTOINCREMENT,' +
                 'kecamatan_name TEXT' +
+            ')');         
+            tx.executeSql('CREATE TABLE IF NOT EXISTS truk (' +
+                'no_polisi TEXT PRIMARY KEY' +
             ')');   
             // notif('Create Table user Sukses');
         },
@@ -254,7 +261,8 @@ function syncronizing(){
                 'position_id',
                 'panen_tpname',
                 'panen_tpnik',
-                'divisi_id'
+                'divisi_id',
+                'panen_placement'
             ];
             dataserver('tp', 'tp', masterarray5);
             let masterarray6 = [
@@ -277,6 +285,10 @@ function syncronizing(){
                 'kecamatan_name'
             ];
             dataserver('datakecamatan', 'kecamatan', masterarray9);
+            let masterarray10 = [
+                'no_polisi'
+            ];
+            dataserver('datatrukpenerimaan', 'truk', masterarray10);
         });                  
     }else{
         syncfinished();

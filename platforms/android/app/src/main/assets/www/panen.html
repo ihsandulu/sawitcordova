@@ -84,7 +84,6 @@
                 <input id="panen_picture" type="text" class="form-control text-biru" placeholder="" aria-label="Geolocation" aria-describedby="btn_picture">
                 <button onclick="picturePanen()" class="btn btn-outline-secondary" type="button" id="btn_picture"><i class="fas fa-camera"></i></button>
                 <img id="panenPicture" src="res/no_picture.png" class="img-thumbnail">
-                <a id="panenPictureLink" href="res/no_picture.png">Link</a>
             </div> 
 
             <button onclick="isikartu()" type="button" class="btn btn-primary">Isi Kartu</button>
@@ -100,7 +99,7 @@
             <input id="blok_name" type="hidden">
             <input id="tph_name" type="hidden">
             <input id="panen_tpname" type="hidden">
-            <input id="panen_brondol" type="hidden">
+            <input id="panen_brondol" type="hidden" value="0">
         </div>
         <div class="">  
             <div class="row">  
@@ -157,15 +156,10 @@
         function panenImg(imageURI) {
             // let src =  "data:image/jpeg;base64," + imageURI;
             // let src =  pathapps+'files/'+imageURI;
-            // let src =  imageURI;
-            
-            let fileName = imageURI.substring(imageURI.lastIndexOf('/') + 1);
-            let src =  'file:///android_asset/www/cache/'+fileName;
-            src = imageURI;
+            // let fileName = imageURI.substring(imageURI.lastIndexOf('/') + 1);
+            let src =  imageURI;            
             $("#panenPicture").attr("src", src); 
             $("#panen_picture").val(src);
-            $('#panenPictureLink').attr('href',src);
-            notif(src);            
         }
         function errorpanenImg(message) {
             notif('Failed because: ' + message);
@@ -230,10 +224,10 @@
                     $("#panen_card").val(nilaiPanenCard);
                 } else {
                     $("#panen_card").val(panencard);
-                }
-                var kalimatTanpaSpasi2 = kalimatTanpaSpasi1.map(function(attribute) {
-                    // return attribute.trim(); // Hapus spasi tambahan jika ada
-                }).join(',\n');
+                }                   
+                
+                let kalimatTanpaSpasi2 = kalimatTanpaSpasi1.join('\n');
+                
                 $("#datanfcjadi").val(kalimatTanpaSpasi2);                
                 $("#datanfcjadi").show();
                 setTimeout(function(){
@@ -360,6 +354,7 @@
         }
 
         function inputOrUpdateData(table, data) {
+            // notiftext(data);
             db.transaction(function (tx) {
                 var dataArray = data.split(',');
                 var columns = [];
@@ -375,7 +370,7 @@
                         if(pair[0] == 'panen_card'){
                             panenCardToCheck=isi;   
                             // notif(isi);    
-                        }
+                        }    
                     }
                 });
 
@@ -553,22 +548,26 @@
                         cell +='</div>';
                         if(resultSet.rows.length == no){
                             $("#"+table).append(cell);   
-                            //hapus kartu
-                            // nfc.erase(successhapuskartupanen, failurehapuskartupanen);                         
-                            //membuat json
-                            var isidata = [];
-                            for (var i = 0; i < resultSet.rows.length; i++) {
-                                var row = resultSet.rows.item(i);
-                                isidata.push(row);
-                            }
-                            var textString = isidata.map(function(row) {
-                                return Object.entries(row).map(function([key, value]) {
-                                    return key + '=' + value;
-                                }).join(', ');
-                            }).join('\n');
-                            // notif(textString);
                             
                             if(perintahkartu=='isikartu'){
+                                //hapus kartu
+                                // nfc.erase(successhapuskartupanen, failurehapuskartupanen);                         
+                                //membuat json
+                                var isidata = [];
+                                for (var i = 0; i < resultSet.rows.length; i++) {
+                                    var row = resultSet.rows.item(i);
+                                    isidata.push(row);
+                                }
+                                var textString = isidata.map(function(row) {
+                                    return Object.entries(row).map(function([key, value]) {
+                                        if (typeof value === 'string' || value instanceof String) {
+                                            value = value.replace(/\b\s+\b/g, "_");
+                                        }
+                                        return key + '=' + value;
+                                    }).join(',');
+                                });
+                                // notif(textString);
+                            
                                 var message = [
                                     ndef.textRecord(textString)
                                 ];
@@ -586,7 +585,7 @@
                         
                     }
                     if (x < 1) {
-                        notif("Tidak Ada Data di Database!");      
+                        // notif("Tidak Ada Data di Database!");      
                         // playAudio('datakosong.mp3');
                     }
                 },
@@ -706,7 +705,7 @@
                     // notif(resultSet.rows.length);     
                     cell += '<option value="">Pilih Tenaga Panen</option>';
                     for (var x = 0; x < resultSet.rows.length; x++) {   
-                        cell += '<option panen_tpname="'+resultSet.rows.item(x)['panen_tpname']+'" value="'+resultSet.rows.item(x)['panen_tp']+'">'+resultSet.rows.item(x)['panen_tpname']+' ('+resultSet.rows.item(x)['panen_tpnik']+')</div>';
+                        cell += '<option panen_tpname="'+resultSet.rows.item(x)['panen_placement']+'" value="'+resultSet.rows.item(x)['panen_tp']+'">'+resultSet.rows.item(x)['panen_tpname']+' - '+resultSet.rows.item(x)['panen_tpname']+' ('+resultSet.rows.item(x)['panen_tpnik']+')</div>';
                         if(resultSet.rows.length == no){
                             $("#panen_tp").append(cell);
                         }

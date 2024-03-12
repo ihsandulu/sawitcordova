@@ -111,7 +111,8 @@
     <script>  
 
         //device ready  
-        document.addEventListener('deviceready', function () {
+        document.addEventListener('deviceready', function () {            
+            playAudio('selamatdatang.mp3');
             logout()
             db = window.sqlitePlugin.openDatabase({
                 name: 'my.db',

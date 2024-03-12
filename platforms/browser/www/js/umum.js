@@ -28,6 +28,46 @@ function notif(message) {
     );
 }
 
+//geolocation
+var onSuccessgeo = function (position) {
+    /* alert('Latitude: ' + position.coords.latitude + '\n' +
+        'Longitude: ' + position.coords.longitude + '\n' +
+        'Altitude: ' + position.coords.altitude + '\n' +
+        'Accuracy: ' + position.coords.accuracy + '\n' +
+        'Altitude Accuracy: ' + position.coords.altitudeAccuracy + '\n' +
+        'Heading: ' + position.coords.heading + '\n' +
+        'Speed: ' + position.coords.speed + '\n' +
+        'Timestamp: ' + position.timestamp + '\n'); */
+        localStorage.setItem('geo','');
+        let geo = position.coords.latitude+'|'+position.coords.longitude;
+        localStorage.setItem('geo',geo);
+};
+function onErrorgeo(error) {
+    notif('code: ' + error.code + '\n' +
+        'message: ' + error.message + '\n');
+}
+function geolocation() {
+    navigator.geolocation.getCurrentPosition(onSuccessgeo, onErrorgeo);
+}
+
+function playAudio(url) {
+    // notif('testaudio');
+    // Play the audio file at url
+    var my_media = new Media('file:///android_asset/www/files/'+url,
+        // success callback
+        function () {
+            // notif("playAudio():Audio Success");
+        },
+        // error callback
+        function (error) {
+            // notif("playAudio():Audio Error: " + error.message);
+        }
+    );
+    // Play audio
+    my_media.play();
+}
+// playAudio('berhasil.mp3');
+// playAudio('gagal.mp3');
 
 function notiftext(message) {
     let title = 'Aplikasi Perkebunan';
@@ -90,6 +130,7 @@ $(document).ready(function(){
     .done(function(data){
         $("#footer").html(data); 
     });
+    $('.select2').select2();
 });
 
 function now(){

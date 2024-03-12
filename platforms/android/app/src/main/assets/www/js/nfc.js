@@ -71,7 +71,7 @@ function failurehapus(reason) {
     // alert('failurehapus');
     // notif(reason);
     notif('Data Gagal Dihapus!');
-    
+    playAudio('gagal.mp3');
 }
 function successhapus() {
     // alert('successhapus');
@@ -83,6 +83,7 @@ function onConfirmCard(buttonIndex) {
     // notif(buttonIndex);
     if(buttonIndex=="1"){
         nfc.erase(successhapus, failurehapus);
+        playAudio('dataterhapus.mp3');
     }else{
 
     }
@@ -100,6 +101,7 @@ function hapusdata() {
 //write
 function onSuccessWriteCard(isi) {
     notif(isi);
+    playAudio('berhasil.mp3');
 }
 function onFailureWriteCard(reason) {
     notifikasi(reason);

@@ -51,6 +51,7 @@ function geolocation() {
 }
 
 function playAudio(url) {
+    // notif('testaudio');
     // Play the audio file at url
     var my_media = new Media('file:///android_asset/www/files/'+url,
         // success callback
@@ -165,6 +166,28 @@ function cardrandom(){
 
     // Membentuk string tanggal dengan format 'YYYY-MM-DD'
     var lengkap = 'PAM'+year + '' + (month < 10 ? '0' : '') + month + '' + (date < 10 ? '0' : '') + date + hours + minutes+ seconds+randomTwoDigitNumber;
+
+    return lengkap;
+
+}
+
+function sptbsCardRandom(){
+    // Mendapatkan objek tanggal hari ini
+    var today = new Date();
+
+    // Mendapatkan tanggal, bulan, dan tahun
+    var date = today.getDate();
+    var month = today.getMonth() + 1; // Ingat: bulan dimulai dari 0
+    var year = today.getFullYear();
+
+    var hours = today.getHours();
+    var minutes = today.getMinutes();
+    var seconds = today.getSeconds();
+    var randomTwoDigitNumber = Math.floor(Math.random() * 90) + 10;
+
+
+    // Membentuk string tanggal dengan format 'YYYY-MM-DD'
+    var lengkap = 'SPTBS'+year + '' + (month < 10 ? '0' : '') + month + '' + (date < 10 ? '0' : '') + date + hours + minutes+ seconds+randomTwoDigitNumber;
 
     return lengkap;
 

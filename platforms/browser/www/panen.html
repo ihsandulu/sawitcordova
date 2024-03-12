@@ -18,6 +18,7 @@
 
     <link rel="stylesheet" href="css/all.min.css"/>
     <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/select2.min.css"/>
     <link rel="stylesheet" href="css/umum.css">
 
 
@@ -57,7 +58,7 @@
                 </select>
             </div>          
             <div class="col-5 mb-4 text-left">Tenaga Panen</div><div class="col-7 text-left">
-                <select onchange="tp()" id="panen_tp" class="form-control">
+                <select onchange="tp()" id="panen_tp" class="form-control select2">
 
                 </select>
             </div>         
@@ -65,12 +66,26 @@
                 <input id="tph_thntanam" class="form-control">
             </div>           
             <div class="col-5 mb-4 text-left">Brondolan</div><div class="col-7 text-left">
-                <input onclick="handleCheckbox()" type="checkbox" id="panen_brondol" name="panen_brondol" value="1">
-                <label for="panen_brondol"> Ya</label>
+                <input onclick="handleCheckbox()" type="checkbox" id="panen_brondold" name="panen_brondold" value="1">
+                <label for="panen_brondold"> Ya</label>
             </div>      
             <div class="col-5 mb-4 text-left" id="jml">Jumlah</div><div class="col-7 text-left">
                 <input id="panen_jml" class="form-control">
             </div>
+               
+            <div class="col-12 text-left input-group">Geolocation</div>
+            <div class="input-group mb-4 ">
+                <input id="panen_geo" type="text" class="form-control" placeholder="" aria-label="Geolocation" aria-describedby="btn_geo">
+                <button onclick="geoPanen()" class="btn btn-outline-secondary" type="button" id="btn_geo"><i class="fas fa-cogs"></i></button>
+            </div>         
+            
+            <div class="col-12 text-left input-group">Picture</div>
+            <div class="input-group mb-4 ">
+                <input id="panen_picture" type="text" class="form-control text-biru" placeholder="" aria-label="Geolocation" aria-describedby="btn_picture">
+                <button onclick="picturePanen()" class="btn btn-outline-secondary" type="button" id="btn_picture"><i class="fas fa-camera"></i></button>
+                <img id="panenPicture" src="res/no_picture.png" class="img-thumbnail">
+            </div> 
+
             <button onclick="isikartu()" type="button" class="btn btn-primary">Isi Kartu</button>
             <input id="panen_date" type="hidden">
             <input id="user_id" type="hidden">
@@ -84,6 +99,7 @@
             <input id="blok_name" type="hidden">
             <input id="tph_name" type="hidden">
             <input id="panen_tpname" type="hidden">
+            <input id="panen_brondol" type="hidden" value="0">
         </div>
         <div class="">  
             <div class="row">  
@@ -101,12 +117,13 @@
     <script type="text/javascript" src="cordova.js"></script>  
     <script type="text/javascript" src="js/jquery.min.js"></script>    
     <script type="text/javascript" src="js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="js/select2.min.js"></script>
     <script type="text/javascript" src="js/umum.js"></script>
     <script type="text/javascript" src="js/data.js"></script>
     <script type="text/javascript" src="js/nfc.js"></script>
     <script>
         //device ready 
-        document.addEventListener('deviceready', function () {   
+        document.addEventListener('deviceready', function () { 
             localStorage.setItem('thntnm', '');          
             $("#datanfcjadi").val('');                
             $("#datanfcjadi").hide();
@@ -134,16 +151,50 @@
                 $("#seksi_name").val(seksiname);
             }                      
         }); 
+
+        //gambar 
+        function panenImg(imageURI) {
+            // let src =  "data:image/jpeg;base64," + imageURI;
+            // let src =  pathapps+'files/'+imageURI;
+            // let fileName = imageURI.substring(imageURI.lastIndexOf('/') + 1);
+            let src =  imageURI;            
+            $("#panenPicture").attr("src", src); 
+            $("#panen_picture").val(src);
+        }
+        function errorpanenImg(message) {
+            notif('Failed because: ' + message);
+        }
+        function picturePanen() {
+            navigator.camera.getPicture(panenImg, errorpanenImg, { quality: 50, destinationType: Camera.DestinationType.FILE_URI });
+        }
+
+        //geolocation
+        var panenGeo = function (position) {
+                let geolo = position.coords.latitude+'|'+position.coords.longitude;
+                $("#panen_geo").val(geolo);
+        };
+        function errorGeo(error) {
+            notif('code: ' + error.code + '\n' +
+                'message: ' + error.message + '\n');
+        }
+        function geoPanen() {
+            navigator.geolocation.getCurrentPosition(panenGeo, errorGeo);
+        }
+        
         function handleCheckbox() {
-            var checkbox = document.getElementById("panen_brondol");
+            var checkbox = document.getElementById("panen_brondold");
             let thntan = localStorage.getItem('thntnm');
+            let isi = 0;
             if (checkbox.checked) {
                 $('#tph_thntanam').val('');
                 $('#jml').text('Karung');
+                isi = 1;
             } else {
                 $('#tph_thntanam').val(thntan);
                 $('#jml').text('Jumlah');
+                isi = 0;
             }
+            $('#panen_brondol').val(isi);
         }
         function datanfcjadiPanen(nfcData) {
             var ndefMessage = nfcData.ndefMessage;
@@ -158,7 +209,8 @@
             var kalimatTanpaSpasi = resultString.replace(/\s/g, '');
             let panencard = cardrandom();
             if(kalimatTanpaSpasi!=""){
-                notif('Silahkan hapus data kartu terlebih dahulu!'); 
+                notif('Silahkan hapus data kartu terlebih dahulu!');                 
+                playAudio('kartuterisi.mp3');
                 var kalimatTanpaSpasi1 = kalimatTanpaSpasi.split(',');
                 var nilaiPanenCard='';
                 for (var i = 0; i < kalimatTanpaSpasi1.length; i++) {
@@ -172,10 +224,10 @@
                     $("#panen_card").val(nilaiPanenCard);
                 } else {
                     $("#panen_card").val(panencard);
-                }
-                var kalimatTanpaSpasi2 = kalimatTanpaSpasi1.map(function(attribute) {
-                    return attribute.trim(); // Hapus spasi tambahan jika ada
-                }).join(',\n');
+                }                   
+                
+                let kalimatTanpaSpasi2 = kalimatTanpaSpasi1.join('\n');
+                
                 $("#datanfcjadi").val(kalimatTanpaSpasi2);                
                 $("#datanfcjadi").show();
                 setTimeout(function(){
@@ -185,7 +237,8 @@
                 $("#panen_card").val(panencard);
                 $("#datanfcjadi").val('');                
                 $("#datanfcjadi").hide();
-                notif('Kartu Telah Kosong.'); 
+                notif('Kartu Telah Kosong.');               
+                playAudio('kartukosong.mp3');
             }
             // notif(resultString);
         }
@@ -201,11 +254,12 @@
                 datanfcjadiPanen(nfcEvent.tag);
                 navigator.notification.vibrate(100);
             }else{
-                notif('Kartu Tidak Terbaca!');
+                notif('Kartu Tidak Terbaca!');             
+                playAudio('kartutakterbaca.mp3');
             }
         }
         function cekkartupanen() {
-            nfc.addNdefListener(onNdefcekpanen, notifbacakartu("Tempelkan Kartu!"), onFailurebacakartu);
+            nfc.addNdefListener(onNdefcekpanen, playAudio("tempelkankartu.mp3"), onFailurebacakartu);
         }
 
         function isikartu(){
@@ -229,6 +283,8 @@
             let panen_jml = $("#panen_jml").val();
             let panen_tp = $("#panen_tp").val();
             let panen_brondol = $("#panen_brondol").val();
+            let panen_geo = $("#panen_geo").val();
+            let panen_picture = $("#panen_picture").val();
 
             /* let masterarray = [
                 'panen_card',
@@ -288,7 +344,9 @@
                 ',panen_jml='+panen_jml+
                 ',panen_tp='+panen_tp+
                 ',panen_tpname='+panen_tpname+
-                ',panen_brondol='+panen_brondol;
+                ',panen_brondol='+panen_brondol+
+                ',panen_geo='+panen_geo+
+                ',panen_picture='+panen_picture;
             deletepanenwherecard('panen',panen_card);
             // addItemPanen('panen', masterarray, isiarray);
             inputOrUpdateData('panen', data);
@@ -296,6 +354,7 @@
         }
 
         function inputOrUpdateData(table, data) {
+            // notiftext(data);
             db.transaction(function (tx) {
                 var dataArray = data.split(',');
                 var columns = [];
@@ -311,7 +370,7 @@
                         if(pair[0] == 'panen_card'){
                             panenCardToCheck=isi;   
                             // notif(isi);    
-                        }
+                        }    
                     }
                 });
 
@@ -325,26 +384,32 @@
                         // Jika panen_card sudah ada, lakukan UPDATE
                         var updateQuery = "UPDATE " + table + " SET " + columns.join('=?, ') + "=? WHERE panen_card = '" + panenCardToCheck + "'";
                         tx.executeSql(updateQuery, values, function (tx, res) {
-                            ambildata('panen','terakhir','isikartu');
+                            ambildata('panen','terakhir','isikartu');  
                         }, function (tx, error) {
-                            notif('Kesalahan UPDATE: ' + error.message);
+                            notif('Kesalahan UPDATE: ' + error.message);            
+                            playAudio('gagal.mp3');
                         });
                     } else {
                         // Jika panen_card belum ada, lakukan INSERT
                         var insertQuery = "INSERT INTO " + table + " (" + columns.join(',') + ") VALUES (" + values.join(',') + ")";
+
                         tx.executeSql(insertQuery, [], function (tx, res) {
                             insertID = res.insertId;
-                            ambildata('panen','terakhir','isikartu');
+                            ambildata('panen','terakhir','isikartu');   
                         }, function (tx, error) {
-                            notif('Kesalahan INSERT: ' + error.message);
+                            notif('Kesalahan INSERT: ' + error.message);      
+                            playAudio('gagal.mp3');
                         });
                     }
                 }, function (tx, error) {
-                    notif('Kesalahan transaksi: ' + error.message);
+                    notif('Kesalahan transaksi: ' + error.message);      
+                    playAudio('gagal.mp3');
                 });
             }, function (error) {
-                notif('Transaction Error: ' + error.message);
+                notif('Transaction Error: ' + error.message);      
+                playAudio('gagal.mp3');
             }, function () {
+                // playAudio('berhasil.mp3');
                 // notif('Data Telah Terhapus!');
             });
         }
@@ -386,12 +451,14 @@
                 // ambildata(table,'semua','');
             },
             function (tx, error) {
-                notif('DELETE error: ' + error.message);
+                notif('DELETE error: ' + error.message);      
+                playAudio('gagal.mp3');
             });
             }, function (error) {
-            notif('transaction error: ' + error.message);
+                notif('transaction error: ' + error.message);      
+                playAudio('gagal.mp3');
             }, function () {
-            // notif('Data Telah Terhapus!');
+                // notif('Data Telah Terhapus!');
             });
         }
 
@@ -404,12 +471,15 @@
                 ambildata(table,'semua','');
             },
             function (tx, error) {
-                notif('DELETE error: ' + error.message);
+                notif('DELETE error: ' + error.message);                      
+                playAudio('gagal.mp3');
             });
             }, function (error) {
-            notif('transaction error: ' + error.message);
+                notif('transaction error: ' + error.message);      
+                playAudio('gagal.mp3');
             }, function () {
-            notif('Data Telah Terhapus!');
+                notif('Data Telah Terhapus!'); 
+                playAudio('dataterhapus.mp3');   
             });
         }
 
@@ -464,32 +534,50 @@
                         }else{
                             cell += '<div class="col-5 text-left">Jumlah</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['panen_jml']+'</div>'; 
                         }  
+                        cell += '<div class="col-5 text-left">Geolocation</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['panen_geo']+'</div>';
+                        let srcpic='';
+                        if(resultSet.rows.item(x)['panen_picture']==""){
+                            srcpic='res/no_picture.png';
+                        }else{
+                            srcpic=resultSet.rows.item(x)['panen_picture'];
+                        }
+                        cell += '<div class="col-5 text-left">Picture</div><div class="col-7 text-left">: &nbsp;&nbsp;<img src="'+srcpic+'" class="img-thumbnail"></div>';
 
                         cell += '<div onclick="confirmdeletetph(\'Yakin di Delete?\',\'Delete Data Panen\',\'panen\','+resultSet.rows.item(x)['panen_id']+')" class="col-12  mt-5 mb-5 text-danger"> >>> &nbsp;&nbsp;<button class="btn btn-danger btn-block"><i class="fas fa-window-close"></i> Delete</button>&nbsp;&nbsp; <<< </div>';             
 
                         cell +='</div>';
                         if(resultSet.rows.length == no){
                             $("#"+table).append(cell);   
-                            //hapus kartu
-                            // nfc.erase(successhapuskartupanen, failurehapuskartupanen);                         
-                            //membuat json
-                            var isidata = [];
-                            for (var i = 0; i < resultSet.rows.length; i++) {
-                                var row = resultSet.rows.item(i);
-                                isidata.push(row);
-                            }
-                            var textString = isidata.map(function(row) {
-                                return Object.entries(row).map(function([key, value]) {
-                                    return key + '=' + value;
-                                }).join(', ');
-                            }).join('\n');
-                            // notif(textString);
                             
                             if(perintahkartu=='isikartu'){
+                                //hapus kartu
+                                // nfc.erase(successhapuskartupanen, failurehapuskartupanen);                         
+                                //membuat json
+                                var isidata = [];
+                                for (var i = 0; i < resultSet.rows.length; i++) {
+                                    var row = resultSet.rows.item(i);
+                                    isidata.push(row);
+                                }
+                                var textString = isidata.map(function(row) {
+                                    return Object.entries(row).map(function([key, value]) {
+                                        if (typeof value === 'string' || value instanceof String) {
+                                            value = value.replace(/\b\s+\b/g, "_");
+                                        }
+                                        return key + '=' + value;
+                                    }).join(',');
+                                });
+                                // notif(textString);
+                            
                                 var message = [
                                     ndef.textRecord(textString)
                                 ];
-                                nfc.write(message, ()=>{notif('Penyimpanan Berhasil!');$("#judulpanen").text("Data Terekam di HP dan Kartu");}, ()=>{});
+                                nfc.write(message, ()=>{
+                                    notif('Penyimpanan Berhasil!');
+                                    $("#judulpanen").text("Data Terekam di HP dan Kartu");
+                                    playAudio('berhasil.mp3');
+                                }, ()=>{                                                                 
+                                    playAudio('datadirekam.mp3');
+                                });
                             }
                             
                         }
@@ -497,15 +585,18 @@
                         
                     }
                     if (x < 1) {
-                        notif("Tidak Ada Data di Database!");
+                        // notif("Tidak Ada Data di Database!");      
+                        // playAudio('datakosong.mp3');
                     }
                 },
                 function (tx, error) {
-                    notif('SELECT error: ' + error.message);
+                    notif('SELECT error: ' + error.message);    
+                    playAudio('gagal.mp3');
                 });
                 
             }, function (error) {
-                notif('transaction error: ' + error.message);
+                notif('transaction error: ' + error.message);   
+                playAudio('gagal.mp3');
             }, function () {
                 // notif('transaction ok');
             });
@@ -513,8 +604,8 @@
         function failurehapuskartupanen(reason) {
             // alert('failurehapus');
             // notif(reason);
-            notif('Data Gagal Dihapus!');
-            
+            notif('Data Gagal Dihapus!');   
+            playAudio('gagal.mp3');            
         }
         function successhapuskartupanen() {
             // alert('successhapus');
@@ -545,11 +636,13 @@
                     }
                 },
                 function (tx, error) {
-                    notif('SELECT error: ' + error.message);
+                    notif('SELECT error: ' + error.message);   
+                    playAudio('gagal.mp3');
                 });
                 
             }, function (error) {
-                notif('transaction error: ' + error.message);
+                notif('transaction error: ' + error.message);   
+                playAudio('gagal.mp3');
             }, function () {
                 // notif('transaction ok');
             });
@@ -582,11 +675,13 @@
                     }
                 },
                 function (tx, error) {
-                    notif('SELECT error: ' + error.message);
+                    notif('SELECT error: ' + error.message);   
+                    playAudio('gagal.mp3');
                 });
                 
             }, function (error) {
-                notif('transaction error: ' + error.message);
+                notif('transaction error: ' + error.message);   
+                playAudio('gagal.mp3');
             }, function () {
                 // notif('transaction ok');
             });
@@ -601,7 +696,7 @@
         
         function tpname(){            
             db.transaction(function (tx) {
-                var query = "SELECT * FROM tp WHERE divisi_id='"+divisiid+"'";
+                var query = "SELECT * FROM tp WHERE divisi_id='"+divisiid+"' ORDER BY panen_tpname ASC";
                 // notif(query);
                 $("#panen_tp").html('');
                 var cell ='';
@@ -610,7 +705,7 @@
                     // notif(resultSet.rows.length);     
                     cell += '<option value="">Pilih Tenaga Panen</option>';
                     for (var x = 0; x < resultSet.rows.length; x++) {   
-                        cell += '<option panen_tpname="'+resultSet.rows.item(x)['panen_tpname']+'" value="'+resultSet.rows.item(x)['panen_tp']+'">'+resultSet.rows.item(x)['panen_tpname']+'</div>';
+                        cell += '<option panen_tpname="'+resultSet.rows.item(x)['panen_tpname']+'" value="'+resultSet.rows.item(x)['panen_tp']+'">'+resultSet.rows.item(x)['panen_tpname']+' ('+resultSet.rows.item(x)['panen_tpnik']+')</div>';
                         if(resultSet.rows.length == no){
                             $("#panen_tp").append(cell);
                         }
@@ -622,11 +717,13 @@
                     }
                 },
                 function (tx, error) {
-                    notif('SELECT error: ' + error.message);
+                    notif('SELECT error: ' + error.message);   
+                    playAudio('gagal.mp3');
                 });
                 
             }, function (error) {
-                notif('transaction error: ' + error.message);
+                notif('transaction error: ' + error.message);   
+                playAudio('gagal.mp3');
             }, function () {
                 // notif('transaction ok');
             });

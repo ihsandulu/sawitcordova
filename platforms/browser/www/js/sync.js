@@ -31,6 +31,7 @@ function onConfirmSync(buttonIndex) {
     // notif(buttonIndex);
     if(buttonIndex=="1"){
         syncronizing();
+        playAudio('singkronisasi.mp3');
     }else{
 
     }
@@ -57,11 +58,12 @@ function syncronizing(){
         deleteTable('tph');
         deleteTable('tp');
         deleteTable('panen');
-        deleteTable('sptbh');
+        deleteTable('sptbs');
         deleteTable('vendor');
         deleteTable('material');
         deleteTable('driver');
         deleteTable('kecamatan');
+        deleteTable('truk');
 
         db.transaction((tx) => {
             /* tx.executeSql('DROP TABLE IF EXISTS user', [], function(tx, result) {
@@ -143,7 +145,9 @@ function syncronizing(){
                 'sptbs_card TEXT,' +
                 'panen_tp INTEGER,' +
                 'panen_tpname TEXT,' +
-                'panen_brondol INTEGER' +
+                'panen_brondol INTEGER,' +
+                'panen_geo TEXT,' +
+                'panen_picture TEXT' +
             ')');
             tx.executeSql('CREATE TABLE IF NOT EXISTS sptbs (' +
                 'sptbs_id INTEGER PRIMARY KEY AUTOINCREMENT,' +
@@ -159,7 +163,8 @@ function syncronizing(){
                 'sptbs_createdname TEXT,' +
                 'sptbs_drivername TEXT,' +
                 'estate_name TEXT,' +
-                'divisi_name TEXT' +
+                'divisi_name TEXT,' +
+                'sptbs_plat TEXT' +
             ')'); 
             tx.executeSql('CREATE TABLE IF NOT EXISTS tp (' +
                 'tp_id INTEGER PRIMARY KEY AUTOINCREMENT,' +
@@ -184,6 +189,9 @@ function syncronizing(){
             tx.executeSql('CREATE TABLE IF NOT EXISTS kecamatan (' +
                 'kecamatan_id INTEGER PRIMARY KEY AUTOINCREMENT,' +
                 'kecamatan_name TEXT' +
+            ')');         
+            tx.executeSql('CREATE TABLE IF NOT EXISTS truk (' +
+                'no_polisi TEXT PRIMARY KEY' +
             ')');   
             // notif('Create Table user Sukses');
         },
@@ -274,6 +282,10 @@ function syncronizing(){
                 'kecamatan_name'
             ];
             dataserver('datakecamatan', 'kecamatan', masterarray9);
+            let masterarray10 = [
+                'no_polisi'
+            ];
+            dataserver('datatrukpenerimaan', 'truk', masterarray10);
         });                  
     }else{
         syncfinished();
@@ -287,6 +299,9 @@ function syncstarted(){
 }
 function syncfinished(){
     $("#singkron").removeClass("progress-bar-animated");
+    if($("#btn-singkron").attr("status")!=""){         
+        playAudio('singkronselesai.mp3');
+    }
     $("#btn-singkron").attr("status","");
-    $("#singkron").text("Sync?");
+    $("#singkron").text("Sync?");  
 }
