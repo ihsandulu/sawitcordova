@@ -64,6 +64,7 @@ function syncronizing(){
         deleteTable('driver');
         deleteTable('kecamatan');
         deleteTable('truk');
+        deleteTable('pruning');
 
         db.transaction((tx) => {
             /* tx.executeSql('DROP TABLE IF EXISTS user', [], function(tx, result) {
@@ -194,8 +195,27 @@ function syncronizing(){
             ')');         
             tx.executeSql('CREATE TABLE IF NOT EXISTS truk (' +
                 'no_polisi TEXT PRIMARY KEY' +
-            ')');   
+            ')');  
+            tx.executeSql('CREATE TABLE IF NOT EXISTS pruning (' +
+                'pruning_id INTEGER PRIMARY KEY AUTOINCREMENT,' +
+                'pruning_baris TEXT,' +
+                'pruning_tp INTEGER,' +
+                'pruning_pokok INTEGER,' +
+                'pruning_pelepah INTEGER,' +
+                'pruning_picture TEXT,' +
+                'pruning_mandor INTEGER,' +
+                'pruning_date DATE,' +
+                'estate_id INTEGER,' +
+                'divisi_id INTEGER,' +
+                'estate_name TEXT,' +
+                'divisi_name TEXT,' +
+                'pruning_tpname TEXT,' +
+                'pruning_mandorname TEXT,' +
+                'blok_id INTEGER,' +
+                'blok_name TEXT' +
+            ')');  
             // notif('Create Table user Sukses');
+            
         },
         (error) => {
             notif('Create Table: '+error.message);
