@@ -18,6 +18,7 @@
 
     <link rel="stylesheet" href="css/all.min.css"/>
     <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/select2.min.css"/>
     <link rel="stylesheet" href="css/umum.css">
 
 
@@ -57,8 +58,10 @@
                     <button onclick="tutupproses();" class="btn btn-danger btn-lg text-white">Tutup Proses</button>
                 </div>               
             </div>                    
-            <div class="col-5 mb-4 text-left">SPTBS Card</div><div class="col-7 text-left">
-                <input readonly id="sptbs_card" class="form-control">
+            <div class="col-5 mb-4 text-left">SPTBS Card</div><div class="col-7 text-left">                
+                <select onchange="cekkartuInput()" id="sptbs_card" class="form-control select2">
+
+                </select>
             </div>          
             <div class="col-6 mb-4 d-grid gap-2">
                 <button onclick="buahdalam();" class="btn btn-info text-white">Buah Dalam</button>
@@ -126,6 +129,7 @@
     <script type="text/javascript" src="cordova.js"></script>  
     <script type="text/javascript" src="js/jquery.min.js"></script>    
     <script type="text/javascript" src="js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="js/select2.min.js"></script>
     <script type="text/javascript" src="js/umum.js"></script>
     <script type="text/javascript" src="js/data.js"></script>
     <script type="text/javascript" src="js/nfc.js"></script>
@@ -150,7 +154,8 @@
                 material();           
                 kecamatan();           
                 driver();              
-                plat();          
+                plat();     
+                sptbsnumber();     
                 $("#sptbs_date").val(now());
                 $("#sptbs_createdby").val(userid);
                 $("#estate_id").val(estateid);
@@ -160,6 +165,51 @@
                 $("#divisi_name").val(divisiname);
             }                      
         }); 
+
+        function sptbsnumber() {
+            db.transaction(function (tx) {
+                var query = "SELECT * FROM sptbsnumber";
+                // notif(query);
+                $("#sptbs_card").html('');
+                var cell ='';
+                tx.executeSql(query, [], function (tx, resultSet) {
+                    let no=1;
+                    // notif(resultSet.rows.length);     
+                    cell += '<option value="">Pilih Penomoran</option>';
+                    for (var x = 0; x < resultSet.rows.length; x++) {   
+                        cell += '<option value="'+resultSet.rows.item(x)['sptbsnumber_card']+'">'+resultSet.rows.item(x)['sptbsnumber_card']+'</div>';
+                        if(resultSet.rows.length == no){
+                            $("#sptbs_card").append(cell);
+                        }
+                        no++;
+                        
+                    }
+                    if (x < 1) {
+                        // notif("Tidak ada data!");
+                    }
+                },
+                function (tx, error) {
+                    notif('SELECT error: ' + error.message);   
+                    playAudio('gagal.mp3');
+                });
+                
+            }, function (error) {
+                notif('transaction error: ' + error.message);   
+                playAudio('gagal.mp3');
+            }, function () {
+                // notif('transaction ok');
+            });
+        }
+
+
+        function cekkartuInput(){
+            let panen_card = $("#panen_card").val();
+            if(panen_card!=""){
+                $("#btnisikartu").show();
+            }else{
+                $("#btnisikartu").hide();
+            }
+        }
 
         function kosongkanfield(){
             $("#sptbs_card").val('');
@@ -351,7 +401,12 @@
                             sesi2 = sesi1[x].split('=');
                             // notif(sesi2[0]+'='+sesi2[1]);
                             // $('#'+sesi2[0]).val(sesi2[1]);
-                            if(sesi2[0]=='sptbs_card'){$("#sptbs_card").val(sesi2[1]);}
+                            if(sesi2[0]=='sptbs_card'){   
+                                // notif(sesi2[1]);                             
+                                $('#sptbs_card').select2('destroy');
+                                $("#sptbs_card").val(sesi2[1]);
+                                $('#sptbs_card').select2();
+                            }
                             if(sesi2[0]=='sptbs_vendor'){
                                 $("#sptbs_vendor").val(sesi2[1]);
                                 if(sesi2[1]!=""){buahluar();}else{buahdalam();}
@@ -379,16 +434,22 @@
                         notif('Data Kartu SPTBS akan ditimpa ulang!'); 
                         playAudio('kartuterisi.mp3');
                         ambildata('panen','semua','');
-                    }else{
+                    }else{  
                         for(let x=0; x<sesi1.length;x++){
                             sesi2 = sesi1[x].split('=');
-                            if(sesi2[0]=='sptbs_card'){$("#sptbs_card").val(sesi2[1]);}
+                            if(sesi2[0]=="\u0002sptbs_card"){                
+                                $('#sptbs_card').select2('destroy');
+                                $("#sptbs_card").val(sesi2[1]);
+                                $('#sptbs_card').select2();
+                            }
                         }
                         notif('Kartu SPTBS Siap Diisi!');
                     }                    
                 }else if(adaPanenCard) {
                     confirminputpanen('Record Data dari Kartu?','Data Panen','panen',kalimatTanpaSpasi);
                 } else {
+                    $("#sptbs_card").val("");
+                    notif("Kartu Tidak Dikenal!");
                 }
                 $("#datanfcjadi").val(kalimatTanpaSpasi2);                
                 $("#datanfcjadi").show();
@@ -403,9 +464,9 @@
                 $("#datanfcjadi").hide();
                 notif('Tidak Ada Data!');
                 playAudio('kartukosong.mp3'); 
-                let sptbsCardR = sptbsCardRandom();
-                // notif(sptbsCardR);
-                $("#sptbs_card").val(sptbsCardR);
+                // let sptbsCardR = sptbsCardRandom();
+                // // notif(sptbsCardR);
+                // $("#sptbs_card").val(sptbsCardR);
                 let ceksptbscard = $("#sptbs_card").val();
                 if(ceksptbscard!=""){showisikartu();}else{hideisikartu();}
             }

@@ -21,6 +21,9 @@ body {
 .text-biru{color:#5cdcffd2;}
 .text-ungu{color:#f7a4ffd2;}
 .text-merah{color:#ffa4a4d2;}
+.text-putih{color:#ffffffd2;}
+.text-hitam{color:#000000d2;}
+.text-merahhitam{color:#ad0000d2;}
 
 .footer {
     position: fixed;
@@ -81,3 +84,5 @@ marquee{padding: 2px; background-color: rgba(255, 255, 255, 0.8); font-size: 15p
 	-webkit-animation-timing-function:ease-in-out;
 	-webkit-animation-direction: alternate;
 }
+
+.nav-link{text-align: center;}

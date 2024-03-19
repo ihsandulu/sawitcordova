@@ -165,7 +165,7 @@ function cardrandom(){
 
 
     // Membentuk string tanggal dengan format 'YYYY-MM-DD'
-    var lengkap = 'PAM'+year + '' + (month < 10 ? '0' : '') + month + '' + (date < 10 ? '0' : '') + date + hours + minutes+ seconds+randomTwoDigitNumber;
+    var lengkap = 'TP'+year + '' + (month < 10 ? '0' : '') + month + '' + (date < 10 ? '0' : '') + date + hours + minutes+ seconds+randomTwoDigitNumber;
 
     return lengkap;
 

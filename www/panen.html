@@ -45,7 +45,10 @@
         <div class="row p-3 ballon">                        
             <H1 class="col-12 alert alert-success">Data Panen</H1>        
             <div class="col-5 mb-4 text-left">Panen Card</div><div class="col-7 text-left">
-                <input readonly id="panen_card" class="form-control">
+                <!-- <input readonly id="panen_card" class="form-control"> -->
+                <select onchange="cekkartuInput()" id="panen_card" class="form-control select2">
+
+                </select>
             </div>         
             <div class="col-5 mb-4 text-left">Blok</div><div class="col-7 text-left">
                 <select onchange="tph()" id="blok_id" class="form-control">
@@ -137,10 +140,55 @@
             if(username==null){
                 window.location.href='login.html';
             }else{
+                tphnumber();
                 $(".username").text(username); 
                 clearData();
             }                      
         }); 
+
+        function cekkartuInput(){
+            let panen_card = $("#panen_card").val();
+            if(panen_card!=""){
+                $("#btnisikartu").show();
+            }else{
+                $("#btnisikartu").hide();
+            }
+        }
+
+        function tphnumber() {
+            db.transaction(function (tx) {
+                var query = "SELECT * FROM tphnumber";
+                // notif(query);
+                $("#panen_card").html('');
+                var cell ='';
+                tx.executeSql(query, [], function (tx, resultSet) {
+                    let no=1;
+                    // notif(resultSet.rows.length);     
+                    cell += '<option value="">Pilih Penomoran</option>';
+                    for (var x = 0; x < resultSet.rows.length; x++) {   
+                        cell += '<option value="'+resultSet.rows.item(x)['tphnumber_card']+'">'+resultSet.rows.item(x)['tphnumber_card']+'</div>';
+                        if(resultSet.rows.length == no){
+                            $("#panen_card").append(cell);
+                        }
+                        no++;
+                        
+                    }
+                    if (x < 1) {
+                        // notif("Tidak ada data!");
+                    }
+                },
+                function (tx, error) {
+                    notif('SELECT error: ' + error.message);   
+                    playAudio('gagal.mp3');
+                });
+                
+            }, function (error) {
+                notif('transaction error: ' + error.message);   
+                playAudio('gagal.mp3');
+            }, function () {
+                // notif('transaction ok');
+            });
+        }
 
         function clearData(){
             $("#panen_card").val('');
@@ -233,7 +281,7 @@
             }
             resultString = resultString.replace("en", "");
             var kalimatTanpaSpasi = resultString.replace(/\s/g, '');
-            let panencard = cardrandom();
+            // let panencard = cardrandom();
             if(kalimatTanpaSpasi!=""){
                 notif('Silahkan hapus data kartu terlebih dahulu!');     
                 ambildata('panen','semua','');            
@@ -246,11 +294,14 @@
                         break;
                     }
                 }
-                var tigaDigitPertama = nilaiPanenCard.substring(0, 3);
-                if (tigaDigitPertama==="PAM") {
+                var duaDigitPertama = nilaiPanenCard.substring(0, 2);
+                if (duaDigitPertama==="TP") {                    
+                    $('#panen_card').select2('destroy');
                     $("#panen_card").val(nilaiPanenCard);
+                    $('#panen_card').select2();
+                    // notif(nilaiPanenCard);
                 } else {
-                    $("#panen_card").val(panencard);
+                    // $("#panen_card").val(panencard);
                 }                   
                 
                 let kalimatTanpaSpasi2 = kalimatTanpaSpasi1.join('\n');
@@ -261,7 +312,7 @@
                     $("#datanfcjadi").hide();
                 },60000);
             }else{
-                $("#panen_card").val(panencard);
+                // $("#panen_card").val(panencard);
                 $("#datanfcjadi").val('');                
                 $("#datanfcjadi").hide();
                 notif('Kartu Telah Kosong.');               
@@ -568,7 +619,7 @@
                                         return key + '=' + value;
                                     }).join(',');
                                 });
-                                // notif(textString);
+                                notif(textString);
                             
                                 var message = [
                                     ndef.textRecord(textString)

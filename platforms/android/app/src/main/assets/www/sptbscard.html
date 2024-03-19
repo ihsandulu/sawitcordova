@@ -1,0 +1,254 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;"> -->
+    <meta http-equiv="Content-Security-Policy" content="default-src * data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src * 'unsafe-inline'; media-src *; img-src * data: content:; script-src * 'unsafe-eval' 'unsafe-inline';">
+    
+
+
+
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
+    <meta name="color-scheme" content="light dark">
+
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> -->
+
+    <link rel="stylesheet" href="css/all.min.css"/>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/select2.min.css"/>
+    <link rel="stylesheet" href="css/umum.css">
+
+
+    <title>PT. PAM</title>
+    <style>   
+        #datanfcjadi{
+            height: 300px !important; 
+            width: 300px; 
+            position: relative;
+            left: 50%;
+            top:0px;
+            transform: translate(-50%,0);
+        } 
+        .bold{font-weight: bold;}
+    </style>
+    <script>
+    </script>
+</head>
+
+<body>    
+    <div id="header">
+        
+    </div>
+    <div id="frame1" class="text-center " > 
+        <div class="row p-3 ballon">                        
+            <H1 class="col-12 alert alert-success">SET SPTBS CARD</H1>            
+            <div class="col-12 mb-4 text-left">Pilih Nomor Kartu</div>
+            <div class="col-12 mb-4 text-left">
+                <select id="sptbsnumber_card" class="form-control select2">
+
+                </select>
+            </div>  
+
+            <button onclick="submit()" type="button" class="btn btn-primary">Submit</button>
+        </div>
+        <h3 class="col-12 mt-5 bold">  
+            Isi Kartu : 
+        </h3>
+        <div id="datanfcjadi" class="col-12"></div>
+    </div>
+
+
+    <div id="footer"></div>
+    <script type="text/javascript" src="cordova.js"></script>  
+    <script type="text/javascript" src="js/jquery.min.js"></script>   
+    <script type="text/javascript" src="js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="js/select2.min.js"></script>
+    <script type="text/javascript" src="js/umum.js"></script>
+    <script type="text/javascript" src="js/data.js"></script>
+    <script type="text/javascript" src="js/nfc.js"></script>
+    
+    <script>
+        //device ready 
+        document.addEventListener('deviceready', function () { 
+            // notif(username);
+            if(username==null){
+                window.location.href='login.html';
+            }else{
+                $(".username").text(username); 
+                sptbsnumber();
+                cekkartusptbs();
+            }                      
+        }); 
+
+        function cekkartusptbs() {
+            nfc.addNdefListener(onNdefceksptbs, ()=>{}, onFailurebacakartu);
+        }
+
+        function onNdefceksptbs(nfcEvent) {
+            // notif(JSON.stringify(nfcEvent.tag));
+            
+            var tag = nfcEvent.tag;
+            ndefMessage = nfcEvent.tag.ndefMessage;
+                                         
+            tag.isWritable = !tag.isLocked;
+            tag.canMakeReadOnly = tag.isLockable;
+            if(ndefMessage.length>0){ 
+                datanfcjadisptbs(nfcEvent.tag);
+                navigator.notification.vibrate(100);
+            }else{
+                notif('Kartu Tidak Terbaca!');             
+                playAudio('kartutakterbaca.mp3');
+                setTimeout(function(){playAudio("tempelkankartu.mp3")},2000);
+            }
+        }
+
+        function datanfcjadisptbs(nfcData) {
+            var ndefMessage = nfcData.ndefMessage;
+            var resultString = "";
+            for (var i = 0; i < ndefMessage.length; i++) {
+                var payload = ndefMessage[i].payload;
+                var payloadString = String.fromCharCode.apply(null, payload);
+                // notif(payloadString);                
+                resultString += payloadString + "\n";
+            }
+            resultString = resultString.replace("en", "");
+            var kalimatTanpaSpasi = resultString.replace(/\s/g, '');
+            if(kalimatTanpaSpasi!=""){
+                // notif('Silahkan hapus data kartu terlebih dahulu!');     
+                playAudio('kartuterisi.mp3');
+                var kalimatTanpaSpasi1 = kalimatTanpaSpasi.split(',');
+                var nilaisptbsCard='';
+                for (var i = 0; i < kalimatTanpaSpasi1.length; i++) {
+                    if (kalimatTanpaSpasi1[i].includes("sptbs_card")) {
+                        nilaisptbsCard = kalimatTanpaSpasi1[i].split('=')[1].trim();
+                        break;
+                    }
+                }
+                var duaDigitPertama = nilaisptbsCard.substring(0, 5);
+                if (duaDigitPertama==="SPTBS") {
+                    $("#datanfcjadi").text(nilaisptbsCard);
+                    $('#sptbsnumber_card').select2('destroy');
+                    $("#sptbsnumber_card").val(nilaisptbsCard);
+                    $('#sptbsnumber_card').select2();
+                } else {
+                    notif('Bukan SPTBS Card!');
+                }                   
+                
+                
+                /* setTimeout(function(){
+                    $("#datanfcjadi").text("");  
+                },3000); */
+            }else{
+                $("#sptbs_card").val(sptbscard);
+                $("#datanfcjadi").val('');
+                notif('Kartu Telah Kosong.');               
+                playAudio('kartukosong.mp3');
+            }
+            $("#btnisikartu").show();
+            ambildata(table,'semua','');
+            // notif(resultString);
+        }
+        
+        function clearField(){
+            $("#sptbsnumber_card").val("");       
+        }
+        
+        function submit(){
+            confirmUpdateCard('Update Kartu?','Konfirmasi');
+        }
+        function updatedataCard(){
+            let sptbsnumber_card = $("#sptbsnumber_card").val(); 
+            let data = 'sptbs_card='+sptbsnumber_card+
+                ',sptbs_date='+
+                ',sptbs_vendor='+
+                ',sptbs_material='+
+                ',sptbs_kecamatan='+
+                ',sptbs_plat='+
+                ',sptbs_driver='+
+                ',sptbs_createdby='+
+                ',estate_id='+
+                ',divisi_id='+
+                ',sptbs_createdname='+
+                ',sptbs_drivername='+
+                ',estate_name='+
+                ',divisi_name=';
+
+            var isidata = [];
+            isidata.push(data);
+
+            var message = [
+                ndef.textRecord(isidata)
+            ];
+            nfc.write(message, ()=>{
+                notif('Penyimpanan Berhasil!');
+                $("#judulsptbs").text("Data Terekam di HP dan Kartu");
+                playAudio('berhasil.mp3');
+                clearData();
+            }, ()=>{                                                                 
+                playAudio('datadirekam.mp3');
+                notif('Data Hanya Terekam di HP! Perbaiki Posisi Kartu sptbs!');
+            });                                 
+    
+            $("#datanfcjadi").val(''); 
+        }
+        function onConfirmUpdate(pilihannya) {
+            if(pilihannya=='1'){
+                updatedataCard();
+            }else{
+                // alert('You selected button ' + jenis);
+            }
+        }
+
+        function confirmUpdateCard(message,title) {
+            let arraynya = ['Update','Cancel'];
+            navigator.notification.confirm(
+                message, // message
+                (buttonIndex) => onConfirmUpdate(buttonIndex),            
+                title,           // title
+                arraynya     // buttonLabels
+            );
+        }
+        
+        function sptbsnumber() {
+            db.transaction(function (tx) {
+                var query = "SELECT * FROM sptbsnumber";
+                // notif(query);
+                $("#sptbsnumber_card").html('');
+                var cell ='';
+                tx.executeSql(query, [], function (tx, resultSet) {
+                    let no=1;
+                    // notif(resultSet.rows.length);     
+                    cell += '<option value="">Pilih Penomoran</option>';
+                    for (var x = 0; x < resultSet.rows.length; x++) {   
+                        cell += '<option value="'+resultSet.rows.item(x)['sptbsnumber_card']+'">'+resultSet.rows.item(x)['sptbsnumber_card']+'</div>';
+                        if(resultSet.rows.length == no){
+                            $("#sptbsnumber_card").append(cell);
+                        }
+                        no++;
+                        
+                    }
+                    if (x < 1) {
+                        // notif("Tidak ada data!");
+                    }
+                },
+                function (tx, error) {
+                    notif('SELECT error: ' + error.message);   
+                    playAudio('gagal.mp3');
+                });
+                
+            }, function (error) {
+                notif('transaction error: ' + error.message);   
+                playAudio('gagal.mp3');
+            }, function () {
+                // notif('transaction ok');
+            });
+        }
+        
+        
+    </script>
+</body>
+
+</html>

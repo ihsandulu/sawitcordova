@@ -26,6 +26,9 @@
 
 
     <title>PT. PAM</title>
+    <style>
+        #mentahan{height: 200px;}
+    </style>
 </head>
 
 <body>
@@ -44,6 +47,8 @@
     <div class="mt-4 p-5 bg-secondary text-white rounded">
         <h1>Data Kartu</h1>
         <div id="isimanusia">
+        </div>
+        <div id="idkartu">
         </div>
     </div>
     <button type="button" onclick="bacakartu()" class="btn btn-success mt-3">Baca Kartu</button>
@@ -106,6 +111,7 @@
 
         function clearScreen() {
             $("#isimanusia").html("");
+            $("#idkartu").html("");
         }
         function onNdef(nfcEvent) {
             // notif(JSON.stringify(nfcEvent.tag));
@@ -113,13 +119,17 @@
             var tag = nfcEvent.tag;
             // BB7 has different names, copy to Android names
             if (tag.serialNumber) {
-                tag.id = tag.serialNumber;
+                tag.id = $("#isi").val();
                 tag.isWritable = !tag.isLocked;
                 tag.canMakeReadOnly = tag.isLockable;
             }
+            // alert(nfcEvent.tag.id);
             let tagnya = JSON.stringify(nfcEvent.tag);
             $("#mentahan").val(tagnya);
             manusiaobject(nfcEvent.tag)
+            //baca ID Kartu
+            $("#idkartu").html(nfcEvent.tag.id);
+
             navigator.notification.vibrate(100);
         }
         function onSuccess(isi) {
@@ -166,6 +176,9 @@
             resultString = resultString.replace("en", "");
             $("#isimanusia").html(resultString);
         }
+        
+        
+
         function manusiastring(nfcDataString) {
             var nfcData = JSON.parse(nfcDataString);
             manusiaobject(nfcData);

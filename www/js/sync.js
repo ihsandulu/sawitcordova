@@ -65,6 +65,8 @@ function syncronizing(){
         deleteTable('kecamatan');
         deleteTable('truk');
         deleteTable('pruning');
+        deleteTable('tphnumber');
+        deleteTable('sptbsnumber');
 
         db.transaction((tx) => {
             /* tx.executeSql('DROP TABLE IF EXISTS user', [], function(tx, result) {
@@ -213,6 +215,12 @@ function syncronizing(){
                 'pruning_mandorname TEXT,' +
                 'blok_id INTEGER,' +
                 'blok_name TEXT' +
+            ')');        
+            tx.executeSql('CREATE TABLE IF NOT EXISTS tphnumber (' +
+                'tphnumber_card TEXT PRIMARY KEY' +
+            ')');       
+            tx.executeSql('CREATE TABLE IF NOT EXISTS sptbsnumber (' +
+                'sptbsnumber_card TEXT PRIMARY KEY' +
             ')');  
             // notif('Create Table user Sukses');
             
@@ -309,6 +317,14 @@ function syncronizing(){
                 'no_polisi'
             ];
             dataserver('datatrukpenerimaan', 'truk', masterarray10);
+            let masterarray11 = [
+                'tphnumber_card'
+            ];
+            dataserver('tphnumber', 'tphnumber', masterarray11);
+            let masterarray12 = [
+                'sptbsnumber_card'
+            ];
+            dataserver('sptbsnumber', 'sptbsnumber', masterarray12);
         });                  
     }else{
         syncfinished();
