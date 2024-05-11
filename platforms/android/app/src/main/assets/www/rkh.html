@@ -51,16 +51,16 @@
     <script type="text/javascript" src="js/data.js"></script>
     <script type="text/javascript" src="js/nfc.js"></script>
     <script>           
-        var userName = localStorage.getItem('user_name'); 
-        var divisiid = localStorage.getItem('divisi_id');  
+        // var username = localStorage.getItem('user_name'); 
+        // var divisiid = localStorage.getItem('divisi_id');  
             
         //device ready 
         document.addEventListener('deviceready', function () { 
             
-            if(userName==null){
+            if(username==null){
                 window.location.href='login.html';
             }else{
-                $(".username").text(userName); 
+                $(".username").text(username); 
 
                 //isi rkh
                 let kolomisi = ["rkh_rdate","rkh_job","estate_name","divisi_name","seksi_name","blok_name","blok_ha","tph_name","rkh_masuk","rkh_tmasuk","rkh_date","username"];

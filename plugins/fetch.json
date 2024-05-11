@@ -78,5 +78,37 @@
     },
     "is_top_level": true,
     "variables": {}
+  },
+  "cordova-plugin-file-transfer": {
+    "source": {
+      "type": "registry",
+      "id": "cordova-plugin-file-transfer@2.0.0"
+    },
+    "is_top_level": true,
+    "variables": {}
+  },
+  "cordova-plugin-tesseract": {
+    "source": {
+      "type": "registry",
+      "id": "https://github.com/gustavomazzoni/cordova-plugin-tesseract"
+    },
+    "is_top_level": true,
+    "variables": {}
+  },
+  "cordova-plugin-appinfo": {
+    "source": {
+      "type": "registry",
+      "id": "cordova-plugin-appinfo"
+    },
+    "is_top_level": true,
+    "variables": {}
+  },
+  "cordova-plugin-inappbrowser": {
+    "source": {
+      "type": "registry",
+      "id": "cordova-plugin-inappbrowser@6.0.0"
+    },
+    "is_top_level": true,
+    "variables": {}
   }
 }

@@ -63,6 +63,12 @@
             <div class="col-5 mb-4 text-left">Jml Pelepah</div><div class="col-7 text-left">
                 <input type="number" id="pruning_pelepah" class="form-control">
             </div>
+               
+            <div class="col-12 text-left input-group">Geolocation</div>
+            <div class="input-group mb-4 ">
+                <input id="pruning_geo" type="text" class="form-control" placeholder="" aria-label="Geolocation" aria-describedby="btn_geo">
+                <button onclick="geoPrunner()" class="btn btn-outline-secondary" type="button" id="btn_geo"><i class="fas fa-cogs"></i></button>
+            </div>  
             
             <div class="col-12 text-left input-group">Picture</div>
             <div class="input-group mb-4 ">
@@ -131,16 +137,16 @@
         }
 
         //geolocation
-        var panenGeo = function (position) {
+        var prunnerGeo = function (position) {
                 let geolo = position.coords.latitude+'|'+position.coords.longitude;
-                $("#hapushapus").val(geolo);
+                $("#pruning_geo").val(geolo);
         };
         function errorGeo(error) {
             notif('code: ' + error.code + '\n' +
                 'message: ' + error.message + '\n');
         }
-        function geoPanen() {
-            navigator.geolocation.getCurrentPosition(panenGeo, errorGeo);
+        function geoPrunner() {
+            navigator.geolocation.getCurrentPosition(prunnerGeo, errorGeo);
         }
         
         function clearField(){
@@ -156,7 +162,10 @@
 
             $("#blok_id").val("");
             $("#blok_name").val("");
-            $("#pruningPicture").attr("src","res/no_picture.png");            
+            $("#pruningPicture").attr("src","res/no_picture.png");     
+            
+            $("#pruning_geo").val("");
+            
         }
         
         function submit(){
@@ -167,6 +176,7 @@
             let pruning_picture = $("#pruning_picture").val();
             let pruning_mandor = $("#pruning_mandor").val();
             let pruning_date = $("#pruning_date").val();
+            let pruning_geo = $("#pruning_geo").val();
 
             let estate_id = $("#estate_id").val();
             let divisi_id = $("#divisi_id").val();
@@ -188,6 +198,7 @@
                 ',pruning_picture='+pruning_picture+
                 ',pruning_mandor='+pruning_mandor+
                 ',pruning_date='+pruning_date+
+                ',pruning_geo='+pruning_geo+
                 ',estate_id='+estate_id+
                 ',divisi_id='+divisi_id+
                 ',estate_name='+estate_name+
@@ -360,6 +371,7 @@
                         cell += '<div class="col-5 text-left">Estate</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['estate_name']+'</div>';
                         cell += '<div class="col-5 text-left">Divisi</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['divisi_name']+'</div>';
                         cell += '<div class="col-5 text-left">Blok</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['blok_name']+'</div>';
+                        cell += '<div class="col-5 text-left">Geolocation</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['pruning_geo']+'</div>';
                        
                         let srcpic='';
                         if(resultSet.rows.item(x)['pruning_picture']==""){

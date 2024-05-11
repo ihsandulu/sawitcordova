@@ -35,6 +35,7 @@
         input.inputbox{background-color: antiquewhite!important; color: aliceblue!important; width: 50px!important; height:50px!important;}
         .titleid{font-size: 20px; font-weight: bold;}
         .hide{display: none;}
+        .select2{width: 180px;}
     </style> 
     <script>
     </script>
@@ -68,32 +69,34 @@
             </div>  
             <div class="col-6 mb-4 d-grid gap-2">
                 <button onclick="buahluar();" class="btn btn-primary text-white">Buah Luar</button>
-            </div>           
+            </div> 
+            <input id="pilih" type="hidden" value="dalam">  
+
             <div class="col-5 mb-4 text-left buahluar hide">Vendor</div>
             <div class="col-7 text-left buahluar hide">
-                <select id="sptbs_vendor" class="form-control">
+                <select onchange="cekkartuInput()" id="sptbs_vendor" class="form-control select2">
 
                 </select>
             </div>         
             <div class="col-5 mb-4 text-left buahluar hide">Material</div>
             <div class="col-7 text-left buahluar hide">
-                <select id="sptbs_material" class="form-control">
+                <select onchange="cekkartuInput()" id="sptbs_material" class="form-control select2">
 
                 </select>
             </div>         
             <div class="col-5 mb-4 text-left buahluar hide">Kecamatan</div>
             <div class="col-7 text-left buahluar hide">
-                <select id="sptbs_kecamatan" class="form-control">
+                <select onchange="cekkartuInput()" id="sptbs_kecamatan" class="form-control select2">
 
                 </select>
             </div>      
             <div class="col-5 mb-4 text-left">No.Plat</div><div class="col-7 text-left">
-                <select id="sptbs_plat" class="form-control">
+                <select onchange="cekkartuInput()" id="sptbs_plat" class="form-control select2">
 
                 </select>
             </div>  
             <div class="col-5 mb-4 text-left">Driver</div><div class="col-7 text-left">
-                <select onchange="drivername()" id="sptbs_driver" class="form-control">
+                <select onchange="drivername();cekkartuInput();" id="sptbs_driver" class="form-control select2">
 
                 </select>
             </div>
@@ -113,6 +116,7 @@
             <input id="estate_name" type="hidden">
             <input id="divisi_name" type="hidden">            
         </div>
+        <textarea id="datanfcjadi1" class="form-control col-12 hide" style="height:1500px;"></textarea>
         <div class="">  
             <div class="row">  
                 <textarea id="datanfcjadi" class="form-control col-12 hide"></textarea>
@@ -122,7 +126,9 @@
         
         </div>
     </div>
+    <div style="height:500px;">....
 
+    </div>
     <marquee width="100%" direction="left">Pastikan Kartu Telah Kosong!</marquee>
 
     <div id="footer"></div>
@@ -138,24 +144,23 @@
         document.addEventListener('deviceready', function () {   
             hideisikartu();
             tutupdatakartu();
-            notif('Tempelkan Kartu Panen!');
-            playAudio('tempelkankartu.mp3');
-            cekkartupanen();
-            ambildata('panen','semua','');            
+                     
             kosongkanfield();
-          
-            // nfc.addNdefListener(onNdef, notifikasi("Tempelkan Kartu!"), onFailure);
+            panencheck();
+            cekkartupanen();
+            
+            
             
             if(username==null){
                 window.location.href='login.html';
-            }else{
-                $(".username").text(username); 
+            }   
+            setTimeout(function(){
                 vendor();           
                 material();           
                 kecamatan();           
                 driver();              
                 plat();     
-                sptbsnumber();     
+                sptbsnumber();  
                 $("#sptbs_date").val(now());
                 $("#sptbs_createdby").val(userid);
                 $("#estate_id").val(estateid);
@@ -163,8 +168,46 @@
                 $("#sptbs_createdname").val(username);
                 $("#estate_name").val(estatename);
                 $("#divisi_name").val(divisiname);
-            }                      
+                playAudio('tempelkankartu.mp3');
+
+                ambildata('panen','semua','');  
+            },2000);    
         }); 
+
+        function panencheck() {
+            db.transaction(function (tx) {
+                var query = "SELECT * FROM panen";
+                var cell = '';
+                tx.executeSql(query, [], function (tx, resultSet) {
+                    
+                    let no=1;
+                    for (var x = 0; x < resultSet.rows.length; x++) {
+                        var row = resultSet.rows.item(x);
+                        for (var key in row) {
+                            if (row.hasOwnProperty(key)) {
+                                var value = row[key];
+                                cell += key + '=' + value + ', ';
+                            }
+                        }
+                        // Hapus koma terakhir dan tambahkan newline
+                        cell = cell.slice(0, -2) + '<br>';
+                        if(resultSet.rows.length == no){
+                            let isi = $("#datanfcjadi1").val() +"\n"+ cell;
+                            $("#datanfcjadi1").val(isi);
+                        }
+                        no++;                        
+                    }
+                    if (x < 1) {
+                        // notif("Tidak ada data!");
+                    }
+                    
+                }, function (tx, error) {
+                    notif('SELECT error: ' + error.message);   
+                    playAudio('gagal.mp3');
+                });
+            });
+
+        }
 
         function sptbsnumber() {
             db.transaction(function (tx) {
@@ -204,8 +247,33 @@
 
         function cekkartuInput(){
             let panen_card = $("#panen_card").val();
+            
+            let sptbs_card = $("#sptbs_card").val();
+            let sptbs_plat = $("#sptbs_plat").val();
+            let sptbs_driver = $("#sptbs_driver").val();
+            let sptbs_vendor = $("#sptbs_vendor").val();
+            let sptbs_material = $("#sptbs_material").val();
+            let sptbs_kecamatan = $("#sptbs_kecamatan").val();
             if(panen_card!=""){
-                $("#btnisikartu").show();
+                let pilih = $("#pilih").val();
+                if(pilih=="dalam"){
+                    // alert(sptbs_plat+"=="+sptbs_driver);
+                    if(sptbs_card!="" && sptbs_plat!="" && sptbs_driver!=""){
+                        $("#btnisikartu").show();
+                    }else{
+                        $("#btnisikartu").hide();
+                    }
+                }
+                
+                if(pilih=="luar"){
+                    // alert(sptbs_plat+"=="+sptbs_driver+"=="+sptbs_vendor+"=="+sptbs_material+"=="+sptbs_kecamatan);
+                    if(sptbs_card!="" && sptbs_plat!="" && sptbs_driver!="" && sptbs_vendor!="" && sptbs_material!="" && sptbs_kecamatan!=""){
+                        $("#btnisikartu").show();
+                    }else{
+                        $("#btnisikartu").hide();
+                    }
+                }
+                
             }else{
                 $("#btnisikartu").hide();
             }
@@ -220,10 +288,14 @@
             $("#sptbs_driver").val('');
             $("#sptbs_drivername").val('');  
             $("#sptbs_listcard").val('');
+            
+            $('#sptbs_card').select2('destroy');
+            $("#sptbs_card").val('');
+            $('#sptbs_card').select2();
         }
 
         function showisikartu(){
-            $("#btnisikartu").show();
+            cekkartuInput();
         }
 
         function hideisikartu(){
@@ -232,10 +304,12 @@
 
         function buahluar(){
             $(".buahluar").show();
+            $("#pilih").value("luar");
         }
 
         function buahdalam(){
             $(".buahluar").hide();
+            $("#pilih").value("dalam");
         }
 
         function bukaproses(){
@@ -267,7 +341,7 @@
                 let panenCardToCheckUpdate='';
                 dataArray.forEach(function (item) {
                     var pair = item.split('=');
-                    if (pair[0] !== 'panen_id') {
+                    // if (pair[0] !== 'panen_id') {
                         columns.push(pair[0]);
                         let isi;
                         let isiupdate;
@@ -288,7 +362,7 @@
                             panenCardToCheckUpdate=isiupdate;   
                             // notif(isi);    
                         }
-                    }
+                    // }
 
                 });
 
@@ -300,6 +374,7 @@
                     let jmldata = result.rows.length;
                     // notif(panenCardToCheck); 
                     if (jmldata > 0) {
+                        // notif(jmldata);
                         // Jika panen_card sudah ada, lakukan UPDATE                        
                         var updateQuery = "UPDATE " + table + " SET " + columns.join('=?, ') + "=? WHERE panen_card = " + panenCardToCheck;                               
                         // notif(updateQuery);                          
@@ -395,10 +470,14 @@
                     let namaf = namafield();
                     let sesi = kalimatTanpaSpasi.split('*');
                     let sesi1 = sesi[0].split(',');
-                    let sesi2 = [];                 
-                    if(readcardsno==1){                        
-                        for(let x=0; x<sesi1.length;x++){
-                            sesi2 = sesi1[x].split('=');
+                    // $("#datanfcjadi1").val(sesi[0]);
+                    let sesi2 = [];  
+                    let vendorn = "";               
+                    if(readcardsno==1){  
+                        // notif(sesi1.length);                      
+                        for(let z=0; z<sesi1.length;z++){
+                            // notif(z);
+                            sesi2 = sesi1[z].split('=');
                             // notif(sesi2[0]+'='+sesi2[1]);
                             // $('#'+sesi2[0]).val(sesi2[1]);
                             if(sesi2[0]=='sptbs_card'){   
@@ -408,13 +487,31 @@
                                 $('#sptbs_card').select2();
                             }
                             if(sesi2[0]=='sptbs_vendor'){
+                                $("#sptbs_vendor").select2('destroy');
                                 $("#sptbs_vendor").val(sesi2[1]);
-                                if(sesi2[1]!=""){buahluar();}else{buahdalam();}
+                                $("#sptbs_vendor").select2();
+                                vendorn = sesi2[1]; 
                             }
-                            if(sesi2[0]=='sptbs_material'){$("#sptbs_material").val(sesi2[1]);}
-                            if(sesi2[0]=='sptbs_kecamatan'){$("#sptbs_kecamatan").val(sesi2[1]);}
-                            if(sesi2[0]=='sptbs_plat'){$("#sptbs_plat").val(sesi2[1]);}
-                            if(sesi2[0]=='sptbs_driver'){$("#sptbs_driver").val(sesi2[1]);}
+                            if(sesi2[0]=='sptbs_material'){
+                                $("#sptbs_material").select2('destroy');
+                                $("#sptbs_material").val(sesi2[1]);
+                                $("#sptbs_material").select2();
+                            }
+                            if(sesi2[0]=='sptbs_kecamatan'){
+                                $("#sptbs_kecamatan").select2('destroy');
+                                $("#sptbs_kecamatan").val(sesi2[1]);
+                                $("#sptbs_kecamatan").select2();
+                            }
+                            if(sesi2[0]=='sptbs_plat'){
+                                $("#sptbs_plat").select2('destroy');
+                                $("#sptbs_plat").val(sesi2[1]);
+                                $("#sptbs_plat").select2();
+                            }
+                            if(sesi2[0]=='sptbs_driver'){
+                                $("#sptbs_driver").select2('destroy');
+                                $("#sptbs_driver").val(sesi2[1]);
+                                $("#sptbs_driver").select2();
+                            }
                             // if(sesi2[0]=='sptbsdet'){$("#sptbsdet").val(sesi2[1]);}
                             if(sesi2[0]=='sptbs_date'){$("#sptbs_date").val(sesi2[1]);}
                             if(sesi2[0]=='sptbs_createdby'){$("#sptbs_createdby").val(sesi2[1]);}
@@ -426,6 +523,7 @@
                             if(sesi2[0]=='divisi_name'){$("#divisi_name").val(sesi2[1]);}
                             if(sesi2[0]=='sptbs_listcard'){$("#sptbs_listcard").val(sesi2[1]);}
                         }
+                        
                         // isifield('sptbs_listcard', sesi1);
                         // for(let x=0; x<namaf.length;x++){
                         //     isifield(namaf[x], sesi1);
@@ -434,12 +532,14 @@
                         notif('Data Kartu SPTBS akan ditimpa ulang!'); 
                         playAudio('kartuterisi.mp3');
                         ambildata('panen','semua','');
+                        if(vendorn!=""){buahluar();}else{buahdalam();}
                     }else{  
                         for(let x=0; x<sesi1.length;x++){
                             sesi2 = sesi1[x].split('=');
-                            if(sesi2[0]=="\u0002sptbs_card"){                
+                            if(sesi2[0].includes("sptbs_card")){                
                                 $('#sptbs_card').select2('destroy');
                                 $("#sptbs_card").val(sesi2[1]);
+                                // alert(sesi2[1]);
                                 $('#sptbs_card').select2();
                             }
                         }
@@ -542,22 +642,20 @@
                 ',sptbs_drivername='+sptbs_drivername+
                 ',estate_name='+estate_name+
                 ',divisi_name='+divisi_name;
-            deletepanenwherecard('sptbs',sptbs_card);
-            inputOrUpdateData('sptbs', data);
+            deleteSptbswherecard(sptbs_card);
+            inputOrUpdateData(data);
         }        
 
-        function deletepanenwherecard(table,card){
+        function deleteSptbswherecard(card){
             db.transaction(function (tx) {
-
-            var query = "DELETE FROM " + table + " WHERE " + table + "_card = ?";
-
-            tx.executeSql(query, [card], function (tx, res) {
-                // ambildata(table,'semua','');
-            },
-            function (tx, error) {
-                notif('DELETE error: ' + error.message);      
-                playAudio('gagal.mp3');
-            });
+                var query = "DELETE FROM sptbs WHERE sptbs_card = ?";
+                tx.executeSql(query, [card], function (tx, res) {
+                    // ambildata(table,'semua','');
+                },
+                function (tx, error) {
+                    notif('DELETE error: ' + error.message);      
+                    playAudio('gagal.mp3');
+                });
             }, function (error) {
                 notif('transaction error: ' + error.message);      
                 playAudio('gagal.mp3');
@@ -567,33 +665,42 @@
         }
 
         function updatetablepanen() {
-            db.transaction(function (tx) {
-                let sptbs_card = $("#sptbs_card").val();
-                let sptbs_listcard = $("#sptbs_listcard").val();
-                let splitsptbs_listcard = sptbs_listcard.split("|");
-                let no=1;
+            let sptbs_card = $("#sptbs_card").val();
+            let sptbs_listcard = $("#sptbs_listcard").val();            
+            let splitsptbs_listcard = sptbs_listcard.split("|");
+            let no=1;
+            let isitest = '';
+
+            // Perbarui query UPDATE sesuai dengan nilai sptbs_listcard
+
+            db.transaction(function (tx) {                
                 splitsptbs_listcard.forEach(function (panen_card) {
-                    panen_card = panen_card.trim(); 
-                    var updateQuery = `UPDATE panen SET sptbs_card=? WHERE panen_card = ?`;
-                    // notif(updateQuery);
-                    tx.executeSql(updateQuery, [sptbs_card,panen_card], function (tx, res) {
-                        // Sukses
-                        if(no==splitsptbs_listcard.length()){
+                    var updateQuery = "UPDATE panen SET sptbs_card='" + sptbs_card + "' WHERE panen_card = '" + panen_card + "'"; 
+                    isitest += updateQuery;
+                    tx.executeSql(updateQuery, [], function (tx, res) {   
+                        if(no==splitsptbs_listcard.length){                   
+                            // notif(updateQuery);
                             kosongkanfield();                                        
                             ambildata('panen','semua','');
                         }
                     }, function (tx, error) {
                         notif('Kesalahan UPDATE: ' + error.message);   
                         playAudio('gagal.mp3');   
-                    });
-                    no++;
-                });
-                ambildata('panen','semua','isikartu');
+                    });                 
+                    no++;   
+                });                        
             });
+                
+            $("#datanfcjadi1").val(isitest); 
+            ambildata('panen','semua','isikartu'); 
+            panencheck(); 
+        } 
+        
+        function geoPanen() {
+            navigator.geolocation.getCurrentPosition(panenGeo, errorGeo);
         }
 
-
-        function inputOrUpdateData(table, data) {
+        function inputOrUpdateData(data) {
             db.transaction(function (tx) {
                 var dataArray = data.split(',');
                 var columns = [];
@@ -613,38 +720,18 @@
                         }
                     }
                 });
-
-                // Mengecek apakah sptbs_card sudah ada dalam tabel
-                var checkQuery = "SELECT sptbs_card FROM " + table + " WHERE sptbs_card = ?";
-                // notif(checkQuery); 
-                tx.executeSql(checkQuery, [sptbsCardToCheck], function (tx, result) {
-                    let jmldata = result.rows.length;
-                    // notif(jmldata); 
-                    if (jmldata > 0) {
-                        // Jika sptbs_card sudah ada, lakukan UPDATE
-                        var updateQuery = "UPDATE " + table + " SET " + columns.join('=?, ') + "=? WHERE sptbs_card = '" + sptbsCardToCheck + "'";
-                        tx.executeSql(updateQuery, values, function (tx, res) {                              
-                            updatetablepanen();
-                        }, function (tx, error) {
-                            notif('Kesalahan UPDATE: ' + error.message);            
-                            playAudio('gagal.mp3');
-                        });
-                    } else {
-                        // Jika sptbs_card belum ada, lakukan INSERT
-                        var insertQuery = "INSERT INTO " + table + " (" + columns.join(',') + ") VALUES (" + values.join(',') + ")";
-                        // notif(insertQuery);
-                        tx.executeSql(insertQuery, [], function (tx, res) {
-                            insertID = res.insertId;                               
-                            updatetablepanen(); 
-                        }, function (tx, error) {
-                            notif('Kesalahan INSERT: ' + error.message);      
-                            playAudio('gagal.mp3');
-                        });
-                    }
+                               
+                var insertQuery = "INSERT INTO sptbs (" + columns.join(',') + ") VALUES (" + values.join(',') + ")";
+                tx.executeSql(insertQuery, [], function (tx, res) {
+                    let insertID = res.insertId;  
+                    // $("#datanfcjadi1").val(insertQuery);     
+                    // alert(insertID);                                                 
+                    updatetablepanen(); 
                 }, function (tx, error) {
-                    notif('Kesalahan transaksi: ' + error.message);      
+                    notif('Kesalahan INSERT: ' + error.message);      
                     playAudio('gagal.mp3');
-                });
+                });                    
+               
             }, function (error) {
                 notif('Transaction Error: ' + error.message);      
                 playAudio('gagal.mp3');
@@ -655,22 +742,7 @@
         }
 
         function deletedatatph(table,id){
-            db.transaction(function (tx) {
-                var query = "DELETE FROM " + table + " WHERE " + table + "_id = ?";
-                tx.executeSql(query, [id], function (tx, res) {
-                    setCheckboxStatus(id, false);
-                    ambildata(table,'semua','');
-                },
-                function (tx, error) {
-                    notif('DELETE error: ' + error.message);
-                    playAudio('gagal.mp3');
-                });
-            }, function (error) {
-                notif('transaction error: ' + error.message);
-            }, function () {
-                notif('Data Telah Terhapus!');
-                playAudio('dataterhapus.mp3');
-            });
+            setCheckboxStatus(id,false);
         }
 
         function onConfirm(pilihannya,table,id) {
@@ -713,17 +785,18 @@
             if (sptbs_listcard.includes(id)) {
 
             }else{
-                $("#sptbs_listcard").val(sptbs_listcard + (sptbs_listcard ? '|' : '') + id);
+                $("#sptbs_listcard").val(sptbs_listcard + (sptbs_listcard ? '|' : '') + id);  
             }
         }
         function keluarinid(id){  
             let sptbs_listcard = $("#sptbs_listcard").val(); 
             const regex = new RegExp(`(\\|${id}$|^${id}$)`);
-            $("#sptbs_listcard").val(sptbs_listcard.replace(regex, '').replace(/^[|]/, ''));
-
+            $("#sptbs_listcard").val(sptbs_listcard.replace(regex, '').replace(/^[|]/, ''));            
+            ambildata('panen','semua','');
         }
         function ambildata(table,status,perintahkartu) {
             let sptbslistcard = $("#sptbs_listcard").val();
+            $("#"+table).html('');
             if(sptbslistcard!=""){
                 db.transaction(function (tx) {
                 let ceksptbscard = $("#sptbs_card").val();
@@ -734,7 +807,6 @@
 
                 
                 // notif(query);
-                $("#"+table).html('');
                 tx.executeSql(query, [], function (tx, resultSet) {                    
                     let no=1;
                     // notif(resultSet.rows.length);
@@ -759,7 +831,9 @@
 
                         arraypanencard.push(resultSet.rows.item(x)['panen_card']);
                         let datapanensptbs = '*'+
-                            'panen_card='+resultSet.rows.item(x)['panen_card']+
+                            'sptbs_card='+resultSet.rows.item(x)['sptbs_card']+
+                            ',panenid='+resultSet.rows.item(x)['panen_id']+
+                            ',panen_card='+resultSet.rows.item(x)['panen_card']+
                             ',panen_date='+resultSet.rows.item(x)['panen_date']+
                             ',user_id='+resultSet.rows.item(x)['user_id']+
                             ',estate_id='+resultSet.rows.item(x)['estate_id']+
@@ -806,7 +880,7 @@
                         cell += '<div class="col-12 hide">&nbsp;&nbsp;<textarea class="form-control" id="'+resultSet.rows.item(x)['panen_id']+'" name="'+resultSet.rows.item(x)['panen_id']+'">'+datapanensptbs+'</textarea></div>';
 
                         // cell += '<div class="col-5 text-left">Panen Card</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['panen_card']+'</div>';
-                        cell += '<div class="col-5 text-left">SPTBS Card</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['sptbs_card']+'</div>';
+                        cell += '<div class="col-3 text-left">SPTBS Card</div><div class="col-9 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['sptbs_card']+'</div>';
                         cell += '<div class="col-5 text-left">Date</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['panen_date']+'</div>';
                         cell += '<div class="col-5 text-left">Checker</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['user_name']+'</div>';
                         cell += '<div class="col-5 text-left">Estate</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['estate_name']+'</div>';
@@ -822,16 +896,16 @@
                         }else{
                             cell += '<div class="col-5 text-left">Jumlah</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['panen_jml']+'</div>'; 
                         }  
-                        cell += '<div class="col-5 text-left">Geolocation</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['panen_geo']+'</div>';
+                        cell += '<div class="col-3 text-left">Geolocation</div><div class="col-9 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['panen_geo']+'</div>';
                         let srcpic='';
                         if(resultSet.rows.item(x)['panen_picture']==""){
                             srcpic='res/no_picture.png';
                         }else{
                             srcpic=resultSet.rows.item(x)['panen_picture'];
                         }
-                        cell += '<div class="col-5 text-left">Picture</div><div class="col-7 text-left">: &nbsp;&nbsp;<img src="'+srcpic+'" class="img-thumbnail"></div>';
+                        // cell += '<div class="col-5 text-left">Picture</div><div class="col-7 text-left">: &nbsp;&nbsp;<img src="'+srcpic+'" class="img-thumbnail"></div>';
 
-                        cell += '<div onclick="confirmdeletetph(\'Yakin di Delete?\',\'Delete Data Panen\',\'panen\','+resultSet.rows.item(x)['panen_id']+')" class="col-12  mt-5 mb-5 text-danger"> >>> &nbsp;&nbsp;<button class="btn btn-danger btn-block"><i class="fas fa-window-close"></i> Delete</button>&nbsp;&nbsp; <<< </div>';             
+                        cell += '<div onclick="confirmdeletetph(\'Yakin di Delete?\',\'Delete Data Panen\',\'panen\',\''+resultSet.rows.item(x)['panen_card']+'\')" class="col-12  mt-5 mb-5 text-danger"> >>> &nbsp;&nbsp;<button class="btn btn-danger btn-block"><i class="fas fa-window-close"></i> Delete</button>&nbsp;&nbsp; <<< </div>';             
 
                         cell +='</div>';
                         $("#"+table).append(cell);                         
@@ -1028,7 +1102,7 @@
 
         function driver() {
             db.transaction(function (tx) {
-                var query = "SELECT * FROM driver";
+                var query = "SELECT * FROM driverdumptruck ORDER BY driverdumptruck_name ASC";
                 // notif(query);
                 $("#sptbs_driver").html('');
                 var cell ='';
@@ -1037,7 +1111,7 @@
                     // notif(resultSet.rows.length);     
                     cell += '<option value="">Pilih Driver</option>';
                     for (var x = 0; x < resultSet.rows.length; x++) {   
-                        cell += '<option driver_name="'+resultSet.rows.item(x)['driver_name']+'" value="'+resultSet.rows.item(x)['driver_id']+'">'+resultSet.rows.item(x)['driver_name']+'</div>';
+                        cell += '<option driver_name="'+resultSet.rows.item(x)['driverdumptruck_name']+'" value="'+resultSet.rows.item(x)['driverdumptruck_id']+'">'+resultSet.rows.item(x)['driverdumptruck_name']+' ('+resultSet.rows.item(x)['driverdumptruck_position']+')</div>';
                         if(resultSet.rows.length == no){
                             $("#sptbs_driver").append(cell);
                         }

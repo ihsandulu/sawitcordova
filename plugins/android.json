@@ -23,6 +23,9 @@
       "ANDROIDX_WEBKIT_VERSION": "1.4.0",
       "PACKAGE_NAME": "com.qithy.tphdigital"
     },
+    "cordova-plugin-file-transfer": {
+      "PACKAGE_NAME": "com.qithy.tphdigital"
+    },
     "cordova-plugin-geolocation": {
       "GPS_REQUIRED": "true",
       "PACKAGE_NAME": "com.qithy.tphdigital"
@@ -36,10 +39,19 @@
     "cordova-plugin-splashscreen": {
       "PACKAGE_NAME": "com.qithy.tphdigital"
     },
+    "cordova-plugin-tesseract": {
+      "PACKAGE_NAME": "com.qithy.tphdigital"
+    },
     "cordova-sqlite-storage": {
       "PACKAGE_NAME": "com.qithy.tphdigital"
     },
     "phonegap-nfc": {
+      "PACKAGE_NAME": "com.qithy.tphdigital"
+    },
+    "cordova-plugin-appinfo": {
+      "PACKAGE_NAME": "com.qithy.tphdigital"
+    },
+    "cordova-plugin-inappbrowser": {
       "PACKAGE_NAME": "com.qithy.tphdigital"
     }
   },

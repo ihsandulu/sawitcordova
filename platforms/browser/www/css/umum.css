@@ -9,6 +9,7 @@ body {
 .hidden {
   opacity: 0;
 }
+.hide{display: none;}
 
 #top{height:60px;}
 
@@ -16,11 +17,14 @@ body {
 .navbar-brand{font-weight: bold;}        
 .border{border: black solid 1px !important; }
 
-.text-hijau{color:#47f65ec9;}
-.text-kuning{color:#fffc5cd2;}
-.text-biru{color:#5cdcffd2;}
-.text-ungu{color:#f7a4ffd2;}
-.text-merah{color:#ffa4a4d2;}
+.text-hijau{color:#47f65ec9 !important;}
+.text-kuning{color:#fffc5cd2 !important;}
+.text-biru{color:#5cdcffd2 !important;}
+.text-ungu{color:#f7a4ffd2 !important;}
+.text-merah{color:#ffa4a4d2 !important;}
+.text-putih{color:#ffffffd2 !important;}
+.text-hitam{color:#000000d2 !important;}
+.text-merahhitam{color:#ad0000d2 !important;}
 
 .footer {
     position: fixed;
@@ -64,3 +68,34 @@ table, th, td {
 marquee{padding: 2px; background-color: rgba(255, 255, 255, 0.8); font-size: 15px; bottom: 30px;
   position: fixed;}
 .navbar-collapse{padding: 5px; background-color: rgba(254, 254, 254, 1);}
+
+/* Blink for Webkit and others
+(Chrome, Safari, Firefox, IE, ...)
+*/
+
+@-webkit-keyframes blinker {
+  from {opacity: 1.0;}
+  to {opacity: 0.0;}
+}
+.blink{
+	text-decoration: blink;
+	-webkit-animation-name: blinker;
+	-webkit-animation-duration: 0.6s;
+	-webkit-animation-iteration-count:infinite;
+	-webkit-animation-timing-function:ease-in-out;
+	-webkit-animation-direction: alternate;
+}
+
+.nav-link{text-align: center;}
+#navbarNav > .navbar-nav > .nav-item{
+  background-color: rgba(162, 248, 167, 0.263);
+  box-shadow: rgb(233, 250, 234) 0px 0px 2px 2px;
+  padding: 20px;
+}
+#navbarNav{
+  height:800px!important;
+  overflow: auto!important;
+  left:-20px;
+}
+#nav-username{background-color: rgba(56, 86, 58, 0.263)!important; color: white;}
+#nav-merah{background-color: rgba(255, 0, 0, 0.514)!important; color: white;}

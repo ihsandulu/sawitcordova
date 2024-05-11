@@ -130,6 +130,9 @@ $(document).ready(function(){
     .done(function(data){
         $("#footer").html(data); 
     });
+    setTimeout(function(){
+        $(".username1").text(username);
+    },1000);
     $('.select2').select2();
 });
 
@@ -149,6 +152,50 @@ function now(){
 
 }
 
+function sekarang(){
+    // Mendapatkan objek tanggal hari ini
+    var today = new Date();
+
+    // Mendapatkan tanggal, bulan, dan tahun
+    var date = today.getDate();
+    var month = today.getMonth() + 1; // Ingat: bulan dimulai dari 0
+    var year = today.getFullYear();
+
+    // Membentuk string tanggal dengan format 'YYYY-MM-DD'
+    var formattedDate = (date < 10 ? '0' : '') + date + '-' + (month < 10 ? '0' : '') + month + '-' + year;
+
+    return formattedDate;
+
+}
+
+function time(){
+    // Membuat objek Date yang mewakili waktu saat ini
+    var waktuSaatIni = new Date();
+
+    // Mendapatkan jam, menit, dan detik dari objek Date
+    var jam = waktuSaatIni.getHours();
+    var menit = waktuSaatIni.getMinutes();
+    var detik = waktuSaatIni.getSeconds();
+
+    // Memastikan agar jam, menit, dan detik selalu dua digit dengan menambahkan nol di depan jika diperlukan
+    jam = padZero(jam);
+    menit = padZero(menit);
+    detik = padZero(detik);
+
+    // Fungsi untuk menambahkan nol di depan angka jika angka kurang dari 10
+    function padZero(angka) {
+        return angka < 10 ? "0" + angka : angka;
+    }
+
+    // Menggabungkan jam, menit, dan detik menjadi format jam:menit:detik
+    var waktuFormat = jam + ":" + menit + ":" + detik;
+
+    // Menampilkan waktu dalam format jam:menit:detik
+    return waktuFormat;
+
+
+}
+
 function cardrandom(){
     // Mendapatkan objek tanggal hari ini
     var today = new Date();
@@ -165,7 +212,29 @@ function cardrandom(){
 
 
     // Membentuk string tanggal dengan format 'YYYY-MM-DD'
-    var lengkap = 'PAM'+year + '' + (month < 10 ? '0' : '') + month + '' + (date < 10 ? '0' : '') + date + hours + minutes+ seconds+randomTwoDigitNumber;
+    var lengkap = 'TP'+year + '' + (month < 10 ? '0' : '') + month + '' + (date < 10 ? '0' : '') + date + hours + minutes+ seconds+randomTwoDigitNumber;
+
+    return lengkap;
+
+}
+
+function sptbsCardRandom(){
+    // Mendapatkan objek tanggal hari ini
+    var today = new Date();
+
+    // Mendapatkan tanggal, bulan, dan tahun
+    var date = today.getDate();
+    var month = today.getMonth() + 1; // Ingat: bulan dimulai dari 0
+    var year = today.getFullYear();
+
+    var hours = today.getHours();
+    var minutes = today.getMinutes();
+    var seconds = today.getSeconds();
+    var randomTwoDigitNumber = Math.floor(Math.random() * 90) + 10;
+
+
+    // Membentuk string tanggal dengan format 'YYYY-MM-DD'
+    var lengkap = 'SPTBS'+year + '' + (month < 10 ? '0' : '') + month + '' + (date < 10 ? '0' : '') + date + hours + minutes+ seconds+randomTwoDigitNumber;
 
     return lengkap;
 

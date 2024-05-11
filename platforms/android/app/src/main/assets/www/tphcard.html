@@ -25,7 +25,7 @@
     <title>PT. PAM</title>
     <style>   
         #datanfcjadi{
-            height: 300px !important; 
+            height: 100px !important; 
             width: 300px; 
             position: relative;
             left: 50%;
@@ -58,6 +58,7 @@
             Isi Kartu : 
         </h3>
         <div id="datanfcjadi" class="col-12"></div>
+        <button id="btnkartu" onclick="kosongkan()" type="button" class="btn btn-danger">Kosongkan Kartu</button>
     </div>
 
 
@@ -77,11 +78,22 @@
             if(username==null){
                 window.location.href='login.html';
             }else{
+                $("#btnkartu").hide();
                 $(".username").text(username); 
                 tphnumber();
                 cekkartupanen();
             }                      
         }); 
+
+        function kosongkan(){
+            let kartu = $("#datanfcjadi").text();
+            // alert(kartu);
+            $('#tphnumber_card').select2('destroy');
+            $("#tphnumber_card").val(kartu);
+            $('#tphnumber_card').select2();
+            $("#btnkartu").hide();
+            submit();
+        }
 
         function cekkartupanen() {
             nfc.addNdefListener(onNdefcekpanen, ()=>{}, onFailurebacakartu);
@@ -129,10 +141,11 @@
                 }
                 var duaDigitPertama = nilaiPanenCard.substring(0, 2);
                 if (duaDigitPertama==="TP") {
-                    $("#datanfcjadi").text(nilaiPanenCard);
-                    $('#tphnumber_card').select2('destroy');
-                    $("#tphnumber_card").val(nilaiPanenCard);
-                    $('#tphnumber_card').select2();
+                    $("#datanfcjadi").text(nilaiPanenCard);                 
+                    $("#btnkartu").show();
+                    // $('#tphnumber_card').select2('destroy');
+                    // $("#tphnumber_card").val(nilaiPanenCard);
+                    // $('#tphnumber_card').select2();
                 } else {
                     notif('Bukan TP Card!');
                 }                   
@@ -195,7 +208,7 @@
                 playAudio('berhasil.mp3');
                 clearData();
             }, ()=>{                                                                 
-                playAudio('datadirekam.mp3');
+                playAudio('gagal.mp3');
                 notif('Data Hanya Terekam di HP! Perbaiki Posisi Kartu Panen!');
             });                                 
     

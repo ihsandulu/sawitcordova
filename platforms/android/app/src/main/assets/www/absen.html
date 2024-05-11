@@ -5,9 +5,6 @@
     <meta charset="utf-8">
     <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;"> -->
     <meta http-equiv="Content-Security-Policy" content="default-src * data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src * 'unsafe-inline'; media-src *; img-src * data: content:; script-src * 'unsafe-eval' 'unsafe-inline';">
-    
-
-
 
     <meta name="format-detection" content="telephone=no">
     <meta name="msapplication-tap-highlight" content="no">
@@ -32,6 +29,9 @@
             top:0px;
             transform: translate(-50%,0);
         } 
+        #absen{
+            margin-bottom: 500px!important;
+        }
     </style>
     <script>
     </script>
@@ -41,48 +41,47 @@
     <div id="header">
         
     </div>
-    <div id="frame1" class="text-center " > 
-        <div class="row p-3 ballon">                        
-            <H1 class="col-12 alert alert-success">Data Pruning</H1>        
-            <div class="col-5 mb-4 text-left">Nama Baris</div><div class="col-7 text-left">
-                <input id="pruning_baris" class="form-control">
-            </div>         
-            <div class="col-5 mb-4 text-left">Blok</div><div class="col-7 text-left">
-                <select onchange="dblokname()" id="blok_id" class="form-control">
-
-                </select>
+    <div id="frame1" class="text-center mb-5" > 
+        <div id="htmlupload">
+            <!-- Isi div -->
+        </div>
+        <div class="row p-3 ballon">                   
+            <H1 class="col-12 alert alert-success"><button id="btnupload" onclick="confirmupload();" class="btn btn-danger btn-xs text-white"><i class="fas fa-upload"></i></button> Absensi</H1>        
+                 
+            <div class="col-5 mb-4 text-left">Jenis</div><div class="col-7 text-left">
+                <input readonly id="absen_type" class="form-control">
             </div>             
-            <div class="col-5 mb-4 text-left">Tenaga Panen</div><div class="col-7 text-left">
-                <select onchange="tp()" id="pruning_tp" class="form-control select2">
+            <div class="col-5 mb-4 text-left">Geolocation</div>
+            <div class="col-7 text-left">
+                <input id="absen_geo" type="text" readonly class="form-control" placeholder="" aria-label="Geolocation" aria-describedby="btn_geo">
+            </div>   
+            <div class="col-5 mb-4 text-left">Estate</div><div class="col-7 text-left">
+                <input readonly type="text" id="estate_name" class="form-control">
+            </div>      
+            <div class="col-5 mb-4 text-left">Divisi</div><div class="col-7 text-left">
+                <input readonly type="text" id="divisi_name" class="form-control">
+            </div>                         
+            <div class="col-5 mb-4 text-left">Tenaga absen</div><div class="col-7 text-left">
+                <select onchange="tp()" id="absen_user" class="form-control select2">
 
                 </select>
-            </div>      
-            <div class="col-5 mb-4 text-left">Jml Pokok</div><div class="col-7 text-left">
-                <input type="number" id="pruning_pokok" class="form-control">
-            </div>      
-            <div class="col-5 mb-4 text-left">Jml Pelepah</div><div class="col-7 text-left">
-                <input type="number" id="pruning_pelepah" class="form-control">
-            </div>
-            
-            <div class="col-12 text-left input-group">Picture</div>
-            <div class="input-group mb-4 ">
-                <input id="pruning_picture" type="text" class="form-control text-biru" placeholder="" aria-label="Geolocation" aria-describedby="btn_picture">
-                <button onclick="picturePanen()" class="btn btn-outline-secondary" type="button" id="btn_picture"><i class="fas fa-camera"></i></button>
-                <img id="pruningPicture" src="res/no_picture.png" class="img-thumbnail">
+            </div>     
+            <div class="col-12 text-left input-group absenpctr">Picture</div>
+            <div class="input-group mb-4 absenpctr">
+                <input readonly id="absen_picture" type="text" class="form-control text-biru" placeholder="" aria-label="Picture" aria-describedby="btn_picture">
+                <button onclick="pictureAbsen()" class="btn btn-outline-secondary" type="button" id="btn_picture"><i class="fas fa-camera"></i></button>
+                <img id="absenPicture" src="res/no_picture.png" class="img-thumbnail">
             </div> 
+            <textarea id="codeerror" class="hide"></textarea>
 
-            <button onclick="submit()" type="button" class="btn btn-primary">Submit</button>
-            <input id="pruning_mandor" type="hidden">
-            <input id="pruning_date" type="hidden">
+            <button  type="button" id="submit" onclick="submit()" type="button" class="btn btn-primary hide">Submit</button>
             <input id="estate_id" type="hidden">
             <input id="divisi_id" type="hidden">
-            <input id="estate_name" type="hidden">
-            <input id="divisi_name" type="hidden">
-            <input id="pruning_tpname" type="hidden">
-            <input id="pruning_mandorname" type="hidden">
-            <input id="blok_name" type="hidden">
+            <input id="absen_date" type="hidden">
+            <input id="absen_time" type="hidden">
+            <input id="absen_username" type="hidden">
         </div>
-        <div class="" id="pruning">  
+        <div class="mb-5" id="absen">  
         
         </div>
     </div>
@@ -99,113 +98,447 @@
     <script>
         //device ready 
         document.addEventListener('deviceready', function () { 
-            ambildata('pruning','semua','');
+            $(".absenpctr").hide();
             
             if(username==null){
                 window.location.href='login.html';
             }else{
                 $(".username").text(username); 
+                geoAbsen();
+                setInterval(function(){
+                    geoAbsen();
+                },10000);  
+                getAbsenceType();            
                 tpname();
-                blok();
-                $("#pruning_date").val(now());
-                $("#pruning_mandor").val(userid);
                 $("#estate_id").val(estateid);
                 $("#divisi_id").val(divisiid);
-                $("#pruning_mandorname").val(username);
                 $("#estate_name").val(estatename);
                 $("#divisi_name").val(divisiname);
+                $("#absen_date").val(now());
+                $("#absen_time").val(time());
+                ambildata('absen','semua','');
+                deviceStart();
+                TesseractPlugin.loadLanguage('eng', function(response) {
+                    deferred.resolve(response);
+                }, function(reason) {
+                    deferred.reject('Error on loading OCR file for your language. ' + reason);
+                });
             }                      
         }); 
 
-        //gambar 
-        function pruningImg(imageURI) {
-            let src =  imageURI;            
-            $("#pruningPicture").attr("src", src); 
-            $("#pruning_picture").val(src);
+        function cekdatasemua(){
+            db.transaction(function (tx) {
+                var query = `SELECT * FROM absen WHERE 1`;  
+                tx.executeSql(query, [], function (tx, resultSet) { 
+                    // notif(resultSet.rows.length);
+                    if (resultSet.rows.length>0) { 
+                        $("#btnupload").show();
+                    } else{
+                        $("#btnupload").hide();
+                    }
+                });
+            });
         }
-        function errorpruningImg(message) {
+
+        function bacafile(fileName) {
+            let fname = fileName+".txt";
+            // alert(fileName);
+            window.resolveLocalFileSystemURL(cordova.file.externalDataDirectory, function(directoryEntry) {
+                directoryEntry.getFile(fname, { create: false }, function(fileEntry) {
+                    fileEntry.file(function (file) {
+                        var reader = new FileReader();
+
+                        reader.onloadend = function () {
+                            $("#p"+fileName).val(this.result); 
+                            setTimeout(function(){                                
+                                $("#psubmit"+fileName).click();
+                            },3000);
+                        };
+
+                        reader.readAsText(file);
+                    }, onErrorReadFile);
+                }, onErrorReadFile);
+            }, onErrorReadFile);
+        }
+
+        function onErrorReadFile1(error, x, no, resultSet){
+            notif('x='+x+", no="+no+"=>1"+JSON.stringify(error).toString());
+            finalupload("",x,no,resultSet);
+        }
+
+        
+        function onErrorReadFile2(error, x, no, resultSet){
+            // notif('x='+x+", no="+no+"=>2"+JSON.stringify(error).toString());
+            finalupload("",x,no,resultSet);
+        }
+
+        
+        function onErrorReadFile3(error, x, no, resultSet){
+            notif('x='+x+", no="+no+"=>3"+JSON.stringify(error).toString());
+            finalupload("",x,no,resultSet);
+        }
+
+        function bacafileajax(fileName, x, no, resultSet, callback) {
+            let fname = fileName+".txt";
+            // alert(fileName);
+            window.resolveLocalFileSystemURL(cordova.file.externalDataDirectory, function(directoryEntry) {
+                directoryEntry.getFile(fname, { create: false }, function(fileEntry) {
+                    fileEntry.file(function (file) {
+                        var reader = new FileReader();
+
+                        reader.onloadend = function () {
+                            callback(this.result, x, no, resultSet);
+                        };
+
+                        reader.readAsText(file);
+                    }, function(error) {
+                        onErrorReadFile1(error, x, no, resultSet); 
+                    });
+                }, function(error) {
+                    onErrorReadFile2(error, x, no, resultSet);
+                });
+            }, function(error) {
+                onErrorReadFile3(error, x, no, resultSet); 
+            });
+        }
+
+        function deletefile(nama_file){
+            var fileName = nama_file+".txt";
+
+            window.resolveLocalFileSystemURL(cordova.file.externalDataDirectory, function(directoryEntry) {
+                directoryEntry.getFile(fileName, {create: false}, function(fileEntry) {
+                    fileEntry.remove(function() {
+                        // File berhasil dihapus
+                        console.log("File berhasil dihapus: " + fileName);
+                    }, function(error) {
+                        // Gagal menghapus file
+                        console.error("Gagal menghapus file: " + error.code);
+                    });
+                }, function(error) {
+                    // File tidak ditemukan
+                    console.error("File tidak ditemukan: " + error.code);
+                });
+            }, function(error) {
+                // Direktori tidak ditemukan
+                console.error("Direktori tidak ditemukan: " + error.code);
+            });
+
+        }
+
+        function confirmupload1(pilihannya) {
+            if(pilihannya=='1'){
+                uploaddata();
+            }else{
+                // alert('You selected button ' + jenis);
+            }
+        }
+
+        function confirmupload(){
+            let arraynya = ['Upload','Cancel'];
+            navigator.notification.confirm(
+                "Yakin di Upload?", // message
+                (buttonIndex) => confirmupload1(buttonIndex),            
+                "Upload",           // title
+                arraynya     // buttonLabels
+            );
+        }
+
+        function finalupload(result,x,no,resultSet){
+            var absen_id = resultSet.rows.item(x)['absen_id'];
+            var absen_user = resultSet.rows.item(x)['absen_user'];
+            var absen_username = resultSet.rows.item(x)['absen_username'];
+            var absen_date = resultSet.rows.item(x)['absen_date'];
+            var absen_time = resultSet.rows.item(x)['absen_time'];
+            var absen_type = resultSet.rows.item(x)['absen_type'];
+            var estate_id = resultSet.rows.item(x)['estate_id'];
+            var estate_name = resultSet.rows.item(x)['estate_name'];
+            var divisi_id = resultSet.rows.item(x)['divisi_id'];
+            var divisi_name = resultSet.rows.item(x)['divisi_name'];
+            var absen_geo = resultSet.rows.item(x)['absen_geo'];
+            var absen_picture = resultSet.rows.item(x)['absen_picture'];
+
+            // Membuat objek FormData
+            var formData = new FormData();
+            formData.append('absen_user', absen_user);
+            formData.append('absen_username', absen_username);
+            formData.append('absen_date', absen_date);
+            formData.append('absen_time', absen_time);
+            formData.append('absen_type', absen_type);
+            formData.append('estate_id', estate_id);
+            formData.append('estate_name', estate_name);
+            formData.append('divisi_id', divisi_id);
+            formData.append('divisi_name', divisi_name);
+            formData.append('absen_geo', absen_geo);
+            isipicture = result;
+            formData.append('absen_picture', isipicture);
+
+            // alert(isipicture);
+            // Melakukan AJAX request
+            $.ajax({
+                url: 'https://parnaagromas.com/tphdigital/api/absen',
+                type: 'POST',
+                data: formData,
+                processData: false,  // Tetapkan ke false agar FormData tidak diproses secara otomatis
+                contentType: false,  // Tetapkan ke false karena FormData sudah berisi tipe konten yang benar
+                success: function(response) {
+                    
+                    db.transaction(function (tx) {
+                        var query1 = "DELETE FROM absen WHERE absen_id = "+absen_id;
+                        tx.executeSql(query1, [], function (tx, resultSet1) { 
+                            deletefile(absen_user);
+                            ambildata('absen','semua','');
+                            if(no==resultSet.rows.length){
+                                notif('Sukses Upload Data!');
+                                clearField();                   
+                                playAudio('berhasil.mp3');
+                            }                                           
+                        },
+                        function (tx, error) {
+                            notif('DELETE error: ' + error.message);                      
+                            playAudio('gagal.mp3');
+                        });
+                        
+                        // alert(no+"=="+resultSet.rows.length);
+                    });
+
+                    
+                    
+                },
+                error: function(xhr, status, error) {
+                    notif('Error:', error);
+                }
+            });
+        }
+
+        function uploaddata(){
+            db.transaction(function (tx) {
+                let hariini = now();
+                // var query = `SELECT * FROM absen WHERE absen_date = '${hariini}'`; 
+                var query = `SELECT * FROM absen WHERE 1`;                
+                // notif(query);
+                $("#htmlupload").html('');
+                tx.executeSql(query, [], function (tx, resultSet) { 
+                    let no=1;
+                    // notif(resultSet.rows.length);
+                    for (var x = 0; x < resultSet.rows.length; x++) {                        
+                        /* var cell ='<form action="https://parnaagromas.com/tphdigital/api/absen" class="form-horizontal" method="post" enctype="multipart/form-data">';
+                        cell += '<input name="absen_user" value="'+resultSet.rows.item(x)['absen_user']+'">'; 
+                        cell += '<input name="absen_username" value="'+resultSet.rows.item(x)['absen_username']+'">'; 
+                        cell += '<input name="absen_date" value="'+resultSet.rows.item(x)['absen_date']+'">'; 
+                        cell += '<input name="absen_time" value="'+resultSet.rows.item(x)['absen_time']+'">'; 
+                        cell += '<input name="absen_type" value="'+resultSet.rows.item(x)['absen_type']+'">'; 
+                        cell += '<input name="estate_id" value="'+resultSet.rows.item(x)['estate_id']+'">'; 
+                        cell += '<input name="estate_name" value="'+resultSet.rows.item(x)['estate_name']+'">'; 
+                        cell += '<input name="divisi_id" value="'+resultSet.rows.item(x)['divisi_id']+'">'; 
+                        cell += '<input name="divisi_name" value="'+resultSet.rows.item(x)['divisi_name']+'">'; 
+                        cell += '<input name="absen_geo" value="'+resultSet.rows.item(x)['absen_geo']+'">'; 
+                        cell += '<input id="p'+resultSet.rows.item(x)['absen_user']+'" name="absen_picture" value="'+resultSet.rows.item(x)['absen_picture']+'">'; 
+                        cell += '<button  type="submit" id="psubmit'+resultSet.rows.item(x)['absen_user']+'" type="submit" class="btn btn-primary">Submit</button>';
+                        cell += '</form>';                         
+                        $("#htmlupload").append(cell);                        
+                        bacafile(resultSet.rows.item(x)['absen_user']); */
+
+                        
+                        let isipicture;                        
+                        var absen_user = resultSet.rows.item(x)['absen_user'];
+                        bacafileajax(absen_user,x,no,resultSet, function(result,x,no,resultSet) {
+                            finalupload(result,x,no,resultSet);
+                        });
+                        
+                            no++;
+                        
+                        
+                    }
+                });
+            });
+        }
+
+
+        function upload(formname) {
+            $("#"+formname).on('submit',(function(e) {
+                let a = new FormData(this);
+                e.preventDefault();
+                $.ajax({
+                    url: "https://parnaagromas.com/tphdigital/api/absen",
+                    type: "POST",
+                    data:  new FormData(this),
+                    contentType: false,
+                    cache: false,
+                    processData:false,
+                    beforeSend : function()
+                    {
+                        //$("#preview").fadeOut();
+                        $("#err").fadeOut();
+                    },
+                    success: function(data)
+                    {
+                        if(data=='invalid')
+                        {
+                            // invalid file format.
+                            $("#err").html("Invalid File !").fadeIn();
+                        }
+                        else
+                        {
+                            // view uploaded file.
+                            $("#preview").html(data).fadeIn();
+                            $("#form")[0].reset(); 
+                        }
+                    },
+                    error: function(e) 
+                    {
+                        $("#err").html(e).fadeIn();
+                    }          
+                });
+            }));
+        }
+
+
+        function getAbsenceType() {
+            const currentTime = new Date();
+            const currentHour = currentTime.getHours();
+            if (currentHour >= 0 && currentHour < 12) {
+                $("#absen_type").val("Masuk");
+            } else {
+                $("#absen_type").val("Keluar");
+            }
+        }
+
+
+        //gambar 
+        function writeToFile(fileName, text) {
+            let fname = fileName+".txt";
+            window.resolveLocalFileSystemURL(cordova.file.externalDataDirectory, function(directoryEntry) {
+                directoryEntry.getFile(fname, { create: true }, function(fileEntry) {
+                    fileEntry.createWriter(function(fileWriter) {
+                        fileWriter.onwriteend = function() {
+                            $("#absenPicture").attr("src", text); 
+                        };
+
+                        fileWriter.onerror = function(e) {
+                            notif("Gagal menulis ke file: " + e.toString());
+                        };
+
+                        var blob = new Blob([text], { type: 'text/plain' });
+                        fileWriter.write(blob);
+                    }, function(error) {
+                        notif("Gagal membuat writer: " + error.toString());
+                    });
+                }, function(error) {
+                    notif("Gagal mendapatkan file: " + error.toString());
+                });
+            }, function(error) {
+                notif("Gagal mengakses direktori: " + error.toString());
+            });
+        }
+
+        function readFromFile(fileName) {
+            let fname = fileName+".txt";
+            // alert(fileName);
+            window.resolveLocalFileSystemURL(cordova.file.externalDataDirectory, function(directoryEntry) {
+                directoryEntry.getFile(fname, { create: false }, function(fileEntry) {
+                    fileEntry.file(function (file) {
+                        var reader = new FileReader();
+
+                        reader.onloadend = function () {
+                            $("#"+fileName).attr("src", this.result); 
+                        };
+
+                        reader.readAsText(file);
+                    }, onErrorReadFile);
+                }, onErrorReadFile);
+            }, onErrorReadFile);
+        }
+
+        function onErrorReadFile(error){
+            notif(JSON.stringify(error).toString());
+        }
+      
+
+        function absenImg(imageURI) {
+            let src =  imageURI;  
+            src =  "data:image/jpeg;base64," + imageURI;          
+            // $("#absenPicture").attr("src", src); 
+            let absen_user = $("#absen_user").val();
+            writeToFile(absen_user, src);  
+            $("#submit").show();          
+        }
+        function errorabsenImg(message) {
             notif('Failed because: ' + message);
         }
-        function picturePanen() {
-            navigator.camera.getPicture(pruningImg, errorpruningImg, { quality: 50, destinationType: Camera.DestinationType.FILE_URI });
+        function pictureAbsen() {
+            navigator.camera.getPicture(absenImg, errorabsenImg, {quality: 50, destinationType: Camera.DestinationType.DATA_URL});
+            // navigator.camera.getPicture(absenImg, errorabsenImg, {quality: 50, destinationType: Camera.DestinationType.FILE_URI});
         }
 
         //geolocation
-        var panenGeo = function (position) {
+        var absenGeo = function (position) {
                 let geolo = position.coords.latitude+'|'+position.coords.longitude;
-                $("#hapushapus").val(geolo);
+                $("#absen_geo").val(geolo);
         };
         function errorGeo(error) {
             notif('code: ' + error.code + '\n' +
                 'message: ' + error.message + '\n');
         }
-        function geoPanen() {
-            navigator.geolocation.getCurrentPosition(panenGeo, errorGeo);
+        function geoAbsen() {
+            navigator.geolocation.getCurrentPosition(absenGeo, errorGeo);
         }
         
         function clearField(){
-            $("#pruning_baris").val("");
-            $("#pruning_tp").val("");
+            $("#absen_user").val("");
+            $("#absen_type").val("");
             tpname();
-            $("#pruning_pokok").val("");
-            $("#pruning_pelepah").val("");
-            $("#pruning_picture").val("");
+            tp();
+            $("#absen_date").val("");
+            $("#absen_time").val("");
             
-            
-            $("#pruning_tpname").val("");
+            $("#absen_date").val(now());
+            $("#absen_time").val(time());
 
-            $("#blok_id").val("");
-            $("#blok_name").val("");
-            $("#pruningPicture").attr("src","res/no_picture.png");            
+            $("#absen_picture").val("");
+            $("#absenPicture").attr("src","res/no_picture.png");  
+            
+            getAbsenceType();  
+             
+            $("#submit").hide();                   
         }
         
         function submit(){
-            let pruning_baris = $("#pruning_baris").val();
-            let pruning_tp = $("#pruning_tp").val();
-            let pruning_pokok = $("#pruning_pokok").val();
-            let pruning_pelepah = $("#pruning_pelepah").val();
-            let pruning_picture = $("#pruning_picture").val();
-            let pruning_mandor = $("#pruning_mandor").val();
-            let pruning_date = $("#pruning_date").val();
-
+            let absen_user = $("#absen_user").val();
+            let absen_username = $("#absen_username").val();
+            let absen_type = $("#absen_type").val();
             let estate_id = $("#estate_id").val();
-            let divisi_id = $("#divisi_id").val();
-            
             let estate_name = $("#estate_name").val();
+            let divisi_id = $("#divisi_id").val();
             let divisi_name = $("#divisi_name").val();
+            let absen_geo = $("#absen_geo").val();
+
             
+            let absen_date = now();
+            let absen_time = $("#absen_time").val();
+
+            let absen_picture = $("#absen_picture").val();
             
-            let pruning_tpname = $("#pruning_tpname").val();
-            let pruning_mandorname = $("#pruning_mandorname").val();
-            
-            let blok_id = $("#blok_id").val();
-            let blok_name = $("#blok_name").val();
-            
-            let data = 'pruning_baris='+pruning_baris+
-                ',pruning_tp='+pruning_tp+
-                ',pruning_pokok='+pruning_pokok+
-                ',pruning_pelepah='+pruning_pelepah+
-                ',pruning_picture='+pruning_picture+
-                ',pruning_mandor='+pruning_mandor+
-                ',pruning_date='+pruning_date+
+            let data = 'absen_user='+absen_user+
+                ',absen_username='+absen_username+
+                ',absen_type='+absen_type+
+                ',absen_date='+absen_date+
+                ',absen_time='+absen_time+
                 ',estate_id='+estate_id+
-                ',divisi_id='+divisi_id+
                 ',estate_name='+estate_name+
+                ',divisi_id='+divisi_id+
                 ',divisi_name='+divisi_name+
-                ',pruning_tpname='+pruning_tpname+
-                ',pruning_mandorname='+pruning_mandorname+
-                ',blok_id='+blok_id+
-                ',blok_name='+blok_name;
+                ',absen_geo='+absen_geo+
+                ',absen_picture='+absen_picture;
                 // notif(data);
-            inputOrUpdateData('pruning', data);
+            inputOrUpdateData('absen', data);
 
         }
-        function updatedataPruning(table,columns,valuesUpdate,pruning_id){
+        function updatedataabsen(table,columns,valuesUpdate,absen_id){
             db.transaction(function (tx) {
-                var updateQuery = "UPDATE " + table + " SET " + columns.join('=?, ') + "=? WHERE pruning_id = '"+ pruning_id + "'";
+                var updateQuery = "UPDATE " + table + " SET " + columns.join('=?, ') + "=? WHERE absen_id = '"+ absen_id + "'";
                             // notif(updateQuery);
                 tx.executeSql(updateQuery, valuesUpdate, function (tx, res) {
-                    ambildata('pruning','semua','');  
+                    ambildata('absen','semua','');  
                     playAudio('berhasil.mp3');
                 }, function (tx, error) {
                     notif('Kesalahan UPDATE: ' + error.message);            
@@ -213,23 +546,26 @@
                 });
             });
         }
-        function onConfirmUpdate(pilihannya,table,columns,valuesUpdate,pruning_id) {
+        function onConfirmUpdate(pilihannya,table,columns,valuesUpdate,absen_id) {
             if(pilihannya=='1'){
-                updatedataPruning(table,columns,valuesUpdate,pruning_id);
+                updatedataabsen(table,columns,valuesUpdate,absen_id);
             }else{
                 // alert('You selected button ' + jenis);
             }
         }
 
-        function confirmUpdatePruning(message,title,table,columns,valuesUpdate,pruning_id) {
+        function confirmUpdateabsen(message,title,table,columns,valuesUpdate,absen_id) {
             let arraynya = ['Update','Cancel'];
             navigator.notification.confirm(
                 message, // message
-                (buttonIndex) => onConfirmUpdate(buttonIndex, table,columns,valuesUpdate,pruning_id),            
+                (buttonIndex) => onConfirmUpdate(buttonIndex, table,columns,valuesUpdate,absen_id),            
                 title,           // title
                 arraynya     // buttonLabels
             );
         }
+
+        
+
         function inputOrUpdateData(table, data) {
             // notiftext(data);
             db.transaction(function (tx) {
@@ -238,48 +574,53 @@
                 var values = [];
                 var valuesUpdate = [];
 
-                var pruningidCheck = '';
-                var pruningidCheckUpdate = '';
-                var pruningmandor = '';
+                var absenidCheck = '';
+                var absenidCheckUpdate = '';
+                var absenmandor = '';
                 dataArray.forEach(function (item) {
                     var pair = item.split('=');
                     columns.push(pair[0]);
-                    let isi = (pair[1] === 'null') ? "NULL" : "'" + pair[1].trim() + "'";
-                    let isiUpdate = (pair[1] === 'null') ? "NULL" : pair[1].trim();
-                    values.push(isi);                 
-                    valuesUpdate.push(isiUpdate);                 
-                    if(pair[0] == 'pruning_baris'){
-                        pruningidCheck=isi;   
-                        pruningidCheckUpdate=isiUpdate;   
-                        // notif(isi);    
-                    }                 
-                    if(pair[0] == 'pruning_mandor'){
-                        pruningmandor=isiUpdate;   
-                        // notif(isi);    
-                    }    
-                    
+                    if(pair[0]=="absen_picture" || pair[0]=="absen_geo"){
+                        let isi = (pair[1] === 'null') ? "NULL" : "'" + pair[1] + "'";
+                        let isiUpdate = (pair[1] === 'null') ? "NULL" : pair[1];
+                        values.push(isi);                 
+                        valuesUpdate.push(isiUpdate); 
+                    }else{
+                        let isi = (pair[1] === 'null') ? "NULL" : "'" + pair[1].trim() + "'";
+                        let isiUpdate = (pair[1] === 'null') ? "NULL" : pair[1].trim();
+                        values.push(isi);                 
+                        valuesUpdate.push(isiUpdate); 
+                    }
+                                         
                 });
 
-                // Mengecek apakah pruning_baris sudah ada dalam tabel
-                var checkQuery = "SELECT * FROM " + table + " WHERE pruning_baris = ? AND pruning_mandor = ?";
-                // notif(checkQuery); 
-                tx.executeSql(checkQuery, [pruningidCheckUpdate, pruningmandor], function (tx, result) {
+                // Mengecek apakah absen_baris sudah ada dalam tabel
+                let useridn = $("#absen_user").val();
+                let hariini = now();
+                let tipe = $("#absen_type").val();
+                if(absen_type=="Masuk"){
+                    var checkQuery = `SELECT * FROM absen WHERE absen_date = ? AND absen_type = '${tipe}' AND absen_user=?`;
+                }else{
+                    var checkQuery = `SELECT * FROM absen WHERE absen_date = ?  AND absen_type = '${tipe}' AND absen_user=?`;
+                }
+                tx.executeSql(checkQuery, [hariini, useridn], function (tx, result) {
                     let jmldata = result.rows.length;
                     // notif(jmldata); 
                     if (jmldata > 0) {
-                        let pruning_id = result.rows.item(0)['pruning_id'];
-                        confirmUpdatePruning('Data sudah ada. Apakah akan ditimpa?','Data Ditemukan',table,columns,valuesUpdate,pruning_id)
-                        // Jika pruning_baris sudah ada, lakukan UPDATE
-                        
+                        let absen_id = result.rows.item(0)['absen_id'];
+                        confirmUpdateabsen('Data sudah ada. Apakah akan ditimpa?','Data Ditemukan',table,columns,valuesUpdate,absen_id)
+                        // Jika absen_baris sudah ada, lakukan UPDATE
+                        clearField();
                     } else {
-                        // Jika pruning_baris belum ada, lakukan INSERT
+                        // Jika absen_baris belum ada, lakukan INSERT
                         var insertQuery = "INSERT INTO " + table + " (" + columns.join(',') + ") VALUES (" + values.join(',') + ")";
                         // notif(insertQuery);
                         tx.executeSql(insertQuery, [], function (tx, res) {
                             insertID = res.insertId;
                             // notif(insertID);
-                            ambildata('pruning','semua','');  
+                            ambildata('absen','semua','');  
                             playAudio('berhasil.mp3'); 
+                            clearField();
                         }, function (tx, error) {
                             notif('Kesalahan INSERT: ' + error.message);      
                             playAudio('gagal.mp3');
@@ -287,6 +628,7 @@
                     }
                     clearField();
                 }, function (tx, error) {
+                    $("#codeerror").val(error.message); 
                     notif('Kesalahan transaksi: ' + error.message);      
                     playAudio('gagal.mp3');
                 });
@@ -299,7 +641,7 @@
             });
         }        
 
-        function deletepruning(table,id){
+        function deleteabsen(table,id){
             db.transaction(function (tx) {
                 var query = "DELETE FROM " + table + " WHERE " + table + "_id = ?";
                 tx.executeSql(query, [id], function (tx, res) {
@@ -320,13 +662,13 @@
 
         function onConfirmDelete(pilihannya,table,id) {
             if(pilihannya=='1'){
-                deletepruning(table,id);
+                deleteabsen(table,id);
             }else{
                 // alert('You selected button ' + jenis);
             }
         }
 
-        function confirmdeletePruning(message,title,table,id) {
+        function confirmdeleteabsen(message,title,table,id) {
             let arraynya = ['Delete','Cancel'];
             navigator.notification.confirm(
                 message, // message
@@ -336,80 +678,20 @@
             );
         }
 
-        function ambildata(table,status,perintahkartu) {
-            db.transaction(function (tx) {
-                var query = "SELECT * FROM " + table+" WHERE pruning_mandor='"+userid+"' ORDER BY "+table+"_id DESC";
-                if(status=="terakhir"){
-                    query += " LIMIT 1";
-                }
-                // notif(query);
-                $("#"+table).html('');
-                var cell ='';
-                tx.executeSql(query, [], function (tx, resultSet) {                    
-                    let no=1;
-                    // notif(resultSet.rows.length);
-                    for (var x = 0; x < resultSet.rows.length; x++) {
-                        cell += '<div class="row p-3 ballon">';                        
-                        cell += '<H1 class="col-12 alert alert-success" id="judulpanen">Data Terekam di Handphone</H1>';        
-                        
-                        cell += '<div class="col-5 text-left">Date</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['pruning_date']+'</div>';
-                        cell += '<div class="col-5 text-left">Nama Baris</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['pruning_baris']+'</div>';
-                        cell += '<div class="col-5 text-left">Tenaga Panen</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['pruning_tpname']+'</div>';
-                        cell += '<div class="col-5 text-left">Jml Pokok</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['pruning_pokok']+'</div>';
-                        cell += '<div class="col-5 text-left">Jml Pelepah</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['pruning_pelepah']+'</div>';
-                        cell += '<div class="col-5 text-left">Estate</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['estate_name']+'</div>';
-                        cell += '<div class="col-5 text-left">Divisi</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['divisi_name']+'</div>';
-                        cell += '<div class="col-5 text-left">Blok</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['blok_name']+'</div>';
-                       
-                        let srcpic='';
-                        if(resultSet.rows.item(x)['pruning_picture']==""){
-                            srcpic='res/no_picture.png';
-                        }else{
-                            srcpic=resultSet.rows.item(x)['pruning_picture'];
-                        }
-                        cell += '<div class="col-5 text-left">Picture</div><div class="col-7 text-left">: &nbsp;&nbsp;<img src="'+srcpic+'" class="img-thumbnail"></div>';
-
-                        cell += '<div onclick="confirmdeletePruning(\'Yakin di Delete?\',\'Delete Data Panen\',\'pruning\','+resultSet.rows.item(x)['pruning_id']+')" class="col-12  mt-5 mb-5 text-danger"> >>> &nbsp;&nbsp;<button class="btn btn-danger btn-block"><i class="fas fa-window-close"></i> Delete</button>&nbsp;&nbsp; <<< </div>';             
-
-                        cell +='</div>';
-                        if(resultSet.rows.length == no){
-                            $("#"+table).append(cell); 
-                            // notif(cell); 
-                        }
-                        no++;                        
-                    }
-                    if (x < 1) {
-                        // notif("Tidak Ada Data di Database!");      
-                        // playAudio('datakosong.mp3');
-                    }
-                },
-                function (tx, error) {
-                    notif('SELECT error: ' + error.message);    
-                    playAudio('gagal.mp3');
-                });
-                
-            }, function (error) {
-                notif('transaction error: ' + error.message);   
-                playAudio('gagal.mp3');
-            }, function () {
-                // notif('transaction ok');
-            });
-        } 
-        
         function tpname(){            
             db.transaction(function (tx) {
                 var query = "SELECT * FROM tp WHERE divisi_id='"+divisiid+"' ORDER BY panen_tpname ASC";
                 // notif(query);
-                $("#pruning_tp").html('');
+                $("#absen_user").html('');
                 var cell ='';
                 tx.executeSql(query, [], function (tx, resultSet) {
                     let no=1;
                     // notif(resultSet.rows.length);     
-                    cell += '<option value="">Pilih Tenaga Panen</option>';
+                    cell += '<option value="">Pilih Tenaga absen</option>';
                     for (var x = 0; x < resultSet.rows.length; x++) {   
                         cell += '<option panen_tpname="'+resultSet.rows.item(x)['panen_tpname']+'" value="'+resultSet.rows.item(x)['panen_tp']+'">'+resultSet.rows.item(x)['panen_placement']+' - '+resultSet.rows.item(x)['panen_tpname']+' ('+resultSet.rows.item(x)['panen_tpnik']+')</div>';
                         if(resultSet.rows.length == no){
-                            $("#pruning_tp").append(cell);
+                            $("#absen_user").append(cell);
                         }
                         no++;
                         
@@ -432,48 +714,98 @@
         }
         
         function tp(){            
-            let pruning_tpname = $("#pruning_tp").find(':selected').attr('panen_tpname');
-            $("#pruning_tpname").val(pruning_tpname);
+            let absen_username = $("#absen_user").find(':selected').attr('panen_tpname');
+            $("#absen_username").val(absen_username);
+            let absenuser = $("#absen_user").val();
+            if(absenuser>0){
+                $(".absenpctr").show();
+                $("#absen_picture").val(absenuser);
+            }else{
+                $(".absenpctr").hide();
+                $("#absen_picture").val("");
+            }
         }
         
-        function blok() {
+        
+        function ambildata(table,status,perintahkartu) {
+            cekdatasemua();
             db.transaction(function (tx) {
-                var query = "SELECT * FROM blok WHERE divisi_id='"+divisiid+"'";
+                let hariini = now();
+                let tipe = $("#absen_type").val();
+                if(absen_type=="Masuk"){
+                    var query = `SELECT * FROM absen WHERE absen_date = '${hariini}' AND absen_type = '${tipe}'`;
+                }else{
+                    var query = `SELECT * FROM absen WHERE absen_date = '${hariini}' AND absen_type = '${tipe}'`;
+                }
+                
+                // var query = `SELECT * FROM absen WHERE absen_date = '${hariini}'`;
+                
                 // notif(query);
-                $("#blok_id").html('');
-                var cell ='';
-                tx.executeSql(query, [], function (tx, resultSet) {
+                $("#"+table).html('');
+                
+                  
+                tx.executeSql(query, [], function (tx, resultSet) { 
                     let no=1;
-                    // notif(resultSet.rows.length);     
-                    cell += '<option value="">Pilih Blok</option>';
-                    for (var x = 0; x < resultSet.rows.length; x++) {   
-                        cell += '<option blok_name="'+resultSet.rows.item(x)['blok_name']+'" value="'+resultSet.rows.item(x)['blok_id']+'">'+resultSet.rows.item(x)['blok_name']+'</div>';
-                        if(resultSet.rows.length == no){
-                            $("#blok_id").append(cell);
+                    // notif(resultSet.rows.length);
+                    let tdataabsenharian='';   
+                    for (var x = 0; x < resultSet.rows.length; x++) {  
+                        if(x==0){
+                            let ab = '<div class="col-12 text-center alert alert-success mb-3">.: Data Berhasil Absen :.</div>';
+                            $("#"+table).append(ab);
+                        }                      
+                        var cell ='';
+                        cell += '<div class="row p-3 ballon">'; 
+
+                        let dataabsenharian = '*'+
+                            'absen_user='+resultSet.rows.item(x)['absen_user']+
+                            ',absen_username='+resultSet.rows.item(x)['absen_username']+
+                            ',absen_date='+resultSet.rows.item(x)['absen_date']+
+                            ',absen_time='+resultSet.rows.item(x)['absen_time']+
+                            ',absen_type='+resultSet.rows.item(x)['absen_type']+
+                            ',estate_id='+resultSet.rows.item(x)['estate_id']+
+                            ',estate_name='+resultSet.rows.item(x)['estate_name']+
+                            ',divisi_id='+resultSet.rows.item(x)['divisi_id']+
+                            ',divisi_name='+resultSet.rows.item(x)['divisi_name']+
+                            ',absen_geo='+resultSet.rows.item(x)['absen_geo']+
+                            ',absen_picture='+resultSet.rows.item(x)['absen_picture'];
+
+                        tdataabsenharian +=dataabsenharian;
+
+                        cell += '<div class="col-12 text-center alert alert-success mb-3">('+resultSet.rows.item(x)['absen_id']+') '+resultSet.rows.item(x)['absen_username']+'</div>';
+                        cell += '<div class="col-4 text-left">Date</div><div class="col-8 text-left">: &nbsp;&nbsp;'+sekarang()+' '+resultSet.rows.item(x)['absen_time']+'</div>';
+                        cell += '<div class="col-4 text-left">Estate</div><div class="col-8 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['estate_name']+'</div>';
+                        cell += '<div class="col-4 text-left">Divisi</div><div class="col-8 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['divisi_name']+'</div>';
+                        cell += '<div class="col-4 text-left">Geolocation</div><div class="col-8 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['absen_geo']+'</div>';
+
+                        let srcpic='res/no_picture.png';
+                        cell += '<div class="col-4 text-left">Picture</div><div class="col-8 text-left">: &nbsp;&nbsp;<img id="'+resultSet.rows.item(x)['absen_user']+'" src="'+srcpic+'" class="img-thumbnail"></div>';
+                        if(resultSet.rows.item(x)['absen_picture']!=""){
+                            readFromFile(resultSet.rows.item(x)['absen_picture']);
+                            $("#"+resultSet.rows.item(x)['absen_user']).attr("src","res/logo.png");
                         }
-                        no++;
+
+                        cell += '<div onclick="confirmdeleteabsen(\'Yakin di Delete?\',\'Delete Data\',\'absen\',\''+resultSet.rows.item(x)['absen_id']+'\')" class="col-12  mt-5 mb-5 text-danger"> >>> &nbsp;&nbsp;<button class="btn btn-danger btn-block"><i class="fas fa-window-close"></i> Delete</button>&nbsp;&nbsp; <<< </div>';  
+                                  
+                        cell +='</div>';
+                        $("#"+table).append(cell);      
                         
+                     
+                        no++;
                     }
                     if (x < 1) {
-                        // notif("Tidak ada data!");
+                        // notif("Tidak Ada Data di Database!");      
+                        // playAudio('datakosong.mp3');
                     }
                 },
                 function (tx, error) {
-                    notif('SELECT error: ' + error.message);   
+                    notif('SELECT error: ' + error.message);    
                     playAudio('gagal.mp3');
                 });
                 
-            }, function (error) {
-                notif('transaction error: ' + error.message);   
-                playAudio('gagal.mp3');
-            }, function () {
-                // notif('transaction ok');
+            
             });
         }
-        function dblokname(){            
-            let blok_name = $("#blok_id").find(':selected').attr('blok_name');
-            $("#blok_name").val(blok_name);
-        }
+
         
     </script>
 </body>

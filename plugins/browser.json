@@ -38,6 +38,18 @@
     },
     "cordova-plugin-media": {
       "PACKAGE_NAME": "com.qithy.tphdigital"
+    },
+    "cordova-plugin-file-transfer": {
+      "PACKAGE_NAME": "com.qithy.tphdigital"
+    },
+    "cordova-plugin-tesseract": {
+      "PACKAGE_NAME": "com.qithy.tphdigital"
+    },
+    "cordova-plugin-appinfo": {
+      "PACKAGE_NAME": "com.qithy.tphdigital"
+    },
+    "cordova-plugin-inappbrowser": {
+      "PACKAGE_NAME": "com.qithy.tphdigital"
     }
   },
   "dependent_plugins": {

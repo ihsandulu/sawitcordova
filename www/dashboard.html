@@ -26,10 +26,10 @@
     <style>
         #frame1{
             /* border-radius: 5px;  */
-            position: fixed !important;
+            position:relative !important;
             left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
+            top: 20px;
+            transform: translate(-50%, 0);
             width: 90%;
         }
         .frame2{border-radius: 5px; padding: 10px; }
@@ -53,35 +53,63 @@
             <h5 class="username"></h5>
         </div>   
         <div class="row">
-            <div class="col-6 frame2">
+            <div class="col-6 frame2 halaman" id="hquarry">
+                <div class="frame3">
+                    <div class="d-grid gap-2 mx-auto">
+                        <button onclick="buka('quarry.html')" class="btn btn-success btn-block"><i class="fas fa-truck text-hijau"></i> Quarry</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 frame2 halaman" id="hpruning">
                 <div class="frame3">
                     <div class="d-grid gap-2 mx-auto">
                         <button onclick="buka('pruning.html')" class="btn btn-success btn-block"><i class="fas fa-tree text-hijau"></i> Pruning</button>
                     </div>
                 </div>
             </div>
-            <div class="col-6 frame2">
+            <div class="col-6 frame2 halaman" id="hrkh">
                 <div class="frame3">
                     <div class="d-grid gap-2 mx-auto">
                         <button onclick="buka('rkh.html')" class="btn btn-success btn-block"><i class="fas fa-tree text-hijau"></i> RKH</button>
                     </div>
                 </div>
             </div>
-            <div class="col-6 frame2">
+            <div class="col-6 frame2 halaman" id="hpanen">
                 <div class="frame3">
                     <div class="d-grid gap-2 mx-auto">
                         <button onclick="buka('panen.html')" class="btn btn-success btn-block"><i class="fas fa-hand-rock text-kuning"></i> PANEN</button>
                     </div>
                 </div>
             </div>
-            <div class="col-6 frame2">
+            <div class="col-6 frame2 halaman" id="hsptbs">
                 <div class="frame3">
                     <div class="d-grid gap-2 mx-auto">
                         <button onclick="buka('sptbs.html')" class="btn btn-success btn-block"><i class="fas fa-hand-lizard text-biru"></i> SPTBS</button>
                     </div>
                 </div>
             </div>
-            <div class="col-6 frame2">
+            <div class="col-6 frame2 halaman" id="hgrading">
+                <div class="frame3">
+                    <div class="d-grid gap-2 mx-auto">
+                        <button onclick="buka('grading.html')" class="btn btn-success btn-block text-putih font10"><i class="fas fa-tree text-hijau"></i> GRADING</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 frame2 halaman" id="habsen">
+                <div class="frame3">
+                    <div class="d-grid gap-2 mx-auto">
+                        <button onclick="buka('absen.html')" class="btn btn-success btn-block"><i class="fas fa-user text-ungu"></i> ABSEN</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 frame2 halaman" id="htimbangan">
+                <div class="frame3">
+                    <div class="d-grid gap-2 mx-auto">
+                        <button onclick="buka('timbangan.html')" class="btn btn-success btn-block"><i class="fas fa-weight-scale text-biru"></i> Timbangan</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 frame2" id="hsync">
                 <div class="frame3">
                     <div class="d-grid gap-2 mx-auto">
                         <button onclick="konfirmasisingkron()" id="btn-singkron" status="" class="btn btn-warning btn-block fa-lg gradient-custom-3 p-0 progress" style="height:40px" type="button">
@@ -90,41 +118,35 @@
                     </div>
                 </div>
             </div>
-            <div class="col-6 frame2">
+            <div class="col-6 frame2 halaman" id="htph_card">
                 <div class="frame3">
                     <div class="d-grid gap-2 mx-auto">
-                        <button onclick="buka('absen.html')" class="btn btn-success btn-block"><i class="fas fa-user text-ungu"></i> ABSEN</button>
+                        <button onclick="buka('tphcard.html')" class="btn btn-warning btn-block text-merahhitam">TPH CARD</button>
                     </div>
                 </div>
             </div>
-            <div class="col-6 frame2">
+            <div class="col-6 frame2 halaman" id="hsptbs_card">
                 <div class="frame3">
                     <div class="d-grid gap-2 mx-auto">
-                        <button onclick="buka('tphcard.html')" class="btn btn-warning btn-block text-merahhitam">SET TPH CARD</button>
+                        <button onclick="buka('sptbscard.html')" class="btn btn-warning btn-block text-merahhitam font10">SPTBS CARD</button>
                     </div>
                 </div>
             </div>
-            <div class="col-6 frame2">
+            <div class="col-6 frame2 halaman" id="hquarry_card">
                 <div class="frame3">
                     <div class="d-grid gap-2 mx-auto">
-                        <button onclick="buka('sptbscard.html')" class="btn btn-warning btn-block text-merahhitam font10">SET SPTBS CARD</button>
+                        <button onclick="buka('quarrycard.html')" class="btn btn-warning btn-block text-merahhitam font10">QUARRY CARD</button>
                     </div>
                 </div>
             </div>
-            <div class="col-6 frame2">
-                <div class="frame3">
-                    <div class="d-grid gap-2 mx-auto">
-                        <button onclick="hapusdatapanen('tph')" class="btn btn-danger btn-block"><i class="fas fa-address-book text-merah"></i> CLEAR TPH</button>
-                    </div>
-                </div>
-            </div>
-            <div class="col-6 frame2">
+            <div class="col-6 frame2 halaman" id="hreset_card">
                 <div class="frame3">
                     <div class="d-grid gap-2 mx-auto p-0">
-                        <button onclick="hapusdatapanen('sptbs')" class="btn btn-danger btn-block"><i class="fas fa-address-card text-merah text-2"></i> <small class="">CLEAR SPTBS</small></button>
+                        <button onclick="hapusdatapanen()" class="btn btn-danger btn-block"><i class="fas fa-address-card text-merah text-2"></i> <small class="">RESET CARD</small></button>
                     </div>
                 </div>
             </div>
+            <div class="col-12 mb-5">&nbsp;</div>
         </div>
     </div>
 
@@ -141,14 +163,19 @@
         var userName = localStorage.getItem('user_name');  
             
         //device ready 
-        document.addEventListener('deviceready', function () {             
+        document.addEventListener('deviceready', function () { 
+            // cekversion();
+            cekhalaman();
+                       
             if(userName==null){
                 window.location.href='login.html';
-            }else{
+            }else{ 
                 $("#mymdl").mdl("show");
                 $(".username").text(userName); 
             }                       
         }); 
+
+        
 
         function buka(url){
             window.location.href=url;
@@ -163,9 +190,7 @@
 
             }
         }
-        function hapusdatapanen(tipe){
-            // alert(tipe);
-            // hapusdata();
+        function hapusdatapanen(){
             navigator.notification.confirm(
                 'Yakin menghapus data!', // message
                 onConfirm,            // callback to invoke with index of button pressed
@@ -173,6 +198,8 @@
                 ['OK','Cancel']     // buttonLabels
             );
         }
+
+        
     </script>
 </body>
 

@@ -43,7 +43,12 @@
     </div>
     <div id="frame1" class="text-center " > 
         <div class="row p-3 ballon">                        
-            <H1 class="col-12 alert alert-success">Data Panen</H1>        
+            <H1 class="col-12 alert alert-success">
+                <button id="btnupload" onclick="confirmupload();" class="btn btn-danger btn-xs text-white"><i class="fas fa-upload"></i></button> Data Panen
+            </H1>          
+            <div  id="btnreadcard" class="col-12 mb-4  text-center">
+                
+            </div>            
             <div class="col-5 mb-4 text-left">Panen Card</div><div class="col-7 text-left">
                 <!-- <input readonly id="panen_card" class="form-control"> -->
                 <select onchange="cekkartuInput()" id="panen_card" class="form-control select2">
@@ -51,12 +56,12 @@
                 </select>
             </div>         
             <div class="col-5 mb-4 text-left">Blok</div><div class="col-7 text-left">
-                <select onchange="tph()" id="blok_id" class="form-control">
+                <select onchange="tph()" id="blok_id" class="form-control select2">
 
                 </select>
             </div>         
             <div class="col-5 mb-4 text-left">TPH</div><div class="col-7 text-left">
-                <select onchange="thntnm()" id="tph_id" class="form-control">
+                <select onchange="thntnm()" id="tph_id" class="form-control select2">
 
                 </select>
             </div>          
@@ -66,14 +71,14 @@
                 </select>
             </div>         
             <div class="col-5 mb-4 text-left">Thn Tanam</div><div class="col-7 text-left">
-                <input type="number" id="tph_thntanam" class="form-control">
+                <input onkeyup="cekfield();" type="number" id="tph_thntanam" class="form-control">
             </div>           
             <div class="col-5 mb-4 text-left">Brondolan</div><div class="col-7 text-left">
                 <input onclick="handleCheckbox()" type="checkbox" id="panen_brondold" name="panen_brondold" value="1">
                 <label for="panen_brondold"> Ya</label>
             </div>      
             <div class="col-5 mb-4 text-left" id="jml">Jumlah</div><div class="col-7 text-left">
-                <input type="number" id="panen_jml" class="form-control">
+                <input onkeyup="cekfield();" type="number" id="panen_jml" class="form-control">
             </div>
                
             <div class="col-12 text-left input-group">Geolocation</div>
@@ -82,9 +87,9 @@
                 <button onclick="geoPanen()" class="btn btn-outline-secondary" type="button" id="btn_geo"><i class="fas fa-cogs"></i></button>
             </div>         
             
-            <div class="col-12 text-left input-group">Picture</div>
-            <div class="input-group mb-4 ">
-                <input id="panen_picture" type="text" class="form-control text-biru" placeholder="" aria-label="Geolocation" aria-describedby="btn_picture">
+            <div class="col-12 text-left input-group panenpctr">Picture</div>
+            <div class="input-group mb-4 panenpctr">
+                <input readonly id="panen_picture" type="text" class="form-control text-biru" placeholder="" aria-label="Geolocation" aria-describedby="btn_picture">
                 <button onclick="picturePanen()" class="btn btn-outline-secondary" type="button" id="btn_picture"><i class="fas fa-camera"></i></button>
                 <img id="panenPicture" src="res/no_picture.png" class="img-thumbnail">
             </div> 
@@ -128,6 +133,7 @@
         //device ready 
         document.addEventListener('deviceready', function () { 
             $("#btnisikartu").hide();
+            $(".panenpctr").hide();
             localStorage.setItem('thntnm', '');          
             $("#datanfcjadi").val('');                
             $("#datanfcjadi").hide();
@@ -146,10 +152,206 @@
             }                      
         }); 
 
+
+        
+        
+        function onErrorReadFile1(error, x, no, resultSet){
+            notif('x='+x+", no="+no+"=>1"+JSON.stringify(error).toString());
+            finalupload("",x,no,resultSet);
+        }
+
+        
+        function onErrorReadFile2(error, x, no, resultSet){
+            // notif('x='+x+", no="+no+"=>2"+JSON.stringify(error).toString());
+            finalupload("",x,no,resultSet);
+        }
+
+        
+        function onErrorReadFile3(error, x, no, resultSet){
+            notif('x='+x+", no="+no+"=>3"+JSON.stringify(error).toString());
+            finalupload("",x,no,resultSet);
+        }
+
+        function bacafileajax(fileName, x, no, resultSet, callback) {
+            let fname = fileName+".txt";
+            // alert(fileName);
+            window.resolveLocalFileSystemURL(cordova.file.externalDataDirectory, function(directoryEntry) {
+                directoryEntry.getFile(fname, { create: false }, function(fileEntry) {
+                    fileEntry.file(function (file) {
+                        var reader = new FileReader();
+
+                        reader.onloadend = function () {
+                            callback(this.result, x, no, resultSet);
+                        };
+
+                        reader.readAsText(file);
+                    }, function(error) {
+                        onErrorReadFile1(error, x, no, resultSet); 
+                    });
+                }, function(error) {
+                    onErrorReadFile2(error, x, no, resultSet);
+                });
+            }, function(error) {
+                onErrorReadFile3(error, x, no, resultSet); 
+            });
+        }
+
+        function deletefile(nama_file){
+            var fileName = nama_file+".txt";
+
+            window.resolveLocalFileSystemURL(cordova.file.externalDataDirectory, function(directoryEntry) {
+                directoryEntry.getFile(fileName, {create: false}, function(fileEntry) {
+                    fileEntry.remove(function() {
+                        // File berhasil dihapus
+                        console.log("File berhasil dihapus: " + fileName);
+                    }, function(error) {
+                        // Gagal menghapus file
+                        console.error("Gagal menghapus file: " + error.code);
+                    });
+                }, function(error) {
+                    // File tidak ditemukan
+                    console.error("File tidak ditemukan: " + error.code);
+                });
+            }, function(error) {
+                // Direktori tidak ditemukan
+                console.error("Direktori tidak ditemukan: " + error.code);
+            });
+
+        }
+
+        function confirmupload1(pilihannya) {
+            if(pilihannya=='1'){
+                uploaddata();
+            }else{
+                // alert('You selected button ' + jenis);
+            }
+        }
+
+        function confirmupload(){
+            let arraynya = ['Upload','Cancel'];
+            navigator.notification.confirm(
+                "Yakin di Upload?", // message
+                (buttonIndex) => confirmupload1(buttonIndex),            
+                "Upload",           // title
+                arraynya     // buttonLabels
+            );
+        }
+
+        function finalupload(result,x,no,resultSet){
+            var panen_id = resultSet.rows.item(x)['panen_id'];
+            var panen_date = resultSet.rows.item(x)['panen_date'];
+            var tph_thntanam = resultSet.rows.item(x)['tph_thntanam'];
+            var panen_jml = resultSet.rows.item(x)['panen_jml'];
+            var user_id = resultSet.rows.item(x)['user_id'];
+            var estate_id = resultSet.rows.item(x)['estate_id'];
+            var divisi_id = resultSet.rows.item(x)['divisi_id'];
+            var seksi_id = resultSet.rows.item(x)['seksi_id'];
+            var blok_id = resultSet.rows.item(x)['blok_id'];
+            var tph_id = resultSet.rows.item(x)['tph_id'];
+            var panen_tp = resultSet.rows.item(x)['panen_tp'];
+            var user_name = resultSet.rows.item(x)['user_name'];
+            var estate_name = resultSet.rows.item(x)['estate_name'];
+            var divisi_name = resultSet.rows.item(x)['divisi_name'];
+            var seksi_name = resultSet.rows.item(x)['seksi_name'];
+            var blok_name = resultSet.rows.item(x)['blok_name'];
+            var tph_name = resultSet.rows.item(x)['tph_name'];
+            var sptbs_code = resultSet.rows.item(x)['sptbs_code'];
+            var panen_card = resultSet.rows.item(x)['panen_card'];
+            var panen_tpname = resultSet.rows.item(x)['panen_tpname'];
+            var panen_brondol = resultSet.rows.item(x)['panen_brondol'];
+            var panen_geo = resultSet.rows.item(x)['panen_geo'];
+            var panen_picture = resultSet.rows.item(x)['panen_picture'];
+
+            // Membuat objek FormData
+            var formData = new FormData();
+            formData.append('panenid', panen_id);
+            formData.append('panen_date', panen_date);
+            formData.append('tph_thntanam', tph_thntanam);
+            formData.append('panen_jml', panen_jml);
+            formData.append('user_id', user_id);
+            formData.append('estate_id', estate_id);
+            formData.append('divisi_id', divisi_id);
+            formData.append('seksi_id', seksi_id);
+            formData.append('blok_id', blok_id);
+            formData.append('tph_id', tph_id);
+            formData.append('panen_tp', panen_tp);
+            formData.append('user_name', user_name);
+            formData.append('estate_name', estate_name);
+            formData.append('divisi_name', divisi_name);
+            formData.append('seksi_name', seksi_name);
+            formData.append('blok_name', blok_name);
+            formData.append('tph_name', tph_name);
+            formData.append('sptbs_code', sptbs_code);
+            formData.append('panen_card', panen_card);
+            formData.append('panen_tpname', panen_tpname);
+            formData.append('panen_brondol', panen_brondol);
+            formData.append('panen_geo', panen_geo);
+            isipicture = result;
+            formData.append('panen_picture', isipicture);
+
+            // alert(isipicture);
+            // Melakukan AJAX request
+            $.ajax({
+                url: 'https://parnaagromas.com/tphdigital/api/uploadtph',
+                type: 'POST',
+                data: formData,
+                processData: false,  // Tetapkan ke false agar FormData tidak diproses secara otomatis
+                contentType: false,  // Tetapkan ke false karena FormData sudah berisi tipe konten yang benar
+                success: function(response) {                                    
+                    db.transaction(function (tx) {
+                        var query1 = "DELETE FROM panen WHERE panen_id = "+panen_id;
+                        tx.executeSql(query1, [], function (tx, resultSet1) { 
+                            deletefile(tph_id);
+                            ambildata('panen','semua','');
+                            if(no==resultSet.rows.length){
+                                notif('Sukses Upload Data!');
+                                clearData();                   
+                                playAudio('berhasil.mp3');
+                                cekdatasemua();
+                            }                                           
+                        },
+                        function (tx, error) {
+                            notif('DELETE error: ' + error.message);                      
+                            playAudio('gagal.mp3');
+                            cekdatasemua();
+                        });
+                        cekdatasemua();
+                        
+                        // alert(no+"=="+resultSet.rows.length);
+                    });                                    
+                },
+                error: function(xhr, status, error) {
+                    notif('Error:', error);
+                }
+            });
+        }
+
+        function uploaddata(){
+            db.transaction(function (tx) {
+                let hariini = now();
+                // var query = `SELECT * FROM panen WHERE panen_date = '${hariini}'`; 
+                var query = `SELECT * FROM panen WHERE 1`;                
+                // notif(query);
+                $("#htmlupload").html('');
+                tx.executeSql(query, [], function (tx, resultSet) { 
+                    let no=1;
+                    // notif(resultSet.rows.length);
+                    for (var x = 0; x < resultSet.rows.length; x++) {                          
+                        let isipicture;                        
+                        var tph_id = resultSet.rows.item(x)['tph_id'];
+                        bacafileajax(tph_id,x,no,resultSet, function(result,x,no,resultSet) {
+                            finalupload(result,x,no,resultSet);
+                        });
+                        no++;
+                    }
+                });
+            });
+        }
+
         function cekkartuInput(){
             let panen_card = $("#panen_card").val();
             if(panen_card!=""){
-                $("#btnisikartu").show();
+                cekfield();
             }else{
                 $("#btnisikartu").hide();
             }
@@ -190,7 +392,26 @@
             });
         }
 
+        function cekdatasemua(){
+            db.transaction(function (tx) {
+                var query = `SELECT * FROM panen WHERE 1`;  
+                tx.executeSql(query, [], function (tx, resultSet) { 
+                    if (resultSet.rows.length>0) { 
+                        $("#btnupload").show();
+                    } else{
+                        $("#btnupload").hide();
+                    }
+                });
+            });
+        }
+            
+
         function clearData(){
+            blok();
+            tph(); 
+            tpname();
+            cekdatasemua();
+
             $("#panen_card").val('');
             $("#blok_name").val('');
             $("#tph_name").val('');
@@ -208,11 +429,14 @@
             
             $("#panen_tp").html("");
             $("#panen_brondold").prop("checked", false);
-            $("#btnisikartu").hide();            
+            $("#btnisikartu").hide();      
             
-            blok();
-            tph(); 
-            tpname();
+            
+            $('#panen_card').select2('destroy');
+            $("#panen_card").val('');
+            $('#panen_card').select2();
+            
+            
             
             $("#panen_date").val(now());
             $("#user_id").val(userid);
@@ -227,25 +451,115 @@
         }
 
         //gambar 
+        function writeToFile(fileName, text) {
+            let fname = fileName+".txt";
+            window.resolveLocalFileSystemURL(cordova.file.externalDataDirectory, function(directoryEntry) {
+                directoryEntry.getFile(fname, { create: true }, function(fileEntry) {
+                    fileEntry.createWriter(function(fileWriter) {
+                        fileWriter.onwriteend = function() {
+                            $("#panenPicture").attr("src", text); 
+                            setTimeout(function(){
+                                cekfield();
+                            },3000);                            
+                        };
+
+                        fileWriter.onerror = function(e) {
+                            notif("Gagal menulis ke file: " + e.toString());
+                        };
+
+                        var blob = new Blob([text], { type: 'text/plain' });
+                        fileWriter.write(blob);
+                    }, function(error) {
+                        notif("Gagal membuat writer: " + error.toString());
+                    });
+                }, function(error) {
+                    notif("Gagal mendapatkan file: " + error.toString());
+                });
+            }, function(error) {
+                notif("Gagal mengakses direktori: " + error.toString());
+            });
+        } 
         function panenImg(imageURI) {
-            // let src =  "data:image/jpeg;base64," + imageURI;
-            // let src =  pathapps+'files/'+imageURI;
-            // let fileName = imageURI.substring(imageURI.lastIndexOf('/') + 1);
-            let src =  imageURI;            
-            $("#panenPicture").attr("src", src); 
-            $("#panen_picture").val(src);
+            let src =  imageURI;  
+            src =  "data:image/jpeg;base64," + imageURI;          
+            // $("#panenPicture").attr("src", src);  
+            let tph_id = $("#tph_id").val();
+            writeToFile(tph_id, src); 
         }
         function errorpanenImg(message) {
             notif('Failed because: ' + message);
         }
-        function picturePanen() {
-            navigator.camera.getPicture(panenImg, errorpanenImg, { quality: 50, destinationType: Camera.DestinationType.FILE_URI });
+        function picturePanen() {            
+            navigator.camera.getPicture(panenImg, errorpanenImg, {quality: 50, destinationType: Camera.DestinationType.DATA_URL});
+            // navigator.camera.getPicture(panenImg, errorpanenImg, {quality: 50, destinationType: Camera.DestinationType.FILE_URI});
+        }
+
+        
+        
+
+        function cekfield(){
+                 
+            let blok_id = $("#blok_id").val();
+            let panen_tp = $("#panen_tp").val();
+            let panen_jml = $("#panen_jml").val();
+            let panen_picture = $("#panen_picture").val();
+            let tph_thntanam = $("#tph_thntanam").val();
+            let panen_geo = $("#panen_geo").val();
+            var checkbox = document.getElementById("panen_brondold");
+
+            
+
+            let d= 0;
+            if(blok_id!="" && panen_tp!="" && panen_jml!="" &&  panen_geo!=""){
+                d = 1;
+            }
+            let cek =blok_id+','+panen_tp+','+panen_jml+','+panen_geo;
+            // notif(d+'=='+cek);
+            let tph_id = $("#tph_id").val();
+            if(tph_id>0 && d==1){
+                $(".panenpctr").show();
+                $("#panen_picture").val(tph_id);
+                d=1;
+            }else{
+                $(".panenpctr").hide();
+                $("#panen_picture").val("");
+                d=0;
+            }
+
+            let e = 0;
+            let picture = $("#panenPicture").attr("src");
+            if(picture!="res/no_picture.png"){
+                e=1;
+                // notif(d+"="+e);
+            }else{
+                // notif(picture);
+            }
+
+            
+            let panen_card = $("#panen_card").val();
+            let f=0;
+            if(panen_card!=""){
+                f=1;
+            }else{
+            }
+            
+
+            if (checkbox.checked && d == 1 && e == 1 && f == 1) {  
+                $("#btnisikartu").show(); 
+            }else{
+                if(d == 1 && e == 1 && f == 1 && tph_thntanam!=""){
+                    $("#btnisikartu").show(); 
+                }else{
+                    $("#btnisikartu").hide(); 
+                }
+            }
         }
 
         //geolocation
         var panenGeo = function (position) {
                 let geolo = position.coords.latitude+'|'+position.coords.longitude;
                 $("#panen_geo").val(geolo);
+                cekfield();
         };
         function errorGeo(error) {
             notif('code: ' + error.code + '\n' +
@@ -269,6 +583,7 @@
                 isi = 0;
             }
             $('#panen_brondol').val(isi);
+            cekfield();
         }
         function datanfcjadiPanen(nfcData) {
             var ndefMessage = nfcData.ndefMessage;
@@ -318,7 +633,7 @@
                 notif('Kartu Telah Kosong.');               
                 playAudio('kartukosong.mp3');
             }
-            $("#btnisikartu").show();
+            cekfield();
             ambildata(table,'semua','');
             // notif(resultString);
         }
@@ -552,6 +867,28 @@
             );
         }
 
+        function readFromFile(fileName) {
+            let fname = fileName+".txt";
+            // alert(fileName);
+            window.resolveLocalFileSystemURL(cordova.file.externalDataDirectory, function(directoryEntry) {
+                directoryEntry.getFile(fname, { create: false }, function(fileEntry) {
+                    fileEntry.file(function (file) {
+                        var reader = new FileReader();
+
+                        reader.onloadend = function () {
+                            $("#"+fileName).attr("src", this.result); 
+                        };
+
+                        reader.readAsText(file);
+                    }, onErrorReadFile);
+                }, onErrorReadFile);
+            }, onErrorReadFile);
+        }
+
+        function onErrorReadFile(error){
+            notif(JSON.stringify(error).toString());
+        }
+
         function ambildata(table,status,perintahkartu) {
             db.transaction(function (tx) {
                 var query = "SELECT * FROM " + table+" ORDER BY "+table+"_id DESC";
@@ -588,13 +925,11 @@
                             cell += '<div class="col-5 text-left">Jumlah</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['panen_jml']+'</div>'; 
                         }  
                         cell += '<div class="col-5 text-left">Geolocation</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['panen_geo']+'</div>';
-                        let srcpic='';
-                        if(resultSet.rows.item(x)['panen_picture']==""){
-                            srcpic='res/no_picture.png';
-                        }else{
-                            srcpic=resultSet.rows.item(x)['panen_picture'];
+                        let srcpic='res/no_picture.png';
+                        cell += '<div class="col-5 text-left">Picture</div><div class="col-7 text-left">: &nbsp;&nbsp;<img id="'+resultSet.rows.item(x)['tph_id']+'" src="'+srcpic+'" class="img-thumbnail"></div>';
+                        if(resultSet.rows.item(x)['panen_picture']!=""){
+                            readFromFile(resultSet.rows.item(x)['panen_picture']);
                         }
-                        cell += '<div class="col-5 text-left">Picture</div><div class="col-7 text-left">: &nbsp;&nbsp;<img src="'+srcpic+'" class="img-thumbnail"></div>';
 
                         cell += '<div onclick="confirmdeletetph(\'Yakin di Delete?\',\'Delete Data Panen\',\'panen\','+resultSet.rows.item(x)['panen_id']+')" class="col-12  mt-5 mb-5 text-danger"> >>> &nbsp;&nbsp;<button class="btn btn-danger btn-block"><i class="fas fa-window-close"></i> Delete</button>&nbsp;&nbsp; <<< </div>';             
 
@@ -610,6 +945,7 @@
                                 for (var i = 0; i < resultSet.rows.length; i++) {
                                     var row = resultSet.rows.item(i);
                                     isidata.push(row);
+                                    // notif(row);
                                 }
                                 var textString = isidata.map(function(row) {
                                     return Object.entries(row).map(function([key, value]) {
@@ -619,11 +955,12 @@
                                         return key + '=' + value;
                                     }).join(',');
                                 });
-                                notif(textString);
+                                // notif(textString);
                             
                                 var message = [
                                     ndef.textRecord(textString)
                                 ];
+                                // notif(message);
                                 nfc.write(message, ()=>{
                                     notif('Penyimpanan Berhasil!');
                                     $("#judulpanen").text("Data Terekam di HP dan Kartu");
@@ -673,7 +1010,7 @@
         }
         function blok() {
             db.transaction(function (tx) {
-                var query = "SELECT * FROM blok WHERE divisi_id='"+divisiid+"'";
+                var query = "SELECT * FROM blok WHERE divisi_id='"+divisiid+"' ORDER BY blok_name ASC";
                 // notif(query);
                 $("#blok_id").html('');
                 var cell ='';
@@ -711,7 +1048,7 @@
 
             db.transaction(function (tx) {
                 let blok_id = $("#blok_id").val();
-                var query = "SELECT * FROM tph WHERE blok_id='"+blok_id+"'";
+                var query = "SELECT * FROM tph WHERE blok_id='"+blok_id+"' ORDER BY tph_name ASC";
                 // notif(query);
                 $("#tph_id").html('');
                 var cell ='';
@@ -742,6 +1079,7 @@
                 playAudio('gagal.mp3');
             }, function () {
                 // notif('transaction ok');
+                cekfield();
             });
         }
         function thntnm(){
@@ -750,6 +1088,7 @@
             let thntnm = $("#tph_id").find(':selected').attr('thntnm');
             $("#tph_thntanam").val(thntnm);
             localStorage.setItem('thntnm', thntnm); 
+            cekfield();            
         }
         
         function tpname(){            
@@ -789,6 +1128,7 @@
         function tp(){            
             let panen_tpname = $("#panen_tp").find(':selected').attr('panen_tpname');
             $("#panen_tpname").val(panen_tpname);
+            cekfield();
         }
     </script>
 </body>

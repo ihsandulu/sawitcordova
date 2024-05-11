@@ -299,6 +299,7 @@ dependencies {
     implementation(project(path: ":CordovaLib"))
     implementation "androidx.webkit:webkit:1.4.0"
     implementation "androidx.core:core:1.6.+"
+    implementation "com.rmtheis:tess-two:9.0.0"
     // SUB-PROJECT DEPENDENCIES END
 }
 

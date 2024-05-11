@@ -1,0 +1,1246 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;"> -->
+    <meta http-equiv="Content-Security-Policy" content="default-src * data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src * 'unsafe-inline'; media-src *; img-src * data: content:; script-src * 'unsafe-eval' 'unsafe-inline';">
+    
+
+
+
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
+    <meta name="color-scheme" content="light dark">
+
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> -->
+
+    <link rel="stylesheet" href="css/all.min.css"/>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/select2.min.css"/>
+    <link rel="stylesheet" href="css/umum.css">
+
+
+    <title>PT. PAM</title>
+    <style>   
+        #datanfcjadi{
+            height: 300px !important; 
+            width: 300px; 
+            position: relative;
+            left: 50%;
+            top:0px;
+            transform: translate(-50%,0);
+        } 
+        input.inputbox{background-color: antiquewhite!important; color: aliceblue!important; width: 50px!important; height:50px!important;}
+        .titleid{font-size: 20px; font-weight: bold;}
+        .hide{display: none;}
+        #frame1{margin-bottom: 500px;}
+        .angka{font-size: 20px; color: black; font-weight: bold;}
+    </style> 
+    <script>
+    </script>
+</head>
+
+<body>    
+    <div id="header">
+        
+    </div>
+    <div id="frame1" class="text-center " > 
+        <div class="row p-3 ballon">                        
+            <H1 class="col-12 alert alert-success">
+                <button id="btnupload" onclick="confirmupload();" class="btn btn-danger btn-xs text-white hide"><i class="fas fa-upload"></i></button> Data Grading
+                <input id="adadata" type="hidden"/>
+            </H1>         
+            <!-- <div  id="btnreadcard" class="col-12 mb-4  text-center">
+                <button onclick="bukaproses();" class="btn btn-danger btn-lg text-white">Baca Kartu SPTBS</button>
+            </div> -->
+            <div id="readcard" class="col-12 text-center hide">
+                <div class="alert alert-warning">
+                    <blink class="blink"> Memproses... </blink><input type="hidden" id="readcardsno" value="0"/>
+                </div> 
+                <div class="col-12 mb-4  text-center">
+                    <button onclick="tutupproses();" class="btn btn-danger btn-lg text-white">Tutup Proses</button>
+                </div>               
+            </div>                    
+            <div class="col-5 mb-4 text-left">SPTBS Card</div><div class="col-7 text-left">                
+                <select onchange="cekkartuInput()" id="sptbs_card" class="form-control select2">
+
+                </select>
+            </div>        
+            <div class="col-5 mb-4 text-left">No.Plat</div><div class="col-7 text-left">
+                <select readonly id="sptbs_plat" class="form-control">
+
+                </select>
+            </div>  
+            <div class="col-5 mb-4 text-left">Driver</div><div class="col-7 text-left">
+                <select readonly onchange="drivername()" id="sptbs_driver" class="form-control">
+
+                </select>
+            </div>
+      
+            
+
+            <hr/>    
+            <div class="col-5 mb-4 text-left">Tenaga Panen</div><div class="col-7 text-left">
+                <select onchange="tp()" id="grading_tp" class="form-control select2">
+
+                </select>
+            </div>   
+            <div class="col-5 mb-4 text-left">Grading Type</div><div class="col-7 text-left">
+                <select onchange="gtype()" id="gradingtype_id" class="form-control">
+
+                </select>
+            </div> 
+            <div class="col-5 mb-4 text-left">Jumlah</div><div class="col-7 text-left">
+                <input type="number" id="grading_qty" class="form-control" value="1">
+            </div> 
+            <button id="btnisikartu" onclick="submit()" type="button" class="btn btn-success hide">Submit</button>
+            <input id="grading_tpname" type="hidden">
+            <input id="grading_date" type="hidden">
+            <input id="grading_user" type="hidden">
+            <input id="gradingtype_name" type="hidden"> 
+            <input id="sptbsid" type="hidden" value="0">       
+        </div>
+        <textarea id="datanfcjadi1" class="form-control col-12 hide"></textarea>
+        <div class="">  
+            <div class="row">  
+                <textarea id="datanfcjadi" class="form-control col-12 hide"></textarea>
+            </div>
+        </div>
+        <div class="mb-5" id="grading">  
+        
+        </div>
+    </div>
+
+    <marquee width="100%" direction="left">Pastikan Kartu Telah Kosong!</marquee>
+
+    <div id="footer"></div>
+    <script type="text/javascript" src="cordova.js"></script>  
+    <script type="text/javascript" src="js/jquery.min.js"></script>    
+    <script type="text/javascript" src="js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="js/select2.min.js"></script>
+    <script type="text/javascript" src="js/umum.js"></script>
+    <script type="text/javascript" src="js/data.js"></script>
+    <script type="text/javascript" src="js/nfc.js"></script>
+    <script>
+        //device ready 
+        document.addEventListener('deviceready', function () {   
+            hideisikartu();
+            tutupdatakartu();
+            notif('Tempelkan Kartu SPTBS!');
+            playAudio('tempelkankartu.mp3');
+            cekkartupanen();
+            // ambildata('grading','semua','');            
+            kosongkanfield();
+          
+            // nfc.addNdefListener(onNdef, notifikasi("Tempelkan Kartu!"), onFailure);
+            
+            if(username==null){
+                window.location.href='login.html';
+            }else{
+                $(".username").text(username);    
+                sptbsnumber(); 
+                tpname();
+                gradingtype();           
+                driver();              
+                plat();       
+                $("#grading_date").val(now());
+                $("#grading_user").val(userid);
+                cekdatasemua();
+            }                      
+        }); 
+
+        function cekdatasemua(){
+            db.transaction(function (tx) {
+                var query = `SELECT * FROM grading WHERE 1`;  
+                tx.executeSql(query, [], function (tx, resultSet) { 
+                    if (resultSet.rows.length>0) { 
+                        $("#btnupload").show();
+                        $("#btnupladadataoad").val(1);
+                    } else{
+                        $("#btnupload").hide();
+                        $("#btnupladadataoad").val(0);
+                    }
+                });
+            });
+        }
+
+        function confirmupload1(pilihannya) {
+            if(pilihannya=='1'){
+                inputdatagrading();
+            }else{
+                // alert('You selected button ' + jenis);
+            }
+        }
+
+        function confirmupload(){
+            let arraynya = ['Upload','Cancel'];
+            navigator.notification.confirm(
+                "Yakin di Upload?", // message
+                (buttonIndex) => confirmupload1(buttonIndex),            
+                "Upload",           // title
+                arraynya     // buttonLabels
+            );
+        }
+
+        function deletegradingsptbs(sptbs_card){
+            db.transaction(function (tx) {
+                var query = "DELETE FROM grading WHERE sptbs_card = ?";
+                tx.executeSql(query, [sptbs_card], function (tx, res) {
+                    ambildata('grading','semua','');
+                },
+                function (tx, error) {
+                    notif('DELETE error: ' + error.message);      
+                    playAudio('gagal.mp3');
+                });
+            }, function (error) {
+                notif('transaction error: ' + error.message);      
+                playAudio('gagal.mp3');
+            }, function () {                
+                cekdatasemua();
+                // notif('Data Telah Terhapus!');
+            });
+        }
+        function inputdatagrading(datanya){
+            db.transaction(function (tx) {
+                let sptbs_card = $("#sptbs_card").val();
+                var checkQuery = "SELECT * FROM grading WHERE sptbs_card = '"+sptbs_card+"';";
+                // notif(checkQuery); 
+                let data="";
+                tx.executeSql(checkQuery, [], function (tx, resultSet) {                   
+                    let no=1;
+                    for (var x = 0; x < resultSet.rows.length; x++) {
+                        data += "sptbsid="+resultSet.rows.item(x)["sptbsid"]+",";
+                        data += "sptbs_card="+resultSet.rows.item(x)["sptbs_card"]+",";
+                        data += "grading_tp="+resultSet.rows.item(x)["grading_tp"]+",";
+                        data += "grading_tpname="+resultSet.rows.item(x)["grading_tpname"]+",";
+                        data += "grading_date="+resultSet.rows.item(x)["grading_date"]+",";
+                        data += "grading_user="+resultSet.rows.item(x)["grading_user"]+",";
+                        data += "gradingtype_id="+resultSet.rows.item(x)["gradingtype_id"]+",";
+                        data += "gradingtype_name="+resultSet.rows.item(x)["gradingtype_name"]+",";
+                        // alert(no+'=='+resultSet.rows.length);
+                        if(no==resultSet.rows.length){
+                            data += "grading_qty="+resultSet.rows.item(x)["grading_qty"];
+                            var options = {
+                                method: 'GET',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                tlsValidation: false,
+                                ignoreSsl: true 
+                            };
+                            
+                            let server = 'https://parnaagromas.com/tphdigital/api/datagradingmentah?datanya='+data;
+                            // $("#datanfcjadi1").val(server);
+                            cordova.plugin.http.sendRequest(server, options, function(response) {
+                                notif("Berhasil di Upload!");
+                                playAudio('berhasil.mp3');
+                                deletegradingsptbs(sptbs_card);
+                            }, function(error) {
+                                // let objString = JSON.stringify(error);
+                                // $("#test").text(objString);
+                               
+                                playAudio('gagal.mp3');
+                            });
+                        }else{
+                            data += "grading_qty="+resultSet.rows.item(x)["grading_qty"]+"*";
+                            no++;
+                        }
+                        
+                    }
+                });
+            });            
+        }
+
+        
+
+        function kosongkanfield(){
+            $("#grading_tpname").val('');
+            $("#gradingtype_name").val('');
+            $("#grading_qty").val('1');
+            
+            
+            // $('#gradingtype_id').select2('destroy');
+            $("#gradingtype_id").val('');
+            // $('#gradingtype_id').select2();
+            
+            $('#grading_tp').select2('destroy');
+            $("#grading_tp").val('');
+            $('#grading_tp').select2();
+            cekdatasemua();
+        }
+
+        function submit(){  
+            let sptbsid = $("#sptbsid").val();
+            let sptbs_card = $("#sptbs_card").val();
+            let grading_tp = $("#grading_tp").val();
+            let grading_tpname = $("#grading_tpname").val();
+            let grading_date = $("#grading_date").val();
+            let grading_user = $("#grading_user").val();
+            let gradingtype_id = $("#gradingtype_id").val();
+            let gradingtype_name = $("#gradingtype_name").val();
+            let grading_qty = $("#grading_qty").val();
+
+            let data = 'sptbs_card='+sptbs_card+
+            ',sptbsid='+sptbsid+
+            ',grading_tp='+grading_tp+
+            ',grading_tpname='+grading_tpname+
+            ',grading_date='+grading_date+
+            ',grading_user='+grading_user+
+            ',gradingtype_id='+gradingtype_id+
+            ',gradingtype_name='+gradingtype_name+
+            ',grading_qty='+grading_qty;
+
+            db.transaction(function (tx) {
+                var dataArray = data.split(',');
+                var columns = [];
+                var values = [];
+                var values1 = [];
+
+                dataArray.forEach(function (item) {
+                    var pair = item.split('=');
+                    if (pair[0] !== 'grading_id') {
+                        columns.push(pair[0]);
+                        let isi = (pair[1] === 'null') ? "NULL" : "'" + pair[1].trim() + "'";
+                        let isi1 = (pair[1] === 'null') ? "NULL" : "" + pair[1].trim() + "";
+                        values.push(isi);  
+                        values1.push(isi1);  
+                    }
+                });
+
+                // Mengecek apakah sptbs_card sudah ada dalam tabel
+                var checkQuery = "SELECT * FROM grading WHERE gradingtype_id = "+gradingtype_id+" AND grading_tp = "+grading_tp+" AND grading_date = "+grading_date+" AND sptbsid = "+sptbsid+";";
+                // notif(checkQuery); 
+                tx.executeSql(checkQuery, [], function (tx, result) {
+                    let jmldata = result.rows.length;
+                    if (jmldata > 0) {
+                        var updateQuery = "UPDATE grading SET " + columns.join('=?, ') + "=? WHERE gradingtype_id = "+gradingtype_id+" AND grading_tp = "+grading_tp+" AND grading_date = "+grading_date+" AND sptbsid = "+sptbsid+"";
+                        tx.executeSql(updateQuery, values1, function (tx, res) {   
+                            notif("Update Data Berhasil!");  
+                            playAudio('datadiupdate.mp3');
+                            kosongkanfield();
+                            ambildata('grading','semua','');
+                        }, function (tx, error) {
+                            notif('Kesalahan UPDATE: ' + error.message);            
+                            playAudio('gagal.mp3');
+                        });
+                    } else {
+                        var insertQuery = "INSERT INTO grading (" + columns.join(',') + ") VALUES (" + values.join(',') + ")";
+                        tx.executeSql(insertQuery, [], function (tx, res) {
+                            insertID = res.insertId;   
+                            notif("Insert Data Berhasil!");    
+                            playAudio('berhasil.mp3');
+                            kosongkanfield();
+                            ambildata('grading','semua','');
+                        }, function (tx, error) {
+                            notif('Kesalahan INSERT: ' + error.message);      
+                            playAudio('gagal.mp3');
+                        });
+                    }
+                }, function (tx, error) {
+                    notif('Kesalahan transaksi: ' + error.message);      
+                    playAudio('gagal.mp3');
+                });
+            }, function (error) {
+                notif('Transaction Error: ' + error.message);      
+                playAudio('gagal.mp3');
+            }, function () {
+                cekdatasemua();
+                // playAudio('berhasil.mp3');
+                // notif('Data Telah Terhapus!');
+            });
+        }
+        function gradingtype(){            
+            db.transaction(function (tx) {
+                var query = "SELECT * FROM gradingtype ORDER BY gradingtype_id ASC";
+                // notif(query);
+                $("#gradingtype_id").html('');
+                var cell ='';
+                tx.executeSql(query, [], function (tx, resultSet) {
+                    let no=1;
+                    // notif(resultSet.rows.length);     
+                    cell += '<option value="">Pilih Tipe Grading</option>';
+                    for (var x = 0; x < resultSet.rows.length; x++) {   
+                        cell += '<option gradingtype_name="'+resultSet.rows.item(x)['gradingtype_name']+'" value="'+resultSet.rows.item(x)['gradingtype_id']+'">'+resultSet.rows.item(x)['gradingtype_name']+'</div>';
+                        if(resultSet.rows.length == no){
+                            $("#gradingtype_id").append(cell);
+                        }
+                        no++;
+                        
+                    }
+                    if (x < 1) {
+                        // notif("Tidak ada data!");
+                    }
+                },
+                function (tx, error) {
+                    notif('SELECT error: ' + error.message);   
+                    playAudio('gagal.mp3');
+                });
+                
+            }, function (error) {
+                notif('transaction error: ' + error.message);   
+                playAudio('gagal.mp3');
+            }, function () {
+                // notif('transaction ok');
+            });
+        }
+        function gtype(){            
+            let gradingtype_name = $("#gradingtype_id").find(':selected').attr('gradingtype_name');
+            $("#gradingtype_name").val(gradingtype_name);
+        }
+
+        function tpname(){         
+            db.transaction(function (tx) {
+                var query = "SELECT * FROM tp WHERE divisi_id='"+divisiid+"' ORDER BY panen_tpname ASC";
+                // notif(query);
+                $("#grading_tp").html('');
+                var cell ='';
+                tx.executeSql(query, [], function (tx, resultSet) {
+                    let no=1;
+                    // notif(resultSet.rows.length);     
+                    cell += '<option value="">Pilih Tenaga Panen</option>';
+                    for (var x = 0; x < resultSet.rows.length; x++) {   
+                        cell += '<option grading_tpname="'+resultSet.rows.item(x)['panen_tpname']+'" value="'+resultSet.rows.item(x)['panen_tp']+'">'+resultSet.rows.item(x)['panen_placement']+' - '+resultSet.rows.item(x)['panen_tpname']+' ('+resultSet.rows.item(x)['panen_tpnik']+')</div>';
+                        if(resultSet.rows.length == no){
+                            $("#grading_tp").append(cell);
+                        }
+                        no++;
+                        
+                    }
+                    if (x < 1) {
+                        // notif("Tidak ada data!");
+                    }
+                },
+                function (tx, error) {
+                    notif('SELECT error: ' + error.message);   
+                    playAudio('gagal.mp3');
+                });
+                
+            }, function (error) {
+                notif('transaction error: ' + error.message);   
+                playAudio('gagal.mp3');
+            }, function () {
+                // notif('transaction ok');
+            });
+        }
+        function tp(){            
+            let grading_tpname = $("#grading_tp").find(':selected').attr('grading_tpname');
+            $("#grading_tpname").val(grading_tpname);
+        }
+
+        function sptbsnumber() {
+            db.transaction(function (tx) {
+                var query = "SELECT * FROM sptbsnumber";
+                // notif(query);
+                $("#sptbs_card").html('');
+                var cell ='';
+                tx.executeSql(query, [], function (tx, resultSet) {
+                    let no=1;
+                    // notif(resultSet.rows.length);     
+                    cell += '<option value="">Pilih Penomoran</option>';
+                    for (var x = 0; x < resultSet.rows.length; x++) {   
+                        cell += '<option value="'+resultSet.rows.item(x)['sptbsnumber_card']+'">'+resultSet.rows.item(x)['sptbsnumber_card']+'</div>';
+                        if(resultSet.rows.length == no){
+                            $("#sptbs_card").append(cell);
+                        }
+                        no++;
+                        
+                    }
+                    if (x < 1) {
+                        // notif("Tidak ada data!");
+                    }
+                },
+                function (tx, error) {
+                    notif('SELECT error: ' + error.message);   
+                    playAudio('gagal.mp3');
+                });
+                
+            }, function (error) {
+                notif('transaction error: ' + error.message);   
+                playAudio('gagal.mp3');
+            }, function () {
+                // notif('transaction ok');
+            });
+        }
+
+
+        function cekkartuInput(){
+            let panen_card = $("#panen_card").val();
+            if(panen_card!=""){
+                $("#btnisikartu").show();
+            }else{
+                $("#btnisikartu").hide();
+            }
+        }
+
+        
+
+        function showisikartu(){
+            $("#btnisikartu").show();
+        }
+
+        function hideisikartu(){
+            $("#btnisikartu").hide();
+        }
+
+        function buahluar(){
+            $(".buahluar").show();
+        }
+
+        function buahdalam(){
+            $(".buahluar").hide();
+        }
+
+        function bukaproses(){
+            $("#btnreadcard").hide();
+            $("#readcard").show();
+            $("#readcardsno").val(1);
+        }
+        function tutupproses(){
+            $("#btnreadcard").show();
+            $("#readcard").hide();
+            $("#readcardsno").val(0);
+        }
+
+        function tutupdatakartu(){
+            $("#datanfcjadi").val('');                
+            $("#datanfcjadi").hide();
+        }
+
+        function inputdatapanen(table,data){
+            data = data.replace(/[^ -~]/g, '');
+            // notif(data);
+            db.transaction(function (tx) {
+                var dataArray = data.split(',');
+                var columns = [];
+                var values = [];
+                var valuesupdate = [];
+
+                var panenCardToCheck = '';
+                let panenCardToCheckUpdate='';
+                dataArray.forEach(function (item) {
+                    var pair = item.split('=');
+                    if (pair[0] !== 'panen_id') {
+                        columns.push(pair[0]);
+                        let isi;
+                        let isiupdate;
+                        let pair1 = pair[1];
+                        if(pair[1] === 'null'){
+                            isi = "NULL";
+                            isiupdate = "NULL";
+                        }else{
+                            isi = "'" + pair1.trim() + "' ";
+                            isiupdate = pair1.trim();
+                        }
+                        // let isi = (pair[1] === 'null') ? "NULL" : "'" + pair[1].trim() + "'";
+                        // isi = isi.replace(/(?<=\S)_|\b_|\b(?=\S)/g, ' ');
+                        values.push(isi);                 
+                        valuesupdate.push(isiupdate);                 
+                        if(pair[0] == 'panen_card'){
+                            panenCardToCheck=isi;   
+                            panenCardToCheckUpdate=isiupdate;   
+                            // notif(isi);    
+                        }
+                    }
+
+                });
+
+                // Mengecek apakah panen_card sudah ada dalam tabel
+                var checkQuery = "SELECT * FROM " + table + " WHERE panen_card = "+panenCardToCheck;
+                // notif(checkQuery); 
+                let idpanen=0;
+                tx.executeSql(checkQuery, [], function (tx, result) {
+                    let jmldata = result.rows.length;
+                    // notif(panenCardToCheck); 
+                    if (jmldata > 0) {
+                        // Jika panen_card sudah ada, lakukan UPDATE                        
+                        var updateQuery = "UPDATE " + table + " SET " + columns.join('=?, ') + "=? WHERE panen_card = " + panenCardToCheck;                               
+                        // notif(updateQuery);                          
+                        // notif(valuesupdate);
+                        tx.executeSql(updateQuery, valuesupdate, function (tx, res) {
+                            masukinid(result.rows.item(0)['panen_card']);
+                            ambildata('grading','semua',''); 
+                            playAudio('berhasil.mp3');
+                            notif('Data Disimpan!');
+                        }, function (tx, error) {
+                            notif('Kesalahan UPDATE: ' + error.message);            
+                            playAudio('gagal.mp3');
+                        });
+                    } else {
+                        // Jika panen_card belum ada, lakukan INSERT
+                        var insertQuery = "INSERT INTO " + table + " (" + columns.join(',') + ") VALUES (" + values.join(',') + ")";
+                        // notif(insertQuery);
+                        tx.executeSql(insertQuery, [], function (tx, res) {
+                            insertID = res.insertId;    
+                            // notif(panenCardToCheckUpdate);                        
+                            masukinid(panenCardToCheckUpdate);
+                            ambildata('grading','semua',''); 
+                            playAudio('berhasil.mp3');  
+                            notif('Data Disimpan!');
+                        }, function (tx, error) {
+                            notif('Kesalahan INSERT: ' + error.message);      
+                            playAudio('gagal.mp3');
+                        });
+                    }
+                }, function (tx, error) {
+                    notif('Kesalahan transaksi: ' + error.message);      
+                    playAudio('gagal.mp3');
+                });
+            }, function (error) {
+                notif('Transaction Error: ' + error.message);      
+                playAudio('gagal.mp3');
+            }, function () {
+                // playAudio('berhasil.mp3');
+                // notif('Data Telah Terhapus!');
+            });
+        }
+        
+
+
+        function onConfirminputpanen(pilihannya,table,data) {
+            if(pilihannya=='1'){
+                inputdatapanen(table,data);
+            }else{
+                // alert('You selected button ' + jenis);
+            }
+        }
+
+        function confirminputpanen(message,title,table,data) {
+            let arraynya = ['Record','Cancel'];
+            navigator.notification.confirm(
+                message, // message
+                (buttonIndex) => onConfirminputpanen(buttonIndex, table, data),            
+                title,           // title
+                arraynya     // buttonLabels
+            );
+        }
+        function datanfcjadiPanen(nfcData) {
+            var ndefMessage = nfcData.ndefMessage;
+            var resultString = "";
+            for (var i = 0; i < ndefMessage.length; i++) {
+                var payload = ndefMessage[i].payload;
+                var payloadString = String.fromCharCode.apply(null, payload);
+                resultString += payloadString + "\n";
+            }
+            resultString = resultString.replace("en", "");
+            var kalimatTanpaSpasi = resultString.replace(/\s/g, '');
+            kalimatTanpaSpasi = kalimatTanpaSpasi.replace(/^[^\x20-\x7E]+/, '');
+            // notif(kalimatTanpaSpasi);            
+
+            if(kalimatTanpaSpasi!=""){
+
+                
+                var kalimatTanpaSpasi3 = kalimatTanpaSpasi.split('*');
+                let kalimatTanpaSpasi4 = kalimatTanpaSpasi3.join('\n\n\n');
+
+                var kalimatTanpaSpasi1 = kalimatTanpaSpasi4.split(',');
+                let kalimatTanpaSpasi2 = kalimatTanpaSpasi1.join('\n');
+
+                var adaPanenCard = kalimatTanpaSpasi1.some(function(element) {
+                    return element.includes('panen_card');
+                });
+                var adaSptbsCard = kalimatTanpaSpasi1.some(function(element) {
+                    return element.includes('sptbs_driver');
+                });
+                let readcardsno = $("#readcardsno").val();
+                tutupproses();
+
+                let sptbscardd = ""; 
+                let sptbscardf = $("#sptbs_card").val(); 
+                if(adaSptbsCard){   
+                    let namaf = namafield();
+                    let sesi = kalimatTanpaSpasi.split('*');
+                    let sesi1 = sesi[0].split(',');
+                    let sesi2 = [];                 
+                    if(readcardsno==1){                        
+                        for(let x=0; x<sesi1.length;x++){
+                            sesi2 = sesi1[x].split('=');
+                            // notif(sesi2[0]+'='+sesi2[1]);
+                            // $('#'+sesi2[0]).val(sesi2[1]);
+                            if(sesi2[0]=='sptbs_card'){   
+                                // notif(sesi2[1]);                             
+                                $('#sptbs_card').select2('destroy');
+                                $("#sptbs_card").val(sesi2[1]);
+                                $('#sptbs_card').select2();
+                            }
+                            
+                            if(sesi2[0]=='sptbsid'){$("#sptbsid").val(sesi2[1]);}
+                            if(sesi2[0]=='sptbs_plat'){$("#sptbs_plat").val(sesi2[1]);}
+                            if(sesi2[0]=='sptbs_driver'){$("#sptbs_driver").val(sesi2[1]);}
+                            if(sesi2[0]=='sptbs_fraksi00'){$("#sptbs_fraksi00").val(sesi2[1]);}
+                            if(sesi2[0]=='sptbs_fraksi0'){$("#sptbs_fraksi0").val(sesi2[1]);}
+                            if(sesi2[0]=='sptbs_fraksi5'){$("#sptbs_fraksi5").val(sesi2[1]);}
+                            if(sesi2[0]=='sptbs_tangkaipanjang'){$("#sptbs_tangkaipanjang").val(sesi2[1]);}
+                            if(sesi2[0]=='sptbs_tandankosong'){$("#sptbs_tandankosong").val(sesi2[1]);}
+                            if(sesi2[0]=='sptbs_tandan3kg'){$("#sptbs_tandan3kg").val(sesi2[1]);}
+                            if(sesi2[0]=='sptbs_sampah'){$("#sptbs_sampah").val(sesi2[1]);}
+                            if(sesi2[0]=='sptbs_brondolanlepas'){$("#sptbs_brondolanlepas").val(sesi2[1]);}
+                            if(sesi2[0]=='sptbs_grader'){$("#sptbs_grader").val(sesi2[1]);}
+                            if(sesi2[0]=='sptbs_gradingtp'){   
+                                // notif(sesi2[1]);                             
+                                $('#sptbs_gradingtp').select2('destroy');
+                                $("#sptbs_gradingtp").val(sesi2[1]);
+                                $('#sptbs_gradingtp').select2();
+                            }
+                            if(sesi2[0]=='sptbs_gradingtpname'){$("#sptbs_gradingtpname").val(sesi2[1]);}
+
+
+
+                            if(sesi2[0]=='sptbs_vendor'){$("#sptbs_vendor").val(sesi2[1]);}
+                            if(sesi2[0]=='sptbs_material'){$("#sptbs_material").val(sesi2[1]);}
+                            if(sesi2[0]=='sptbs_kecamatan'){$("#sptbs_kecamatan").val(sesi2[1]);}
+                            if(sesi2[0]=='grading_date'){$("#grading_date").val(sesi2[1]);}
+                            if(sesi2[0]=='grading_user'){$("#grading_user").val(sesi2[1]);}
+                            if(sesi2[0]=='estate_id'){$("#estate_id").val(sesi2[1]);}
+                            if(sesi2[0]=='divisi_id'){$("#divisi_id").val(sesi2[1]);}
+                            if(sesi2[0]=='sptbs_createdname'){$("#sptbs_createdname").val(sesi2[1]);}
+                            if(sesi2[0]=='sptbs_drivername'){$("#sptbs_drivername").val(sesi2[1]);}
+                            if(sesi2[0]=='estate_name'){$("#estate_name").val(sesi2[1]);}
+                            if(sesi2[0]=='divisi_name'){$("#divisi_name").val(sesi2[1]);}
+                        }
+                       
+
+                        notif('Data Kartu SPTBS akan ditimpa ulang!'); 
+                        playAudio('kartuterisi.mp3');
+                        ambildata('grading','semua','');
+                    }else{ 
+                        for(let x=0; x<sesi1.length;x++){
+                            sesi2 = sesi1[x].split('=');
+                            if(sesi2[0]=="sptbs_card"){                
+                                $('#sptbs_card').select2('destroy');
+                                $("#sptbs_card").val(sesi2[1]);
+                                sptbscardd = sesi2[1];
+                                $('#sptbs_card').select2();
+                            }                            
+                            if(sesi2[0]=='sptbs_id'){$("#sptbsid").val(sesi2[1]);}
+                            if(sesi2[0]=='sptbs_plat'){$("#sptbs_plat").val(sesi2[1]);}
+                            if(sesi2[0]=='sptbs_driver'){$("#sptbs_driver").val(sesi2[1]);}
+                            // alert(sesi1[x]);
+                        }
+                        let adadata = $("#btnupladadataoad").val();
+                        if(adadata==1 && sptbscardd!=sptbscardf){
+                            notif('Harap upload data Sebelumnya!');
+                            playAudio('harapuploaddatasebelumnya.mp3');
+                            hideisikartu(); 
+                        }else{
+                            notif('Silahkan Isi Data!');
+                            ambildata('grading','semua','');
+                            showisikartu();
+                        }
+                    }                    
+                }else if(adaPanenCard) {
+                    confirminputpanen('Record Data dari Kartu?','Data Panen','panen',kalimatTanpaSpasi);
+                } else {
+                    $("#sptbs_card").val("");
+                    notif("Kartu Tidak Dikenal!");
+                    hideisikartu();
+                }
+                $("#datanfcjadi").val(kalimatTanpaSpasi2);                
+                $("#datanfcjadi").show();
+                setTimeout(function(){
+                    $("#datanfcjadi").hide();
+                },60000);
+                
+            }else{
+                $("#datanfcjadi").val('');                
+                $("#datanfcjadi").hide();
+                notif('Tidak Ada Data!');
+                playAudio('kartukosong.mp3'); 
+                // let sptbsCardR = sptbsCardRandom();
+                // // notif(sptbsCardR);
+                // $("#sptbs_card").val(sptbsCardR);
+                let ceksptbscard = $("#sptbs_card").val();
+                if(ceksptbscard!=""){showisikartu();}else{hideisikartu();}
+            }
+            // notif(resultString);
+            
+        }
+        function isifield(field, data){
+            var splitResult = data.find(function(element) {
+                return element.includes(field);
+            }).split('=');
+            var nilaifield = splitResult[1];
+            $("#"+field).val(nilaifield);
+            // notif(field+'='+nilaifield);
+        }
+        function onNdefcekpanen(nfcEvent) {
+            // notif(JSON.stringify(nfcEvent.tag));
+            
+            var tag = nfcEvent.tag;
+            ndefMessage = nfcEvent.tag.ndefMessage;
+            if(ndefMessage.length>0){             
+                     
+                tag.id = sptbsCardRandom();
+                tag.isWritable = !tag.isLocked;
+                tag.canMakeReadOnly = tag.isLockable;   
+                if(tag.serialNumber) {
+                    tag.serialNumber = tag.id;            
+                }
+                datanfcjadiPanen(nfcEvent.tag)
+                navigator.notification.vibrate(100);
+            }else{
+            }
+        }
+        function cekkartupanen() {
+            nfc.addNdefListener(onNdefcekpanen, notifbacakartu("Tempelkan Kartu!"), onFailurebacakartu);
+        }
+
+        function namafield(){
+            let field = 'sptbs_card,sptbs_vendor,sptbs_material,sptbs_kecamatan,sptbs_plat,sptbs_driver,grading_date,grading_user,estate_id,divisi_id,sptbs_createdname,sptbs_drivername,  estate_name,divisi_name,sptbs_listcard';
+            return field.split(',');
+        }
+
+        
+
+        function isikartu(){
+            let sptbs_card = $("#sptbs_card").val(); 
+
+            
+            let grading_tp = $("#grading_tp").val();
+            let grading_tpname = $("#grading_tpname").val();
+            let grading_date = now();
+            let grading_user = userid;
+            let gradingtype_id = $("#gradingtype_id").val();
+            let gradingtype_name = $("#gradingtype_name").val();
+
+            let data = 'sptbs_card='+sptbs_card+            
+                ',grading_tp='+grading_tp+
+                ',grading_tpname='+grading_tpname+
+                ',grading_date='+grading_date+
+                ',grading_user='+grading_user+
+                ',gradingtype_id='+gradingtype_id+
+                ',gradingtype_name='+gradingtype_name;
+            inputGrading('grading', data);
+        }        
+
+        function deletepanenwherecard(table,card){
+            db.transaction(function (tx) {
+                var query = "DELETE FROM " + table + " WHERE " + table + "_card = ?";
+                tx.executeSql(query, [card], function (tx, res) {
+                    // ambildata(table,'semua','');
+                },
+                function (tx, error) {
+                    notif('DELETE error: ' + error.message);      
+                    playAudio('gagal.mp3');
+                });
+            }, function (error) {
+                notif('transaction error: ' + error.message);      
+                playAudio('gagal.mp3');
+            }, function () {
+                // notif('Data Telah Terhapus!');
+            });
+        }
+
+        function updatetablepanen() {
+            db.transaction(function (tx) {
+                let sptbs_card = $("#sptbs_card").val();
+                let sptbs_listcard = $("#sptbs_listcard").val();
+                let splitsptbs_listcard = sptbs_listcard.split("|");
+                let no=1;
+                splitsptbs_listcard.forEach(function (panen_card) {
+                    panen_card = panen_card.trim(); 
+                    var updateQuery = `UPDATE panen SET sptbs_card=? WHERE panen_card = ?`;
+                    // notif(updateQuery);
+                    tx.executeSql(updateQuery, [sptbs_card,panen_card], function (tx, res) {
+                        // Sukses
+                        if(no==splitsptbs_listcard.length){
+                            kosongkanfield();                                        
+                            ambildata('grading','semua','');
+                        }
+                    }, function (tx, error) {
+                        notif('Kesalahan UPDATE: ' + error.message);   
+                        playAudio('gagal.mp3');   
+                    });
+                    no++;
+                });
+                ambildata('grading','semua','isikartu');
+            });
+        }
+
+
+        function inputGrading(table, data) {
+            db.transaction(function (tx) {
+                var dataArray = data.split(',');
+                var columns = [];
+                var values = [];
+
+                var sptbsCardToCheck = '';
+                var listsptbscard = [];
+                dataArray.forEach(function (item) {
+                    var pair = item.split('=');
+                    if (pair[0] !== 'grading_id') {
+                        columns.push(pair[0]);
+                        let isi = (pair[1] === 'null') ? "NULL" : "'" + pair[1].trim() + "'";
+                        values.push(isi);                 
+                        if(pair[0] == 'sptbs_card'){
+                            sptbsCardToCheck=isi;   
+                            // notif(isi);    
+                        }
+                    }
+                });
+                    
+                // Jika sptbs_card belum ada, lakukan INSERT
+                var insertQuery = "INSERT INTO " + table + " (" + columns.join(',') + ") VALUES (" + values.join(',') + ")";
+                // notif(insertQuery);
+                tx.executeSql(insertQuery, [], function (tx, res) {
+                    insertID = res.insertId;  
+                }, function (tx, error) {
+                    notif('Kesalahan INSERT: ' + error.message);      
+                    playAudio('gagal.mp3');
+                });
+                    
+               
+            }, function (error) {
+                notif('Transaction Error: ' + error.message);      
+                playAudio('gagal.mp3');
+            }, function () {
+                // playAudio('berhasil.mp3');
+                // notif('Data Telah Terhapus!');
+            });
+        }
+
+        function deletedatagrading(table,id){
+            db.transaction(function (tx) {
+                var query = "DELETE FROM " + table + " WHERE " + table + "_id = "+id;
+                // alert(query);
+                tx.executeSql(query, [], function (tx, res) {
+                    ambildata(table,'semua','');
+                },
+                function (tx, error) {
+                    notif('DELETE error: ' + error.message);
+                    playAudio('gagal.mp3');
+                });
+            }, function (error) {
+                notif('transaction error: ' + error.message);
+            }, function () {
+                notif('Data Telah Terhapus!');
+                playAudio('dataterhapus.mp3');
+                cekdatasemua();
+            });
+        }
+
+        function onConfirm(pilihannya,table,id) {
+            if(pilihannya=='1'){
+                deletedatagrading(table,id);
+            }else{
+                // alert('You selected button ' + jenis);
+            }
+        }
+
+        function confirmdeletegrading(message,title,table,id) {
+            let arraynya = ['Delete','Cancel'];
+            navigator.notification.confirm(
+                message, // message
+                (buttonIndex) => onConfirm(buttonIndex, table, id),            
+                title,           // title
+                arraynya     // buttonLabels
+            );
+        }
+
+        function setCheckboxStatus(checkboxId, isChecked) {
+            const checkbox = $('#cekpanen-' + checkboxId);
+            checkbox.prop('checked', isChecked);
+            
+            // Panggil fungsi handleCheckboxChange untuk memproses perubahan
+            handleCheckboxChange(checkboxId);
+        }
+        
+        function handleCheckboxChange(checkboxId) {
+            const checkbox = $('#cekpanen-' + checkboxId);
+            if (checkbox.prop('checked')) {
+                masukinid(checkboxId);
+            } else {
+                keluarinid(checkboxId);
+            }
+        } 
+        function masukinid(id){            
+            let sptbs_listcard = $("#sptbs_listcard").val();
+            // notif(sptbs_listcard);
+            if (sptbs_listcard.includes(id)) {
+
+            }else{
+                $("#sptbs_listcard").val(sptbs_listcard + (sptbs_listcard ? '|' : '') + id);
+            }
+        }
+        function keluarinid(id){  
+            let sptbs_listcard = $("#sptbs_listcard").val(); 
+            const regex = new RegExp(`(\\|${id}$|^${id}$)`);
+            $("#sptbs_listcard").val(sptbs_listcard.replace(regex, '').replace(/^[|]/, ''));
+
+        }
+        function tambahkurang(id,qty){
+            db.transaction(function (tx) {
+                var query = "UPDATE grading SET grading_qty='" + qty + "' WHERE grading_id='" + id + "'";
+                tx.executeSql(query, [], function (tx, resultSet) { 
+                    notif("Qty Dirubah!");
+                    ambildata('grading','semua',''); 
+                });
+            });
+        }
+        function ambildata(table,status,perintahkartu) {
+            let sptbs_card = $("#sptbs_card").val();
+            if(sptbs_card!=""){
+                db.transaction(function (tx) {
+                var query = "SELECT * FROM " + table + " WHERE sptbs_card='" + sptbs_card + "' ORDER BY " + table + "_id DESC";
+
+                
+                // notif(query);
+                $("#"+table).html('');
+                tx.executeSql(query, [], function (tx, resultSet) { 
+                    let no=1;
+                    // notif(resultSet.rows.length);
+                    let tdatagradingsptbs='';   
+                    for (var x = 0; x < resultSet.rows.length; x++) {                        
+                        var cell ='';
+                        cell += '<div class="row p-3 ballon">'; 
+
+                        let datagradingsptbs = '*'+
+                            'sptbs_card='+resultSet.rows.item(x)['sptbs_card']+
+                            ',grading_tp='+resultSet.rows.item(x)['grading_tp']+
+                            ',grading_tpname='+resultSet.rows.item(x)['grading_tpname']+
+                            ',grading_date='+resultSet.rows.item(x)['grading_date']+
+                            ',grading_user='+resultSet.rows.item(x)['grading_user']+
+                            ',gradingtype_id='+resultSet.rows.item(x)['gradingtype_id']+
+                            ',gradingtype_name='+resultSet.rows.item(x)['gradingtype_name'];
+
+                        tdatagradingsptbs +=datagradingsptbs;
+
+                        cell += '<div class="col-12 text-center alert alert-success mb-5">'+resultSet.rows.item(x)['sptbs_card']+'</div>';
+                        cell += '<div class="col-5 text-left">Date</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['grading_date']+'</div>';
+                        cell += '<div class="col-5 text-left">Tenaga Panen</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['grading_tpname']+'</div>';
+                        cell += '<div class="col-5 text-left">Tipe Grading</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['gradingtype_name']+'</div>';
+
+                        let kurang = resultSet.rows.item(x)['grading_qty']-1;
+                        let tambah = resultSet.rows.item(x)['grading_qty']+1;
+                        cell += '<div class="col-5 text-left">Jumlah</div><div class="col-7 text-left">: &nbsp;&nbsp;<button onclick="tambahkurang('+resultSet.rows.item(x)['grading_id']+','+kurang+')" class="btn btn-xs btn-warning mr-3 text-putih">-</button>&nbsp;&nbsp;<span class="angka">'+resultSet.rows.item(x)['grading_qty']+'</span>&nbsp;&nbsp;<button onclick="tambahkurang('+resultSet.rows.item(x)['grading_id']+','+tambah+')" class="btn btn-xs btn-warning ml-3 text-putih">+</button></div>';
+
+                        cell += '<div onclick="confirmdeletegrading(\'Yakin di Delete?\',\'Delete Data\',\'grading\',\''+resultSet.rows.item(x)['grading_id']+'\')" class="col-12  mt-5 mb-5 text-danger"> >>> &nbsp;&nbsp;<button class="btn btn-danger btn-block"><i class="fas fa-window-close"></i> Delete</button>&nbsp;&nbsp; <<< </div>';  
+                                  
+                        cell +='</div>';
+                        $("#"+table).append(cell);      
+                        
+                        if(resultSet.rows.length == no){
+                            //isi kartu sptbs
+                            if(perintahkartu=='isikartu'){   
+                                var message = [
+                                    ndef.textRecord(tdatagradingsptbs)
+                                ];
+                                nfc.write(message, ()=>{
+                                    notif('Data Terekam di HP dan Kartu!');
+                                    playAudio('berhasil.mp3');
+                                    kosongkanfield();
+                                    $("#panen").html('');
+                                    tutupdatakartu();
+                                }, ()=>{   
+                                    notif('Data Hanya Terekam di HP!');
+                                    playAudio('datadirekam.mp3');
+                                });
+                            }
+                        }
+                        no++;
+                    }
+                    if (x < 1) {
+                        // notif("Tidak Ada Data di Database!");      
+                        // playAudio('datakosong.mp3');
+                    }
+                },
+                function (tx, error) {
+                    notif('SELECT error: ' + error.message);    
+                    playAudio('gagal.mp3');
+                });
+                
+            }, function (error) {
+                notif('transaction error: ' + error.message);   
+                playAudio('gagal.mp3');
+            }, function () {
+                // notif('transaction ok');
+            });
+            }
+        }
+
+        
+        function vendor() {
+            db.transaction(function (tx) {
+                var query = "SELECT * FROM vendor";
+                // notif(query);
+                $("#sptbs_vendor").html('');
+                var cell ='';
+                tx.executeSql(query, [], function (tx, resultSet) {
+                    let no=1;
+                    // notif(resultSet.rows.length);     
+                    cell += '<option value="">Pilih Vendor</option>';
+                    for (var x = 0; x < resultSet.rows.length; x++) {   
+                        cell += '<option vendor_name="'+resultSet.rows.item(x)['vendor_name']+'" value="'+resultSet.rows.item(x)['vendor_id']+'">'+resultSet.rows.item(x)['vendor_name']+'</div>';
+                        if(resultSet.rows.length == no){
+                            $("#sptbs_vendor").append(cell);
+                        }
+                        no++;
+                        
+                    }
+                    if (x < 1) {
+                        // notif("Tidak ada data!");
+                    }
+                },
+                function (tx, error) {
+                    notif('SELECT Vendor Error: ' + error.message);
+                    playAudio('gagal.mp3');
+                });
+                
+            }, function (error) {
+                notif('transaction error: ' + error.message);
+            }, function () {
+                // notif('transaction ok');
+            });
+        }
+
+        function material() {
+            db.transaction(function (tx) {
+                var query = "SELECT * FROM material";
+                // notif(query);
+                $("#sptbs_material").html('');
+                var cell ='';
+                tx.executeSql(query, [], function (tx, resultSet) {
+                    let no=1;
+                    // notif(resultSet.rows.length);     
+                    cell += '<option value="">Pilih Material</option>';
+                    for (var x = 0; x < resultSet.rows.length; x++) {   
+                        cell += '<option material_name="'+resultSet.rows.item(x)['material_name']+'" value="'+resultSet.rows.item(x)['material_id']+'">'+resultSet.rows.item(x)['material_name']+'</div>';
+                        if(resultSet.rows.length == no){
+                            $("#sptbs_material").append(cell);
+                        }
+                        no++;
+                        
+                    }
+                    if (x < 1) {
+                        // notif("Tidak ada data!");
+                    }
+                },
+                function (tx, error) {
+                    notif('SELECT Material Error: ' + error.message);
+                    playAudio('gagal.mp3');
+                });
+                
+            }, function (error) {
+                notif('transaction error: ' + error.message);
+            }, function () {
+                // notif('transaction ok');
+            });
+        }
+
+        function kecamatan() {
+            db.transaction(function (tx) {
+                var query = "SELECT * FROM kecamatan";
+                // notif(query);
+                $("#sptbs_kecamatan").html('');
+                var cell ='';
+                tx.executeSql(query, [], function (tx, resultSet) {
+                    let no=1;
+                    // notif(resultSet.rows.length);     
+                    cell += '<option value="">Pilih Kecamatan</option>';
+                    for (var x = 0; x < resultSet.rows.length; x++) {   
+                        cell += '<option kecamatan_name="'+resultSet.rows.item(x)['kecamatan_name']+'" value="'+resultSet.rows.item(x)['kecamatan_id']+'">'+resultSet.rows.item(x)['kecamatan_name']+'</div>';
+                        if(resultSet.rows.length == no){
+                            $("#sptbs_kecamatan").append(cell);
+                        }
+                        no++;
+                        
+                    }
+                    if (x < 1) {
+                        // notif("Tidak ada data!");
+                    }
+                },
+                function (tx, error) {
+                    notif('SELECT Kecamatan Error: ' + error.message);
+                    playAudio('gagal.mp3');
+                });
+                
+            }, function (error) {
+                notif('transaction error: ' + error.message);
+            }, function () {
+                // notif('transaction ok');
+            });
+        }
+
+        function drivername(){
+            let drivername = $("#sptbs_driver :selected").attr("driver_name");
+            if (typeof drivername !== "undefined") {
+                $("#sptbs_drivername").val(drivername);
+            } else {
+                // Atau, jika drivername undefined, atur nilai input ke string kosong atau sesuai kebutuhan
+                $("#sptbs_drivername").val("");
+            }
+        }
+
+        function driver() {
+            db.transaction(function (tx) {
+                var query = "SELECT * FROM driverdumptruck ORDER BY driverdumptruck_name ASC";
+                // notif(query);
+                $("#sptbs_driver").html('');
+                var cell ='';
+                tx.executeSql(query, [], function (tx, resultSet) {
+                    let no=1;
+                    // notif(resultSet.rows.length);     
+                    cell += '<option value="">Pilih Driver</option>';
+                    for (var x = 0; x < resultSet.rows.length; x++) {   
+                        cell += '<option driver_name="'+resultSet.rows.item(x)['driverdumptruck_name']+'" value="'+resultSet.rows.item(x)['driverdumptruck_id']+'">'+resultSet.rows.item(x)['driverdumptruck_name']+' ('+resultSet.rows.item(x)['driverdumptruck_position']+')</div>';
+                        if(resultSet.rows.length == no){
+                            $("#sptbs_driver").append(cell);
+                        }
+                        no++;
+                        
+                    }
+                    if (x < 1) {
+                        // notif("Tidak ada data!");
+                    }
+                },
+                function (tx, error) {
+                    notif('SELECT Driver Error: ' + error.message);
+                    playAudio('gagal.mp3');
+                });
+                
+            }, function (error) {
+                notif('transaction error: ' + error.message);
+            }, function () {
+                // notif('transaction ok');
+            });
+        }
+
+        function plat() {
+            db.transaction(function (tx) {
+                var query = "SELECT * FROM truk";
+                // notif(query);
+                $("#sptbs_plat").html('');
+                var cell ='';
+                tx.executeSql(query, [], function (tx, resultSet) {
+                    let no=1;
+                    // notif(resultSet.rows.length);     
+                    cell += '<option value="">Pilih Plat</option>';
+                    for (var x = 0; x < resultSet.rows.length; x++) {   
+                        cell += '<option value="'+resultSet.rows.item(x)['no_polisi']+'">'+resultSet.rows.item(x)['no_polisi']+'</div>';
+                        if(resultSet.rows.length == no){
+                            $("#sptbs_plat").append(cell);
+                        }
+                        no++;
+                        
+                    }
+                    if (x < 1) {
+                        // notif("Tidak ada data!");
+                    }
+                },
+                function (tx, error) {
+                    notif('SELECT Truk Error: ' + error.message);
+                    playAudio('gagal.mp3');
+                });
+                
+            }, function (error) {
+                notif('transaction error: ' + error.message);
+            }, function () {
+                // notif('transaction ok');
+            });
+        }
+       
+    </script>
+</body>
+
+</html>

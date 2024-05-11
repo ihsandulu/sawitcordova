@@ -1,0 +1,110 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src * 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; connect-src *">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>Photo Upload App</title>
+    <script type="text/javascript" src="cordova.js"></script>
+    <script>
+    document.addEventListener('deviceready', deviceStart, false);
+   </script>
+</head>
+
+<body>
+
+<button onclick="photoUpload.camera();">Take a photo</button>
+<br>
+<br>
+<button onclick="photoUpload.gallery();">Upload a photo</button>
+
+<div id="imageSelected"></div>
+
+<script>
+function deviceStart(){
+    var pictureSource;
+    var destinationType;
+
+    pictureSource = navigator.camera.PictureSourceType;
+    destinationType = navigator.camera.DestinationType;
+
+}
+
+function clearCache() {
+    navigator.camera.cleanup();
+}
+
+var retries = 0;
+
+// function to run after user successfully takes a photo or selects
+function onCapturePhoto(fileURI) {
+    
+	// display the photo before uploading
+	document.getElementById("imageSelected").innerHTML = '<img src="' +fileURI+ '"/>';
+	
+    var win = function(r) {
+        clearCache();
+        retries = 0;
+        alert('Image Uploaded!'); // image uploaded
+    };
+
+    var fail = function(error) {
+        if (retries === 0) {
+            retries++;
+            setTimeout(function() {
+                // upload failed lets try once more
+                onCapturePhoto(fileURI);
+            }, 1000);
+        } else {
+            retries = 0;
+            clearCache();
+            alert('Something went wrong try Again...');
+        }
+    };
+	
+    var options = new FileUploadOptions();
+    options.fileKey = "file";
+    options.fileName = fileURI.substr(fileURI.lastIndexOf('/') + 1);
+    options.mimeType = "image/jpeg";
+	
+    options.params = {
+        data: "extra post data to pass to the server"
+    }
+	
+    var ft = new FileTransfer();
+    ft.upload(fileURI, encodeURI("http://YOUR-SERVER-URL"), win, fail, options);
+}
+
+// function runs when the user cancels the camera or gallery selection
+function onFaill(message) {
+    alert(message);
+}
+
+// Photo Upload
+var photoUpload = {
+    camera: function() {
+        navigator.camera.getPicture(onCapturePhoto, onFaill, {
+            quality: 100, // photo quality
+            destinationType: destinationType.FILE_URI,
+            sourceType: Camera.PictureSourceType.CAMERA,
+            encodingType: Camera.EncodingType.JPEG
+        });
+    },
+    gallery: function() {
+        navigator.camera.getPicture(onCapturePhoto, onFaill, {
+            quality: 100,
+            destinationType: destinationType.FILE_URI,
+            sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
+            encodingType: Camera.EncodingType.JPEG
+        });
+    }
+}
+
+
+</script>
+</body>
+
+</html>
+

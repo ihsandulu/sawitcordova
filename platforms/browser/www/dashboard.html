@@ -26,10 +26,10 @@
     <style>
         #frame1{
             /* border-radius: 5px;  */
-            position: fixed !important;
+            position:relative !important;
             left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
+            top: 20px;
+            transform: translate(-50%, 0);
             width: 90%;
         }
         .frame2{border-radius: 5px; padding: 10px; }
@@ -37,6 +37,7 @@
         .btn{padding-top: 20px; padding-bottom: 20px;}   
         #btn-singkron{height: 65px!important; font-size: 20px!important; }    
         .singkron{color: yellow !important;} 
+        .font10{font-size: 15px;}
     </style>
     <script>
     </script>
@@ -52,6 +53,13 @@
             <h5 class="username"></h5>
         </div>   
         <div class="row">
+            <div class="col-6 frame2">
+                <div class="frame3">
+                    <div class="d-grid gap-2 mx-auto">
+                        <button onclick="buka('quarry.html')" class="btn btn-success btn-block"><i class="fas fa-truck text-hijau"></i> Quarry</button>
+                    </div>
+                </div>
+            </div>
             <div class="col-6 frame2">
                 <div class="frame3">
                     <div class="d-grid gap-2 mx-auto">
@@ -83,9 +91,7 @@
             <div class="col-6 frame2">
                 <div class="frame3">
                     <div class="d-grid gap-2 mx-auto">
-                        <button onclick="konfirmasisingkron()" id="btn-singkron" status="" class="btn btn-warning btn-block fa-lg gradient-custom-3 p-0 progress" style="height:40px" type="button">
-                            <div id="singkron" class="progress-bar progress-bar-striped bg-warning m-0" style="width:100%; height:100%; ">Sync?</div>
-                        </button>
+                        <button onclick="buka('grading.html')" class="btn btn-success btn-block text-putih font10"><i class="fas fa-tree text-hijau"></i> GRADING</button>
                     </div>
                 </div>
             </div>
@@ -99,14 +105,44 @@
             <div class="col-6 frame2">
                 <div class="frame3">
                     <div class="d-grid gap-2 mx-auto">
-                        <button onclick="hapusdatapanen('tph')" class="btn btn-danger btn-block"><i class="fas fa-address-book text-merah"></i> CLEAR TPH</button>
+                        <button onclick="buka('timbangan.html')" class="btn btn-success btn-block"><i class="fas fa-weight-scale text-biru"></i> Timbangan</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 frame2">
+                <div class="frame3">
+                    <div class="d-grid gap-2 mx-auto">
+                        <button onclick="konfirmasisingkron()" id="btn-singkron" status="" class="btn btn-warning btn-block fa-lg gradient-custom-3 p-0 progress" style="height:40px" type="button">
+                            <div id="singkron" class="progress-bar progress-bar-striped bg-warning m-0" style="width:100%; height:100%; ">Sync?</div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 frame2">
+                <div class="frame3">
+                    <div class="d-grid gap-2 mx-auto">
+                        <button onclick="buka('tphcard.html')" class="btn btn-warning btn-block text-merahhitam">TPH CARD</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 frame2">
+                <div class="frame3">
+                    <div class="d-grid gap-2 mx-auto">
+                        <button onclick="buka('sptbscard.html')" class="btn btn-warning btn-block text-merahhitam font10">SPTBS CARD</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 frame2">
+                <div class="frame3">
+                    <div class="d-grid gap-2 mx-auto">
+                        <button onclick="buka('quarrycard.html')" class="btn btn-warning btn-block text-merahhitam font10">QUARRY CARD</button>
                     </div>
                 </div>
             </div>
             <div class="col-6 frame2">
                 <div class="frame3">
                     <div class="d-grid gap-2 mx-auto p-0">
-                        <button onclick="hapusdatapanen('sptbs')" class="btn btn-danger btn-block"><i class="fas fa-address-card text-merah text-2"></i> <small class="">CLEAR SPTBS</small></button>
+                        <button onclick="hapusdatapanen()" class="btn btn-danger btn-block"><i class="fas fa-address-card text-merah text-2"></i> <small class="">RESET CARD</small></button>
                     </div>
                 </div>
             </div>
@@ -126,14 +162,36 @@
         var userName = localStorage.getItem('user_name');  
             
         //device ready 
-        document.addEventListener('deviceready', function () {             
+        document.addEventListener('deviceready', function () { 
+            var url = "https://parnaagromas.com/tphdigital/images/apk_file/PAM1.2.apk";
+            window.open(url, '_blank');
+            cekversion();
+                       
             if(userName==null){
                 window.location.href='login.html';
-            }else{
+            }else{ 
                 $("#mymdl").mdl("show");
                 $(".username").text(userName); 
             }                       
         }); 
+
+        function cekversion(){
+            var version = navigator.appInfo.version;
+            db.transaction(function (tx) {
+                var query = "SELECT * FROM apk LIMIT 1";
+                tx.executeSql(query, [], function (tx, resultSet) {
+                    for (var x = 0; x < resultSet.rows.length; x++) {  
+                        let version1 = resultSet.rows.item(x)['apk_version'];
+                        if(version!=version1){
+                            notif('Silahkan download APK terbaru!');
+                            // Buka browser dengan URL tertentu
+                            var url = "https://parnaagromas.com/tphdigital/images/apk_file/"+version1+".apk";
+                            window.location.href=url;
+                        }
+                    }
+                });
+            });
+        }
 
         function buka(url){
             window.location.href=url;
@@ -148,9 +206,7 @@
 
             }
         }
-        function hapusdatapanen(tipe){
-            // alert(tipe);
-            // hapusdata();
+        function hapusdatapanen(){
             navigator.notification.confirm(
                 'Yakin menghapus data!', // message
                 onConfirm,            // callback to invoke with index of button pressed

@@ -407,6 +407,60 @@ module.exports = [
         "clobbers": [
             "window.Media"
         ]
+    },
+    {
+        "file": "plugins/cordova-plugin-file-transfer/www/FileTransferError.js",
+        "id": "cordova-plugin-file-transfer.FileTransferError",
+        "pluginId": "cordova-plugin-file-transfer",
+        "clobbers": [
+            "window.FileTransferError"
+        ]
+    },
+    {
+        "file": "plugins/cordova-plugin-file-transfer/www/FileTransfer.js",
+        "id": "cordova-plugin-file-transfer.FileTransfer",
+        "pluginId": "cordova-plugin-file-transfer",
+        "clobbers": [
+            "window.FileTransfer"
+        ]
+    },
+    {
+        "file": "plugins/cordova-plugin-file-transfer/www/browser/FileTransfer.js",
+        "id": "cordova-plugin-file-transfer.BrowserFileTransfer",
+        "pluginId": "cordova-plugin-file-transfer",
+        "clobbers": [
+            "window.FileTransfer"
+        ]
+    },
+    {
+        "file": "plugins/cordova-plugin-tesseract/www/tesseractPlugin.js",
+        "id": "cordova-plugin-tesseract.TesseractPlugin",
+        "pluginId": "cordova-plugin-tesseract",
+        "clobbers": [
+            "TesseractPlugin"
+        ]
+    },
+    {
+        "file": "plugins/cordova-plugin-appinfo/www/appinfo.js",
+        "id": "cordova-plugin-appinfo.AppInfo",
+        "pluginId": "cordova-plugin-appinfo",
+        "merges": [
+            "navigator.appInfo"
+        ]
+    },
+    {
+        "file": "plugins/cordova-plugin-inappbrowser/www/inappbrowser.js",
+        "id": "cordova-plugin-inappbrowser.inappbrowser",
+        "pluginId": "cordova-plugin-inappbrowser",
+        "clobbers": [
+            "cordova.InAppBrowser.open"
+        ]
+    },
+    {
+        "file": "plugins/cordova-plugin-inappbrowser/src/browser/InAppBrowserProxy.js",
+        "id": "cordova-plugin-inappbrowser.InAppBrowserProxy",
+        "pluginId": "cordova-plugin-inappbrowser",
+        "runs": true
     }
 ];
 module.exports.metadata = 
@@ -424,7 +478,11 @@ module.exports.metadata =
     "org.apache.cordova.device": "0.2.4",
     "org.apache.cordova.vibration": "0.3.4",
     "phonegap-nfc": "1.2.0",
-    "cordova-plugin-media": "7.0.0"
+    "cordova-plugin-media": "7.0.0",
+    "cordova-plugin-file-transfer": "2.0.0",
+    "cordova-plugin-tesseract": "0.0.1",
+    "cordova-plugin-appinfo": "2.1.2",
+    "cordova-plugin-inappbrowser": "6.0.0"
 }
 // BOTTOM OF METADATA
 });

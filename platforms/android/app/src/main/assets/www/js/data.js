@@ -25,7 +25,9 @@ function addItem(table, columns, values, fungsilain) {
 
 
         var query = "INSERT INTO " + table + " (" + columnString + ") VALUES " + valueStrings.join(', ');
-        
+        if(table=="gradingtype"){
+            // alert(values);
+        }
         // $("#test").text(query+'\n');
         tx.executeSql(query, [], function (tx, res) {
             // notif("insertId: " + res.insertId + " -- mungkin 1");

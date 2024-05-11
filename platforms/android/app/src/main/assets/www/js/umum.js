@@ -130,6 +130,9 @@ $(document).ready(function(){
     .done(function(data){
         $("#footer").html(data); 
     });
+    setTimeout(function(){
+        $(".username1").text(username);
+    },1000);
     $('.select2').select2();
 });
 
@@ -146,6 +149,50 @@ function now(){
     var formattedDate = year + '-' + (month < 10 ? '0' : '') + month + '-' + (date < 10 ? '0' : '') + date;
 
     return formattedDate;
+
+}
+
+function sekarang(){
+    // Mendapatkan objek tanggal hari ini
+    var today = new Date();
+
+    // Mendapatkan tanggal, bulan, dan tahun
+    var date = today.getDate();
+    var month = today.getMonth() + 1; // Ingat: bulan dimulai dari 0
+    var year = today.getFullYear();
+
+    // Membentuk string tanggal dengan format 'YYYY-MM-DD'
+    var formattedDate = (date < 10 ? '0' : '') + date + '-' + (month < 10 ? '0' : '') + month + '-' + year;
+
+    return formattedDate;
+
+}
+
+function time(){
+    // Membuat objek Date yang mewakili waktu saat ini
+    var waktuSaatIni = new Date();
+
+    // Mendapatkan jam, menit, dan detik dari objek Date
+    var jam = waktuSaatIni.getHours();
+    var menit = waktuSaatIni.getMinutes();
+    var detik = waktuSaatIni.getSeconds();
+
+    // Memastikan agar jam, menit, dan detik selalu dua digit dengan menambahkan nol di depan jika diperlukan
+    jam = padZero(jam);
+    menit = padZero(menit);
+    detik = padZero(detik);
+
+    // Fungsi untuk menambahkan nol di depan angka jika angka kurang dari 10
+    function padZero(angka) {
+        return angka < 10 ? "0" + angka : angka;
+    }
+
+    // Menggabungkan jam, menit, dan detik menjadi format jam:menit:detik
+    var waktuFormat = jam + ":" + menit + ":" + detik;
+
+    // Menampilkan waktu dalam format jam:menit:detik
+    return waktuFormat;
+
 
 }
 
@@ -191,6 +238,48 @@ function sptbsCardRandom(){
 
     return lengkap;
 
+}
+
+function cekversion(){
+    var version = navigator.appInfo.version;
+    db.transaction(function (tx) {
+        var query = "SELECT * FROM apk LIMIT 1";
+        tx.executeSql(query, [], function (tx, resultSet) {
+            for (var x = 0; x < resultSet.rows.length; x++) {  
+                let version1 = resultSet.rows.item(x)['apk_version'];
+                if(version!=version1){
+                    alert('Silahkan download APK terbaru!');
+                    // Buka browser dengan URL tertentu
+                    var url = "https://parnaagromas.com/tphdigital/images/apk_file/"+version1+".apk";
+                    var target = "_system"; // Buka dengan browser sistem
+                    var options = "location=yes,hidden=no";
+                    cordova.InAppBrowser.open(url, target, options);
+                }
+            }
+        });
+    });
+}
+
+function cekhalaman(){
+    $(".halaman").hide();
+    let kata='';
+    let halaman='';
+    db.transaction(function (tx) {
+        var query = "SELECT * FROM positionandroid";
+        tx.executeSql(query, [], function (tx, resultSet) {
+            for (var x = 0; x < resultSet.rows.length; x++) { 
+                kata = resultSet.rows.item(x)['android_name'];
+                if (kata !== null) {
+                    halaman = kata.replace(/\s/g, "_");
+                    halaman = halaman.toLowerCase();
+                    if(resultSet.rows.item(x)['positionandroid_read']==1){
+                        $("#h"+halaman).show();
+                        // alert('h'+halaman);
+                    }
+                }
+            }
+        });
+    });
 }
 
 
