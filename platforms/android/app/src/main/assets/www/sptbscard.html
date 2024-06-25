@@ -172,14 +172,15 @@
         function submit(){
             confirmUpdateCard('Update Kartu?','Konfirmasi');
         }
+        
         function updatedataCard(){
             let sptbsnumber_card = $("#sptbsnumber_card").val(); 
             let data = 'sptbs_card='+sptbsnumber_card+
+                ',sptbs_nokartu='+
                 ',sptbs_date='+
                 ',sptbs_vendor='+
                 ',sptbs_material='+
                 ',sptbs_kecamatan='+
-                ',sptbs_plat='+
                 ',sptbs_driver='+
                 ',sptbs_createdby='+
                 ',estate_id='+
@@ -187,7 +188,10 @@
                 ',sptbs_createdname='+
                 ',sptbs_drivername='+
                 ',estate_name='+
-                ',divisi_name=';
+                ',divisi_name='+
+                ',sptbs_listcard='+
+                ',wt_name='+
+                ',lr_name=';
 
             var isidata = [];
             isidata.push(data);

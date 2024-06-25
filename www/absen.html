@@ -49,7 +49,18 @@
             <H1 class="col-12 alert alert-success"><button id="btnupload" onclick="confirmupload();" class="btn btn-danger btn-xs text-white"><i class="fas fa-upload"></i></button> Absensi</H1>        
                  
             <div class="col-5 mb-4 text-left">Jenis</div><div class="col-7 text-left">
-                <input readonly id="absen_type" class="form-control">
+                <select onchange="tp()" id="absen_type" class="">
+                    <option value="">Pilih Jenis Absensi</option>
+                    <option value="Masuk">Masuk</option>
+                    <option value="Keluar">Keluar</option>
+                    <option value="Izin">Izin</option>
+                    <option value="Sakit">Sakit</option>
+                    <option value="Mangkir">Mangkir</option>
+                </select>
+            </div>             
+            <div class="col-5 mb-4 text-left">Keterangan</div>
+            <div class="col-7 text-left">
+                <input id="absen_note" type="text" class="form-control">
             </div>             
             <div class="col-5 mb-4 text-left">Geolocation</div>
             <div class="col-7 text-left">
@@ -187,6 +198,7 @@
                         var reader = new FileReader();
 
                         reader.onloadend = function () {
+                            // alert(this.result);
                             callback(this.result, x, no, resultSet);
                         };
 
@@ -244,12 +256,14 @@
         }
 
         function finalupload(result,x,no,resultSet){
+            $("#loader").show();
             var absen_id = resultSet.rows.item(x)['absen_id'];
             var absen_user = resultSet.rows.item(x)['absen_user'];
             var absen_username = resultSet.rows.item(x)['absen_username'];
             var absen_date = resultSet.rows.item(x)['absen_date'];
             var absen_time = resultSet.rows.item(x)['absen_time'];
             var absen_type = resultSet.rows.item(x)['absen_type'];
+            var absen_note = resultSet.rows.item(x)['absen_note'];
             var estate_id = resultSet.rows.item(x)['estate_id'];
             var estate_name = resultSet.rows.item(x)['estate_name'];
             var divisi_id = resultSet.rows.item(x)['divisi_id'];
@@ -264,6 +278,7 @@
             formData.append('absen_date', absen_date);
             formData.append('absen_time', absen_time);
             formData.append('absen_type', absen_type);
+            formData.append('absen_note', absen_note);
             formData.append('estate_id', estate_id);
             formData.append('estate_name', estate_name);
             formData.append('divisi_id', divisi_id);
@@ -284,13 +299,20 @@
                     
                     db.transaction(function (tx) {
                         var query1 = "DELETE FROM absen WHERE absen_id = "+absen_id;
+                        let text1='';
                         tx.executeSql(query1, [], function (tx, resultSet1) { 
+                            /* for (let [key, value] of formData.entries()) {
+                                text1+=`${key}: ${value}`;
+                            }
+                            notif(text1); */
+
                             deletefile(absen_user);
                             ambildata('absen','semua','');
                             if(no==resultSet.rows.length){
                                 notif('Sukses Upload Data!');
                                 clearField();                   
-                                playAudio('berhasil.mp3');
+                                playAudio('berhasil.mp3');                                
+                                $("#loader").hide();
                             }                                           
                         },
                         function (tx, error) {
@@ -340,8 +362,8 @@
 
                         
                         let isipicture;                        
-                        var absen_user = resultSet.rows.item(x)['absen_user'];
-                        bacafileajax(absen_user,x,no,resultSet, function(result,x,no,resultSet) {
+                        var absen_picture = resultSet.rows.item(x)['absen_picture'];
+                        bacafileajax(absen_picture,x,no,resultSet, function(result,x,no,resultSet) {
                             finalupload(result,x,no,resultSet);
                         });
                         
@@ -407,6 +429,7 @@
         //gambar 
         function writeToFile(fileName, text) {
             let fname = fileName+".txt";
+            // alert(fname);
             window.resolveLocalFileSystemURL(cordova.file.externalDataDirectory, function(directoryEntry) {
                 directoryEntry.getFile(fname, { create: true }, function(fileEntry) {
                     fileEntry.createWriter(function(fileWriter) {
@@ -440,6 +463,7 @@
                         var reader = new FileReader();
 
                         reader.onloadend = function () {
+                            // alert(fileName+"=="+this.result);
                             $("#"+fileName).attr("src", this.result); 
                         };
 
@@ -450,7 +474,7 @@
         }
 
         function onErrorReadFile(error){
-            notif(JSON.stringify(error).toString());
+            // notif(JSON.stringify(error).toString());
         }
       
 
@@ -458,16 +482,17 @@
             let src =  imageURI;  
             src =  "data:image/jpeg;base64," + imageURI;          
             // $("#absenPicture").attr("src", src); 
-            let absen_user = $("#absen_user").val();
-            writeToFile(absen_user, src);  
+            let absen_picture = $("#absen_picture").val();
+            // alert(absen_picture);
+            writeToFile(absen_picture, src);  
             $("#submit").show();          
         }
         function errorabsenImg(message) {
             notif('Failed because: ' + message);
         }
         function pictureAbsen() {
-            navigator.camera.getPicture(absenImg, errorabsenImg, {quality: 50, destinationType: Camera.DestinationType.DATA_URL});
-            // navigator.camera.getPicture(absenImg, errorabsenImg, {quality: 50, destinationType: Camera.DestinationType.FILE_URI});
+            navigator.camera.getPicture(absenImg, errorabsenImg, {quality: 50, destinationType: Camera.DestinationType.DATA_URL, correctOrientation: true});
+            // navigator.camera.getPicture(absenImg, errorabsenImg, {quality: 50, destinationType: Camera.DestinationType.FILE_URI, correctOrientation: true});
         }
 
         //geolocation
@@ -486,6 +511,7 @@
         function clearField(){
             $("#absen_user").val("");
             $("#absen_type").val("");
+            $("#absen_note").val("");
             tpname();
             tp();
             $("#absen_date").val("");
@@ -506,6 +532,7 @@
             let absen_user = $("#absen_user").val();
             let absen_username = $("#absen_username").val();
             let absen_type = $("#absen_type").val();
+            let absen_note = $("#absen_note").val();
             let estate_id = $("#estate_id").val();
             let estate_name = $("#estate_name").val();
             let divisi_id = $("#divisi_id").val();
@@ -521,6 +548,7 @@
             let data = 'absen_user='+absen_user+
                 ',absen_username='+absen_username+
                 ',absen_type='+absen_type+
+                ',absen_note='+absen_note+
                 ',absen_date='+absen_date+
                 ',absen_time='+absen_time+
                 ',estate_id='+estate_id+
@@ -533,6 +561,7 @@
             inputOrUpdateData('absen', data);
 
         }
+
         function updatedataabsen(table,columns,valuesUpdate,absen_id){
             db.transaction(function (tx) {
                 var updateQuery = "UPDATE " + table + " SET " + columns.join('=?, ') + "=? WHERE absen_id = '"+ absen_id + "'";
@@ -546,6 +575,7 @@
                 });
             });
         }
+        
         function onConfirmUpdate(pilihannya,table,columns,valuesUpdate,absen_id) {
             if(pilihannya=='1'){
                 updatedataabsen(table,columns,valuesUpdate,absen_id);
@@ -717,9 +747,13 @@
             let absen_username = $("#absen_user").find(':selected').attr('panen_tpname');
             $("#absen_username").val(absen_username);
             let absenuser = $("#absen_user").val();
-            if(absenuser>0){
+            let absentype = $("#absen_type").val();
+            let absendate = $("#absen_date").val();
+            let absen_picture = absenuser+absentype+absendate;
+            if(absenuser>0){                
+                $("#submit").show();          
                 $(".absenpctr").show();
-                $("#absen_picture").val(absenuser);
+                $("#absen_picture").val(absen_picture);
             }else{
                 $(".absenpctr").hide();
                 $("#absen_picture").val("");
@@ -732,13 +766,13 @@
             db.transaction(function (tx) {
                 let hariini = now();
                 let tipe = $("#absen_type").val();
-                if(absen_type=="Masuk"){
+                /* if(absen_type=="Masuk"){
                     var query = `SELECT * FROM absen WHERE absen_date = '${hariini}' AND absen_type = '${tipe}'`;
                 }else{
                     var query = `SELECT * FROM absen WHERE absen_date = '${hariini}' AND absen_type = '${tipe}'`;
-                }
+                } */
                 
-                // var query = `SELECT * FROM absen WHERE absen_date = '${hariini}'`;
+                var query = `SELECT * FROM absen WHERE absen_date = '${hariini}'`;
                 
                 // notif(query);
                 $("#"+table).html('');
@@ -762,6 +796,7 @@
                             ',absen_date='+resultSet.rows.item(x)['absen_date']+
                             ',absen_time='+resultSet.rows.item(x)['absen_time']+
                             ',absen_type='+resultSet.rows.item(x)['absen_type']+
+                            ',absen_note='+resultSet.rows.item(x)['absen_note']+
                             ',estate_id='+resultSet.rows.item(x)['estate_id']+
                             ',estate_name='+resultSet.rows.item(x)['estate_name']+
                             ',divisi_id='+resultSet.rows.item(x)['divisi_id']+
@@ -772,16 +807,23 @@
                         tdataabsenharian +=dataabsenharian;
 
                         cell += '<div class="col-12 text-center alert alert-success mb-3">('+resultSet.rows.item(x)['absen_id']+') '+resultSet.rows.item(x)['absen_username']+'</div>';
+                        cell += '<div class="col-4 text-left">Jenis</div><div class="col-8 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['absen_type']+'</div>';
+                        cell += '<div class="col-4 text-left">Keterangan</div><div class="col-8 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['absen_note']+'</div>';
                         cell += '<div class="col-4 text-left">Date</div><div class="col-8 text-left">: &nbsp;&nbsp;'+sekarang()+' '+resultSet.rows.item(x)['absen_time']+'</div>';
                         cell += '<div class="col-4 text-left">Estate</div><div class="col-8 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['estate_name']+'</div>';
                         cell += '<div class="col-4 text-left">Divisi</div><div class="col-8 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['divisi_name']+'</div>';
                         cell += '<div class="col-4 text-left">Geolocation</div><div class="col-8 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['absen_geo']+'</div>';
 
                         let srcpic='res/no_picture.png';
-                        cell += '<div class="col-4 text-left">Picture</div><div class="col-8 text-left">: &nbsp;&nbsp;<img id="'+resultSet.rows.item(x)['absen_user']+'" src="'+srcpic+'" class="img-thumbnail"></div>';
+                        let absenuser = resultSet.rows.item(x)['absen_user'];
+                        let absentype = resultSet.rows.item(x)['absen_type'];
+                        let absendate = resultSet.rows.item(x)['absen_date'];
+                        let absen_picture = absenuser+absentype+absendate;
+                        cell += '<div class="col-4 text-left">Picture</div><div class="col-8 text-left">: &nbsp;&nbsp;<img id="'+absen_picture+'" src="'+srcpic+'" class="img-thumbnail"></div>';
                         if(resultSet.rows.item(x)['absen_picture']!=""){
+                            // alert(resultSet.rows.item(x)['absen_picture']+"=="+absen_picture);
                             readFromFile(resultSet.rows.item(x)['absen_picture']);
-                            $("#"+resultSet.rows.item(x)['absen_user']).attr("src","res/logo.png");
+                            // $("#"+resultSet.rows.item(x)['absen_user']).attr("src","res/logo.png");
                         }
 
                         cell += '<div onclick="confirmdeleteabsen(\'Yakin di Delete?\',\'Delete Data\',\'absen\',\''+resultSet.rows.item(x)['absen_id']+'\')" class="col-12  mt-5 mb-5 text-danger"> >>> &nbsp;&nbsp;<button class="btn btn-danger btn-block"><i class="fas fa-window-close"></i> Delete</button>&nbsp;&nbsp; <<< </div>';  

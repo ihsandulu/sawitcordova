@@ -43,12 +43,14 @@
     </div>
     <div id="frame1" class="text-center " > 
         <div class="row p-3 ballon">                        
-            <H1 class="col-12 alert alert-success">Data Pruning</H1>        
-            <div class="col-5 mb-4 text-left">Nama Baris</div><div class="col-7 text-left">
+            <H1 class="col-12 alert alert-success">
+                <button id="btnupload" onclick="confirmupload();" class="btn btn-danger btn-xs text-white"><i class="fas fa-upload"></i></button> Inspeksi Panen
+            </H1>        
+            <!-- <div class="col-5 mb-4 text-left">Nama Baris</div><div class="col-7 text-left">
                 <input id="pruning_baris" class="form-control">
-            </div>         
+            </div> -->         
             <div class="col-5 mb-4 text-left">Blok</div><div class="col-7 text-left">
-                <select onchange="dblokname()" id="blok_id" class="form-control">
+                <select onchange="dblokname();cekfield();" id="blok_id" class="form-control">
 
                 </select>
             </div>             
@@ -57,11 +59,22 @@
 
                 </select>
             </div>      
-            <div class="col-5 mb-4 text-left">Jml Pokok</div><div class="col-7 text-left">
-                <input type="number" id="pruning_pokok" class="form-control">
+            <div class="col-5 mb-4 text-left">Thn Tanam</div><div class="col-7 text-left">
+                <input type="number" id="pruning_thntanam" class="form-control">
             </div>      
-            <div class="col-5 mb-4 text-left">Jml Pelepah</div><div class="col-7 text-left">
-                <input type="number" id="pruning_pelepah" class="form-control">
+            <div class="col-5 mb-4 text-left">Luas (Ha)</div><div class="col-7 text-left">
+                <input type="number" id="pruning_luas" class="form-control">
+            </div>      
+            <div class="col-5 mb-4 text-left">SPH (Pokok/Ha)</div><div class="col-7 text-left">
+                <input type="number" id="pruning_pokok" class="form-control">
+            </div>             
+            <div class="col-5 mb-4 text-left">Category</div><div class="col-7 text-left">
+                <select onchange="cekfield();" id="pruningc_id" class="form-control">
+
+                </select>
+            </div>   
+            <div class="col-5 mb-4 text-left">Jml</div><div class="col-7 text-left">
+                <input onchange="cekfield();" type="number" id="pruning_jml" class="form-control">
             </div>
                
             <div class="col-12 text-left input-group">Geolocation</div>
@@ -70,10 +83,10 @@
                 <button onclick="geoPrunner()" class="btn btn-outline-secondary" type="button" id="btn_geo"><i class="fas fa-cogs"></i></button>
             </div>  
             
-            <div class="col-12 text-left input-group">Picture</div>
-            <div class="input-group mb-4 ">
+            <div class="col-12 text-left input-group gambar">Picture</div>
+            <div class="input-group mb-4 gambar">
                 <input id="pruning_picture" type="text" class="form-control text-biru" placeholder="" aria-label="Geolocation" aria-describedby="btn_picture">
-                <button onclick="picturePanen()" class="btn btn-outline-secondary" type="button" id="btn_picture"><i class="fas fa-camera"></i></button>
+                <button onclick="picturepruning()" class="btn btn-outline-secondary" type="button" id="btn_picture"><i class="fas fa-camera"></i></button>
                 <img id="pruningPicture" src="res/no_picture.png" class="img-thumbnail">
             </div> 
 
@@ -88,6 +101,7 @@
             <input id="pruning_mandorname" type="hidden">
             <input id="blok_name" type="hidden">
         </div>
+        <textarea id="datanfcjadi1" class="form-control col-12 hide" style="height:1500px;"></textarea>
         <div class="" id="pruning">  
         
         </div>
@@ -113,6 +127,7 @@
                 $(".username").text(username); 
                 tpname();
                 blok();
+                pruningc();
                 $("#pruning_date").val(now());
                 $("#pruning_mandor").val(userid);
                 $("#estate_id").val(estateid);
@@ -120,20 +135,287 @@
                 $("#pruning_mandorname").val(username);
                 $("#estate_name").val(estatename);
                 $("#divisi_name").val(divisiname);
+                cekfield();
             }                      
         }); 
 
+
+
+        //...upload...//
+
+        function cekdatasemua(){
+            db.transaction(function (tx) {
+                var query = `SELECT * FROM pruning WHERE 1`;  
+                tx.executeSql(query, [], function (tx, resultSet) { 
+                    if (resultSet.rows.length>0) { 
+                        $("#btnupload").show();
+                    } else{
+                        $("#btnupload").hide();
+                    }
+                });
+            });
+        }
+
+
+        function onErrorReadFile1(error, x, no, resultSet){
+            notif('x='+x+", no="+no+"=>1"+JSON.stringify(error).toString());
+            finalupload("",x,no,resultSet);
+        }
+
+        
+        function onErrorReadFile2(error, x, no, resultSet){
+            // notif('x='+x+", no="+no+"=>2"+JSON.stringify(error).toString());
+            finalupload("",x,no,resultSet);
+        }
+
+        
+        function onErrorReadFile3(error, x, no, resultSet){
+            notif('x='+x+", no="+no+"=>3"+JSON.stringify(error).toString());
+            finalupload("",x,no,resultSet);
+        }
+
+        function bacafileajax(fileName, x, no, resultSet, callback) {
+            let fname = fileName+".txt";
+            // alert(fileName);
+            window.resolveLocalFileSystemURL(cordova.file.externalDataDirectory, function(directoryEntry) {
+                directoryEntry.getFile(fname, { create: false }, function(fileEntry) {
+                    fileEntry.file(function (file) {
+                        var reader = new FileReader();
+
+                        reader.onloadend = function () {
+                            // alert(1);
+                            callback(this.result, x, no, resultSet);
+                        };
+
+                        reader.readAsText(file);
+                    }, function(error) {
+                            // alert(2);
+                        onErrorReadFile1(error, x, no, resultSet); 
+                    });
+                }, function(error) {
+                            // alert(3);
+                    onErrorReadFile2(error, x, no, resultSet);
+                });
+            }, function(error) {
+                            // alert(4);
+                onErrorReadFile3(error, x, no, resultSet); 
+            });
+        }
+
+        function deletefile(nama_file){
+            var fileName = nama_file+".txt";
+
+            window.resolveLocalFileSystemURL(cordova.file.externalDataDirectory, function(directoryEntry) {
+                directoryEntry.getFile(fileName, {create: false}, function(fileEntry) {
+                    fileEntry.remove(function() {
+                        // File berhasil dihapus
+                        console.log("File berhasil dihapus: " + fileName);
+                    }, function(error) {
+                        // Gagal menghapus file
+                        console.error("Gagal menghapus file: " + error.code);
+                    });
+                }, function(error) {
+                    // File tidak ditemukan
+                    console.error("File tidak ditemukan: " + error.code);
+                });
+            }, function(error) {
+                // Direktori tidak ditemukan
+                console.error("Direktori tidak ditemukan: " + error.code);
+            });
+
+        }
+
+        function confirmupload1(pilihannya) {
+            if(pilihannya=='1'){
+                uploaddata();
+            }else{
+                // alert('You selected button ' + jenis);
+            }
+        }
+
+        function confirmupload(){
+            let arraynya = ['Upload','Cancel'];
+            navigator.notification.confirm(
+                "Yakin di Upload?", // message
+                (buttonIndex) => confirmupload1(buttonIndex),            
+                "Upload",           // title
+                arraynya     // buttonLabels
+            );
+        }
+
+        function finalupload(result,x,no,resultSet){
+            var blok_id = resultSet.rows.item(x)['blok_id'];
+            var pruning_tp = resultSet.rows.item(x)['pruning_tp'];
+            var pruning_thntanam = resultSet.rows.item(x)['pruning_thntanam'];
+            var pruning_luas = resultSet.rows.item(x)['pruning_luas'];
+            var pruning_pokok = resultSet.rows.item(x)['pruning_pokok'];
+            var pruningc_id = resultSet.rows.item(x)['pruningc_id'];
+            var pruning_jml = resultSet.rows.item(x)['pruning_jml'];
+            var pruning_geo = resultSet.rows.item(x)['pruning_geo'];
+            var pruning_picture = resultSet.rows.item(x)['pruning_picture'];
+            var pruning_mandor = resultSet.rows.item(x)['pruning_mandor'];
+            var pruning_date = resultSet.rows.item(x)['pruning_date'];
+            var estate_id = resultSet.rows.item(x)['estate_id'];
+            var divisi_id = resultSet.rows.item(x)['divisi_id'];
+            var estate_name = resultSet.rows.item(x)['estate_name'];
+            var divisi_name = resultSet.rows.item(x)['divisi_name'];
+            var pruning_tpname = resultSet.rows.item(x)['pruning_tpname'];
+            var pruning_mandorname = resultSet.rows.item(x)['pruning_mandorname'];
+            var blok_name = resultSet.rows.item(x)['blok_name'];
+            var pruning_id = resultSet.rows.item(x)['pruning_id'];
+
+            // Membuat objek FormData
+            var formData = new FormData();
+            formData.append('blok_id', blok_id);
+            formData.append('pruning_tp', pruning_tp);
+            formData.append('pruning_thntanam', pruning_thntanam);
+            formData.append('pruning_luas', pruning_luas);
+            formData.append('pruning_pokok', pruning_pokok);
+            formData.append('pruningc_id', pruningc_id);
+            formData.append('pruning_jml', pruning_jml);
+            formData.append('pruning_geo', pruning_geo);
+            formData.append('pruning_mandor', pruning_mandor);
+            formData.append('pruning_date', pruning_date);
+            formData.append('estate_id', estate_id);
+            formData.append('divisi_id', divisi_id);
+            formData.append('estate_name', estate_name);
+            formData.append('divisi_name', divisi_name);
+            formData.append('pruning_tpname', pruning_tpname);
+            formData.append('pruning_mandorname', pruning_mandorname);
+            formData.append('blok_name', blok_name);
+            isipicture = result;
+            formData.append('pruning_picture', isipicture);
+
+            /* let fdata = '';
+            for (var pair of formData.entries()) {
+                fdata += pair[0] + ' = ' + pair[1] + '\n';
+            }
+            notifx(fdata); */
+
+
+            // alert(isipicture);
+            // Melakukan AJAX request
+            $.ajax({
+                url: 'https://parnaagromas.com/tphdigital/api/uploadpruning',
+                type: 'POST',
+                data: formData,
+                processData: false,  // Tetapkan ke false agar FormData tidak diproses secara otomatis
+                contentType: false,  // Tetapkan ke false karena FormData sudah berisi tipe konten yang benar
+                success: function(response) {                                    
+                    db.transaction(function (tx) {
+                        var query1 = "DELETE FROM pruning WHERE pruning_id = "+pruning_id;
+                        tx.executeSql(query1, [], function (tx, resultSet1) { 
+                            
+                            let blok_id = $("#blok_id").val();  
+                            let pruningc_id = $("#pruningc_id").val();  
+                            let pruning_jml = $("#pruning_jml").val(); 
+                            let filename = blok_id+pruningc_id+pruning_jml;
+                            deletefile(filename);
+                            ambildata('pruning','semua','');
+                            if(no==resultSet.rows.length){
+                                notif('Sukses Upload Data!');
+                                playAudio('berhasil.mp3');
+                                cekdatasemua();
+                            }                                           
+                        },
+                        function (tx, error) {
+                            notif('DELETE error: ' + error.message);                      
+                            playAudio('gagal.mp3');
+                            cekdatasemua();
+                        });
+                        cekdatasemua();
+                        
+                        // alert(no+"=="+resultSet.rows.length);
+                    });                                    
+                },
+                error: function(xhr, status, error) {
+                    notif('Error:', error);
+                }
+            });
+        }
+
+        function uploaddata(){
+            db.transaction(function (tx) {
+                let hariini = now();
+                // var query = `SELECT * FROM pruning WHERE pruning_date = '${hariini}'`; 
+                var query = `SELECT * FROM pruning WHERE 1`;                
+                // notif(query);
+                $("#htmlupload").html('');
+                tx.executeSql(query, [], function (tx, resultSet) { 
+                    let no=1;
+                    // notif(resultSet.rows.length);
+                    for (var x = 0; x < resultSet.rows.length; x++) {                          
+                        let isipicture;                        
+                        var pruning_picture = resultSet.rows.item(x)['pruning_picture'];
+                        bacafileajax(pruning_picture,x,no,resultSet, function(result,x,no,resultSet) {
+                            // alert('asdf'+result);
+                            finalupload(result,x,no,resultSet);
+                        });
+                        no++;
+                    }
+                });
+            });
+        }
+
+        //...upload...//
+
+        function cekfield(){
+            let blok_id = $("#blok_id").val();  
+            let pruningc_id = $("#pruningc_id").val();  
+            let pruning_jml = $("#pruning_jml").val(); 
+     
+            if(blok_id!="" && pruningc_id!="" && pruning_jml!=""){
+                $(".gambar").show(); 
+            }else{
+                $(".gambar").hide(); 
+            }                   
+        }
+
         //gambar 
+        function writeToFile(fileName, text) {
+            let fname = fileName+".txt";
+            // alert(fileName);
+            window.resolveLocalFileSystemURL(cordova.file.externalDataDirectory, function(directoryEntry) {
+                directoryEntry.getFile(fname, { create: true }, function(fileEntry) {
+                    fileEntry.createWriter(function(fileWriter) {
+                        fileWriter.onwriteend = function() {
+                            $("#pruningPicture").attr("src", text); 
+                            // alert(fileName);
+                            $("#pruning_picture").val(fileName);
+                        };
+
+                        fileWriter.onerror = function(e) {
+                            notif("Gagal menulis ke file: " + e.toString());
+                        };
+
+                        var blob = new Blob([text], { type: 'text/plain' });
+                        fileWriter.write(blob);
+                    }, function(error) {
+                        notif("Gagal membuat writer: " + error.toString());
+                    });
+                }, function(error) {
+                    notif("Gagal mendapatkan file: " + error.toString());
+                });
+            }, function(error) {
+                notif("Gagal mengakses direktori: " + error.toString());
+            });
+        } 
         function pruningImg(imageURI) {
-            let src =  imageURI;            
-            $("#pruningPicture").attr("src", src); 
-            $("#pruning_picture").val(src);
+            let src =  imageURI;  
+            src =  "data:image/jpeg;base64," + imageURI;          
+            // $("#pruningPicture").attr("src", src);  
+            let blok_id = $("#blok_id").val();  
+            let pruningc_id = $("#pruningc_id").val();  
+            let pruning_jml = $("#pruning_jml").val(); 
+            let filename = blok_id+pruningc_id+pruning_jml;
+            writeToFile(filename, src); 
         }
         function errorpruningImg(message) {
             notif('Failed because: ' + message);
         }
-        function picturePanen() {
-            navigator.camera.getPicture(pruningImg, errorpruningImg, { quality: 50, destinationType: Camera.DestinationType.FILE_URI });
+        function picturepruning() {            
+            navigator.camera.getPicture(pruningImg, errorpruningImg, {quality: 50, destinationType: Camera.DestinationType.DATA_URL, correctOrientation: true});
+            // navigator.camera.getPicture(pruningImg, errorpruningImg, {quality: 50, destinationType: Camera.DestinationType.FILE_URI, correctOrientation: true});
         }
 
         //geolocation
@@ -150,17 +432,22 @@
         }
         
         function clearField(){
-            $("#pruning_baris").val("");
+            // $("#pruning_baris").val("");
             $("#pruning_tp").val("");
             tpname();
             $("#pruning_pokok").val("");
-            $("#pruning_pelepah").val("");
             $("#pruning_picture").val("");
             
             
             $("#pruning_tpname").val("");
 
             $("#blok_id").val("");
+            
+            $("#pruning_thntanam").val("");
+            $("#pruning_luas").val("");
+            $("#pruningc_id").val("");
+            $("#pruning_jml").val("");
+            
             $("#blok_name").val("");
             $("#pruningPicture").attr("src","res/no_picture.png");     
             
@@ -169,10 +456,9 @@
         }
         
         function submit(){
-            let pruning_baris = $("#pruning_baris").val();
+            // let pruning_baris = $("#pruning_baris").val();
             let pruning_tp = $("#pruning_tp").val();
             let pruning_pokok = $("#pruning_pokok").val();
-            let pruning_pelepah = $("#pruning_pelepah").val();
             let pruning_picture = $("#pruning_picture").val();
             let pruning_mandor = $("#pruning_mandor").val();
             let pruning_date = $("#pruning_date").val();
@@ -189,12 +475,17 @@
             let pruning_mandorname = $("#pruning_mandorname").val();
             
             let blok_id = $("#blok_id").val();
+            
+            let pruning_thntanam = $("#pruning_thntanam").val();
+            let pruning_luas = $("#pruning_luas").val();
+            let pruningc_id = $("#pruningc_id").val();
+            let pruning_jml = $("#pruning_jml").val();
+
             let blok_name = $("#blok_name").val();
             
-            let data = 'pruning_baris='+pruning_baris+
-                ',pruning_tp='+pruning_tp+
+            
+            let data = 'pruning_tp='+pruning_tp+
                 ',pruning_pokok='+pruning_pokok+
-                ',pruning_pelepah='+pruning_pelepah+
                 ',pruning_picture='+pruning_picture+
                 ',pruning_mandor='+pruning_mandor+
                 ',pruning_date='+pruning_date+
@@ -206,6 +497,10 @@
                 ',pruning_tpname='+pruning_tpname+
                 ',pruning_mandorname='+pruning_mandorname+
                 ',blok_id='+blok_id+
+                ',pruning_thntanam='+pruning_thntanam+
+                ',pruning_luas='+pruning_luas+
+                ',pruningc_id='+pruningc_id+
+                ',pruning_jml='+pruning_jml+
                 ',blok_name='+blok_name;
                 // notif(data);
             inputOrUpdateData('pruning', data);
@@ -271,7 +566,7 @@
                     
                 });
 
-                // Mengecek apakah pruning_baris sudah ada dalam tabel
+                /* // Mengecek apakah pruning_baris sudah ada dalam tabel
                 var checkQuery = "SELECT * FROM " + table + " WHERE pruning_baris = ? AND pruning_mandor = ?";
                 // notif(checkQuery); 
                 tx.executeSql(checkQuery, [pruningidCheckUpdate, pruningmandor], function (tx, result) {
@@ -282,7 +577,7 @@
                         confirmUpdatePruning('Data sudah ada. Apakah akan ditimpa?','Data Ditemukan',table,columns,valuesUpdate,pruning_id)
                         // Jika pruning_baris sudah ada, lakukan UPDATE
                         
-                    } else {
+                    } else { */
                         // Jika pruning_baris belum ada, lakukan INSERT
                         var insertQuery = "INSERT INTO " + table + " (" + columns.join(',') + ") VALUES (" + values.join(',') + ")";
                         // notif(insertQuery);
@@ -291,16 +586,17 @@
                             // notif(insertID);
                             ambildata('pruning','semua','');  
                             playAudio('berhasil.mp3'); 
+                            clearField();
                         }, function (tx, error) {
                             notif('Kesalahan INSERT: ' + error.message);      
                             playAudio('gagal.mp3');
                         });
-                    }
+                    /* }
                     clearField();
                 }, function (tx, error) {
                     notif('Kesalahan transaksi: ' + error.message);      
                     playAudio('gagal.mp3');
-                });
+                }); */
             }, function (error) {
                 notif('Transaction Error: ' + error.message);      
                 playAudio('gagal.mp3');
@@ -347,9 +643,32 @@
             );
         }
 
+        function readFromFile(fileName) {
+            let fname = fileName+".txt";
+            // alert(fileName);
+            window.resolveLocalFileSystemURL(cordova.file.externalDataDirectory, function(directoryEntry) {
+                directoryEntry.getFile(fname, { create: false }, function(fileEntry) {
+                    fileEntry.file(function (file) {
+                        var reader = new FileReader();
+
+                        reader.onloadend = function () {
+                            $("#"+fileName).attr("src", this.result); 
+                        };
+
+                        reader.readAsText(file);
+                    }, onErrorReadFile);
+                }, onErrorReadFile);
+            }, onErrorReadFile);
+        }
+
+        function onErrorReadFile(error){
+            notif(JSON.stringify(error).toString());
+        }
+
         function ambildata(table,status,perintahkartu) {
+            cekdatasemua();
             db.transaction(function (tx) {
-                var query = "SELECT * FROM " + table+" WHERE pruning_mandor='"+userid+"' ORDER BY "+table+"_id DESC";
+                var query = "SELECT * FROM " + table+" LEFT JOIN pruningc ON pruningc.pruningc_id=pruning.pruningc_id WHERE pruning_mandor='"+userid+"' ORDER BY "+table+"_id DESC";
                 if(status=="terakhir"){
                     query += " LIMIT 1";
                 }
@@ -364,22 +683,23 @@
                         cell += '<H1 class="col-12 alert alert-success" id="judulpanen">Data Terekam di Handphone</H1>';        
                         
                         cell += '<div class="col-5 text-left">Date</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['pruning_date']+'</div>';
-                        cell += '<div class="col-5 text-left">Nama Baris</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['pruning_baris']+'</div>';
+                        // cell += '<div class="col-5 text-left">Nama Baris</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['pruning_baris']+'</div>';
                         cell += '<div class="col-5 text-left">Tenaga Panen</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['pruning_tpname']+'</div>';
-                        cell += '<div class="col-5 text-left">Jml Pokok</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['pruning_pokok']+'</div>';
-                        cell += '<div class="col-5 text-left">Jml Pelepah</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['pruning_pelepah']+'</div>';
+                        cell += '<div class="col-5 text-left">Thn Tanam</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['pruning_thntanam']+'</div>';
+                        cell += '<div class="col-5 text-left">Luas</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['pruning_luas']+' Ha</div>';
+                        cell += '<div class="col-5 text-left">SPH</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['pruning_pokok']+'</div>';
+                        cell += '<div class="col-5 text-left">Category</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['pruningc_name']+'</div>';
+                        cell += '<div class="col-5 text-left">Jml</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['pruning_jml']+'</div>';
                         cell += '<div class="col-5 text-left">Estate</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['estate_name']+'</div>';
                         cell += '<div class="col-5 text-left">Divisi</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['divisi_name']+'</div>';
                         cell += '<div class="col-5 text-left">Blok</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['blok_name']+'</div>';
                         cell += '<div class="col-5 text-left">Geolocation</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['pruning_geo']+'</div>';
                        
-                        let srcpic='';
-                        if(resultSet.rows.item(x)['pruning_picture']==""){
-                            srcpic='res/no_picture.png';
-                        }else{
-                            srcpic=resultSet.rows.item(x)['pruning_picture'];
+                        let srcpic='res/no_picture.png';
+                        cell += '<div class="col-5 text-left">Picture</div><div class="col-7 text-left">: &nbsp;&nbsp;<img id="'+resultSet.rows.item(x)['pruning_picture']+'" src="'+srcpic+'" class="img-thumbnail"></div>';
+                        if(resultSet.rows.item(x)['pruning_picture']!=""){
+                            readFromFile(resultSet.rows.item(x)['pruning_picture']);
                         }
-                        cell += '<div class="col-5 text-left">Picture</div><div class="col-7 text-left">: &nbsp;&nbsp;<img src="'+srcpic+'" class="img-thumbnail"></div>';
 
                         cell += '<div onclick="confirmdeletePruning(\'Yakin di Delete?\',\'Delete Data Panen\',\'pruning\','+resultSet.rows.item(x)['pruning_id']+')" class="col-12  mt-5 mb-5 text-danger"> >>> &nbsp;&nbsp;<button class="btn btn-danger btn-block"><i class="fas fa-window-close"></i> Delete</button>&nbsp;&nbsp; <<< </div>';             
 
@@ -405,6 +725,7 @@
                 playAudio('gagal.mp3');
             }, function () {
                 // notif('transaction ok');
+                cekfield();
             });
         } 
         
@@ -482,6 +803,42 @@
                 // notif('transaction ok');
             });
         }
+
+        function pruningc() {
+            db.transaction(function (tx) {
+                var query = "SELECT * FROM pruningc";
+                // notif(query);
+                $("#pruningc_id").html('');
+                var cell ='';
+                tx.executeSql(query, [], function (tx, resultSet) {
+                    let no=1;
+                    // notif(resultSet.rows.length);     
+                    cell += '<option value="">Pilih Category</option>';
+                    for (var x = 0; x < resultSet.rows.length; x++) {   
+                        cell += '<option pruningc_name="'+resultSet.rows.item(x)['pruningc_name']+'" value="'+resultSet.rows.item(x)['pruningc_id']+'">'+resultSet.rows.item(x)['pruningc_name']+'</div>';
+                        if(resultSet.rows.length == no){
+                            $("#pruningc_id").append(cell);
+                        }
+                        no++;
+                        
+                    }
+                    if (x < 1) {
+                        // notif("Tidak ada data!");
+                    }
+                },
+                function (tx, error) {
+                    notif('SELECT error: ' + error.message);   
+                    playAudio('gagal.mp3');
+                });
+                
+            }, function (error) {
+                notif('transaction error: ' + error.message);   
+                playAudio('gagal.mp3');
+            }, function () {
+                // notif('transaction ok');
+            });
+        }
+
         function dblokname(){            
             let blok_name = $("#blok_id").find(':selected').attr('blok_name');
             $("#blok_name").val(blok_name);

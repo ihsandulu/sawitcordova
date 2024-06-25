@@ -14,6 +14,8 @@ let username = localStorage.getItem('user_name');
 let userpassword = localStorage.getItem('user_password');
 let usernik = localStorage.getItem('user_nik');
 
+$(".halaman").hide();
+
 function alertDismissed(title) {
     // alert('Kesalahan Pesan!',title)
 }
@@ -26,6 +28,11 @@ function notif(message) {
         title,            // title
         'Close'                  // buttonName
     );
+}
+
+function notifx(message) {
+    $("#datanfcjadi1").show();
+    $("#datanfcjadi1").html(message);
 }
 
 //geolocation
@@ -132,6 +139,10 @@ $(document).ready(function(){
     });
     setTimeout(function(){
         $(".username1").text(username);
+        
+        if(positionid>0){
+            cekhalaman();
+        }
     },1000);
     $('.select2').select2();
 });
@@ -218,6 +229,28 @@ function cardrandom(){
 
 }
 
+function iscardrandom(inisial){
+    // Mendapatkan objek tanggal hari ini
+    var today = new Date();
+
+    // Mendapatkan tanggal, bulan, dan tahun
+    var date = today.getDate();
+    var month = today.getMonth() + 1; // Ingat: bulan dimulai dari 0
+    var year = today.getFullYear();
+
+    var hours = today.getHours();
+    var minutes = today.getMinutes();
+    var seconds = today.getSeconds();
+    var randomTwoDigitNumber = Math.floor(Math.random() * 90) + 10;
+
+
+    // Membentuk string tanggal dengan format 'YYYY-MM-DD'
+    var lengkap = inisial+year + '' + (month < 10 ? '0' : '') + month + '' + (date < 10 ? '0' : '') + date + hours + minutes+ seconds+randomTwoDigitNumber;
+
+    return lengkap;
+
+}
+
 function sptbsCardRandom(){
     // Mendapatkan objek tanggal hari ini
     var today = new Date();
@@ -260,26 +293,36 @@ function cekversion(){
     });
 }
 
+function tulisversi(){
+    var version = navigator.appInfo.version;
+    $("#versi").text(version);
+    // alert(version);
+}
+
 function cekhalaman(){
     $(".halaman").hide();
     let kata='';
     let halaman='';
-    db.transaction(function (tx) {
-        var query = "SELECT * FROM positionandroid";
-        tx.executeSql(query, [], function (tx, resultSet) {
-            for (var x = 0; x < resultSet.rows.length; x++) { 
-                kata = resultSet.rows.item(x)['android_name'];
-                if (kata !== null) {
-                    halaman = kata.replace(/\s/g, "_");
-                    halaman = halaman.toLowerCase();
-                    if(resultSet.rows.item(x)['positionandroid_read']==1){
-                        $("#h"+halaman).show();
-                        // alert('h'+halaman);
+    if(positionid>0){
+        // alert(positionid);
+        db.transaction(function (tx) {
+            var query = "SELECT * FROM positionandroid WHERE position_id='"+positionid+"'";
+            tx.executeSql(query, [], function (tx, resultSet) {     
+                // alert(query);           
+                for (var x = 0; x < resultSet.rows.length; x++) { 
+                    kata = resultSet.rows.item(x)['android_name'];
+                    if (kata !== null) {
+                        halaman = kata.replace(/\s/g, "_");
+                        halaman = halaman.toLowerCase();
+                        if(resultSet.rows.item(x)['positionandroid_read']==1){
+                            $(".h"+halaman).show();
+                            // alert('h'+halaman);
+                        }
                     }
                 }
-            }
+            });
         });
-    });
+    }
 }
 
 

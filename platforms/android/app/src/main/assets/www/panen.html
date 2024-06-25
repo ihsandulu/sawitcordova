@@ -4,8 +4,9 @@
 <head>
     <meta charset="utf-8">
     <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;"> -->
-    <meta http-equiv="Content-Security-Policy" content="default-src * data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src * 'unsafe-inline'; media-src *; img-src * data: content:; script-src * 'unsafe-eval' 'unsafe-inline';">
-    
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src * data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src * 'unsafe-inline'; media-src *; img-src * data: content:; script-src * 'unsafe-eval' 'unsafe-inline';">
+
 
 
 
@@ -16,83 +17,95 @@
 
     <!-- <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> -->
 
-    <link rel="stylesheet" href="css/all.min.css"/>
+    <link rel="stylesheet" href="css/all.min.css" />
     <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/select2.min.css"/>
+    <link rel="stylesheet" href="css/select2.min.css" />
     <link rel="stylesheet" href="css/umum.css">
 
 
     <title>PT. PAM</title>
-    <style>   
-        #datanfcjadi{
-            height: 300px !important; 
-            width: 300px; 
+    <style>
+        #datanfcjadi {
+            height: 300px !important;
+            width: 300px;
             position: relative;
             left: 50%;
-            top:0px;
-            transform: translate(-50%,0);
-        } 
+            top: 0px;
+            transform: translate(-50%, 0);
+        }
     </style>
     <script>
     </script>
 </head>
 
-<body>    
+<body>
     <div id="header">
-        
+
     </div>
-    <div id="frame1" class="text-center " > 
-        <div class="row p-3 ballon">                        
+    <div id="frame1" class="text-center ">
+        <div class="row p-3 ballon">
             <H1 class="col-12 alert alert-success">
-                <button id="btnupload" onclick="confirmupload();" class="btn btn-danger btn-xs text-white"><i class="fas fa-upload"></i></button> Data Panen
-            </H1>          
-            <div  id="btnreadcard" class="col-12 mb-4  text-center">
-                
-            </div>            
-            <div class="col-5 mb-4 text-left">Panen Card</div><div class="col-7 text-left">
+                <button id="btnupload" onclick="confirmupload();" class="btn btn-danger btn-xs text-white"><i
+                        class="fas fa-upload"></i></button> Data Panen
+            </H1>
+            <div id="btnreadcard" class="col-12 mb-4  text-center">
+
+            </div>
+            <div class="col-5 mb-4 text-left">Panen Card</div>
+            <div class="col-7 text-left">
                 <!-- <input readonly id="panen_card" class="form-control"> -->
                 <select onchange="cekkartuInput()" id="panen_card" class="form-control select2">
 
                 </select>
-            </div>         
-            <div class="col-5 mb-4 text-left">Blok</div><div class="col-7 text-left">
+            </div>
+            <div class="col-5 mb-4 text-left">Blok</div>
+            <div class="col-7 text-left">
                 <select onchange="tph()" id="blok_id" class="form-control select2">
 
                 </select>
-            </div>         
-            <div class="col-5 mb-4 text-left">TPH</div><div class="col-7 text-left">
+            </div>
+            <div class="col-5 mb-4 text-left">TPH</div>
+            <div class="col-7 text-left">
                 <select onchange="thntnm()" id="tph_id" class="form-control select2">
 
                 </select>
-            </div>          
-            <div class="col-5 mb-4 text-left">Tenaga Panen</div><div class="col-7 text-left">
+            </div>
+            <div class="col-5 mb-4 text-left">Tenaga Panen</div>
+            <div class="col-7 text-left">
                 <select onchange="tp()" id="panen_tp" class="form-control select2">
 
                 </select>
-            </div>         
-            <div class="col-5 mb-4 text-left">Thn Tanam</div><div class="col-7 text-left">
+            </div>
+            <div class="col-5 mb-4 text-left">Thn Tanam</div>
+            <div class="col-7 text-left">
                 <input onkeyup="cekfield();" type="number" id="tph_thntanam" class="form-control">
-            </div>           
-            <div class="col-5 mb-4 text-left">Brondolan</div><div class="col-7 text-left">
+            </div>
+            <div class="col-5 mb-4 text-left">Brondolan</div>
+            <div class="col-7 text-left">
                 <input onclick="handleCheckbox()" type="checkbox" id="panen_brondold" name="panen_brondold" value="1">
                 <label for="panen_brondold"> Ya</label>
-            </div>      
-            <div class="col-5 mb-4 text-left" id="jml">Jumlah</div><div class="col-7 text-left">
+            </div>
+            <div class="col-5 mb-4 text-left" id="jml">Jumlah</div>
+            <div class="col-7 text-left">
                 <input onkeyup="cekfield();" type="number" id="panen_jml" class="form-control">
             </div>
-               
+
             <div class="col-12 text-left input-group">Geolocation</div>
             <div class="input-group mb-4 ">
-                <input id="panen_geo" type="text" class="form-control" placeholder="" aria-label="Geolocation" aria-describedby="btn_geo">
-                <button onclick="geoPanen()" class="btn btn-outline-secondary" type="button" id="btn_geo"><i class="fas fa-cogs"></i></button>
-            </div>         
-            
+                <input id="panen_geo" type="text" class="form-control" placeholder="" aria-label="Geolocation"
+                    aria-describedby="btn_geo">
+                <button onclick="geoPanen()" class="btn btn-outline-secondary" type="button" id="btn_geo"><i
+                        class="fas fa-cogs"></i></button>
+            </div>
+
             <div class="col-12 text-left input-group panenpctr">Picture</div>
             <div class="input-group mb-4 panenpctr">
-                <input readonly id="panen_picture" type="text" class="form-control text-biru" placeholder="" aria-label="Geolocation" aria-describedby="btn_picture">
-                <button onclick="picturePanen()" class="btn btn-outline-secondary" type="button" id="btn_picture"><i class="fas fa-camera"></i></button>
+                <input readonly id="panen_picture" type="text" class="form-control text-biru" placeholder=""
+                    aria-label="Geolocation" aria-describedby="btn_picture">
+                <button onclick="picturePanen()" class="btn btn-outline-secondary" type="button" id="btn_picture"><i
+                        class="fas fa-camera"></i></button>
                 <img id="panenPicture" src="res/no_picture.png" class="img-thumbnail">
-            </div> 
+            </div>
 
             <button id="btnisikartu" onclick="isikartu()" type="button" class="btn btn-primary hide">Isi Kartu</button>
             <input id="panen_date" type="hidden">
@@ -109,21 +122,21 @@
             <input id="panen_tpname" type="hidden">
             <input id="panen_brondol" type="hidden" value="0">
         </div>
-        <div class="">  
-            <div class="row">  
+        <div class="">
+            <div class="row">
                 <textarea id="datanfcjadi" class="form-control col-12 hide"></textarea>
             </div>
         </div>
-        <div class="mb-5" id="panen">  
-        
+        <div class="mb-5" id="panen">
+
         </div>
     </div>
 
     <marquee width="100%" direction="left">Pastikan Kartu Telah Kosong!</marquee>
 
     <div id="footer"></div>
-    <script type="text/javascript" src="cordova.js"></script>  
-    <script type="text/javascript" src="js/jquery.min.js"></script>    
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="js/jquery.min.js"></script>
     <script type="text/javascript" src="js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="js/select2.min.js"></script>
     <script type="text/javascript" src="js/umum.js"></script>
@@ -131,52 +144,53 @@
     <script type="text/javascript" src="js/nfc.js"></script>
     <script>
         //device ready 
-        document.addEventListener('deviceready', function () { 
+        document.addEventListener('deviceready', function () {
+            cekkartupanen();
+            $(".username").text(username);
+            if (username == null) {
+                // window.location.href='login.html';
+            } else {
+
+            }
             $("#btnisikartu").hide();
             $(".panenpctr").hide();
-            localStorage.setItem('thntnm', '');          
-            $("#datanfcjadi").val('');                
+            localStorage.setItem('thntnm', '');
+            $("#datanfcjadi").val('');
             $("#datanfcjadi").hide();
             // notif('Tempelkan Kartu!');
-            cekkartupanen();
-            ambildata('panen','semua','');
-          
+            ambildata('panen', 'semua', '');
+
             // nfc.addNdefListener(onNdef, notifikasi("Tempelkan Kartu!"), onFailure);
-            
-            if(username==null){
-                window.location.href='login.html';
-            }else{
-                tphnumber();
-                $(".username").text(username); 
-                clearData();
-            }                      
-        }); 
+
+            clearData();
+
+        });
 
 
-        
-        
-        function onErrorReadFile1(error, x, no, resultSet){
-            notif('x='+x+", no="+no+"=>1"+JSON.stringify(error).toString());
-            finalupload("",x,no,resultSet);
+
+
+        function onErrorReadFile1(error, x, no, resultSet) {
+            notif('x=' + x + ", no=" + no + "=>1" + JSON.stringify(error).toString());
+            finalupload("", x, no, resultSet);
         }
 
-        
-        function onErrorReadFile2(error, x, no, resultSet){
+
+        function onErrorReadFile2(error, x, no, resultSet) {
             // notif('x='+x+", no="+no+"=>2"+JSON.stringify(error).toString());
-            finalupload("",x,no,resultSet);
+            finalupload("", x, no, resultSet);
         }
 
-        
-        function onErrorReadFile3(error, x, no, resultSet){
-            notif('x='+x+", no="+no+"=>3"+JSON.stringify(error).toString());
-            finalupload("",x,no,resultSet);
+
+        function onErrorReadFile3(error, x, no, resultSet) {
+            notif('x=' + x + ", no=" + no + "=>3" + JSON.stringify(error).toString());
+            finalupload("", x, no, resultSet);
         }
 
         function bacafileajax(fileName, x, no, resultSet, callback) {
-            let fname = fileName+".txt";
+            let fname = fileName + ".txt";
             // alert(fileName);
-            window.resolveLocalFileSystemURL(cordova.file.externalDataDirectory, function(directoryEntry) {
-                directoryEntry.getFile(fname, { create: false }, function(fileEntry) {
+            window.resolveLocalFileSystemURL(cordova.file.externalDataDirectory, function (directoryEntry) {
+                directoryEntry.getFile(fname, { create: false }, function (fileEntry) {
                     fileEntry.file(function (file) {
                         var reader = new FileReader();
 
@@ -185,34 +199,34 @@
                         };
 
                         reader.readAsText(file);
-                    }, function(error) {
-                        onErrorReadFile1(error, x, no, resultSet); 
+                    }, function (error) {
+                        onErrorReadFile1(error, x, no, resultSet);
                     });
-                }, function(error) {
+                }, function (error) {
                     onErrorReadFile2(error, x, no, resultSet);
                 });
-            }, function(error) {
-                onErrorReadFile3(error, x, no, resultSet); 
+            }, function (error) {
+                onErrorReadFile3(error, x, no, resultSet);
             });
         }
 
-        function deletefile(nama_file){
-            var fileName = nama_file+".txt";
+        function deletefile(nama_file) {
+            var fileName = nama_file + ".txt";
 
-            window.resolveLocalFileSystemURL(cordova.file.externalDataDirectory, function(directoryEntry) {
-                directoryEntry.getFile(fileName, {create: false}, function(fileEntry) {
-                    fileEntry.remove(function() {
+            window.resolveLocalFileSystemURL(cordova.file.externalDataDirectory, function (directoryEntry) {
+                directoryEntry.getFile(fileName, { create: false }, function (fileEntry) {
+                    fileEntry.remove(function () {
                         // File berhasil dihapus
                         console.log("File berhasil dihapus: " + fileName);
-                    }, function(error) {
+                    }, function (error) {
                         // Gagal menghapus file
                         console.error("Gagal menghapus file: " + error.code);
                     });
-                }, function(error) {
+                }, function (error) {
                     // File tidak ditemukan
                     console.error("File tidak ditemukan: " + error.code);
                 });
-            }, function(error) {
+            }, function (error) {
                 // Direktori tidak ditemukan
                 console.error("Direktori tidak ditemukan: " + error.code);
             });
@@ -220,24 +234,24 @@
         }
 
         function confirmupload1(pilihannya) {
-            if(pilihannya=='1'){
+            if (pilihannya == '1') {
                 uploaddata();
-            }else{
+            } else {
                 // alert('You selected button ' + jenis);
             }
         }
 
-        function confirmupload(){
-            let arraynya = ['Upload','Cancel'];
+        function confirmupload() {
+            let arraynya = ['Upload', 'Cancel'];
             navigator.notification.confirm(
                 "Yakin di Upload?", // message
-                (buttonIndex) => confirmupload1(buttonIndex),            
+                (buttonIndex) => confirmupload1(buttonIndex),
                 "Upload",           // title
                 arraynya     // buttonLabels
             );
         }
 
-        function finalupload(result,x,no,resultSet){
+        function finalupload(result, x, no, resultSet) {
             var panen_id = resultSet.rows.item(x)['panen_id'];
             var panen_date = resultSet.rows.item(x)['panen_date'];
             var tph_thntanam = resultSet.rows.item(x)['tph_thntanam'];
@@ -297,50 +311,49 @@
                 data: formData,
                 processData: false,  // Tetapkan ke false agar FormData tidak diproses secara otomatis
                 contentType: false,  // Tetapkan ke false karena FormData sudah berisi tipe konten yang benar
-                success: function(response) {                                    
+                success: function (response) {
                     db.transaction(function (tx) {
-                        var query1 = "DELETE FROM panen WHERE panen_id = "+panen_id;
-                        tx.executeSql(query1, [], function (tx, resultSet1) { 
+                        var query1 = "DELETE FROM panen WHERE panen_id = " + panen_id;
+                        tx.executeSql(query1, [], function (tx, resultSet1) {
                             deletefile(tph_id);
-                            ambildata('panen','semua','');
-                            if(no==resultSet.rows.length){
+                            ambildata('panen', 'semua', '');
+                            if (no == resultSet.rows.length) {
                                 notif('Sukses Upload Data!');
-                                clearData();                   
                                 playAudio('berhasil.mp3');
                                 cekdatasemua();
-                            }                                           
+                            }
                         },
-                        function (tx, error) {
-                            notif('DELETE error: ' + error.message);                      
-                            playAudio('gagal.mp3');
-                            cekdatasemua();
-                        });
+                            function (tx, error) {
+                                notif('DELETE error: ' + error.message);
+                                playAudio('gagal.mp3');
+                                cekdatasemua();
+                            });
                         cekdatasemua();
-                        
+
                         // alert(no+"=="+resultSet.rows.length);
-                    });                                    
+                    });
                 },
-                error: function(xhr, status, error) {
+                error: function (xhr, status, error) {
                     notif('Error:', error);
                 }
             });
         }
 
-        function uploaddata(){
+        function uploaddata() {
             db.transaction(function (tx) {
                 let hariini = now();
                 // var query = `SELECT * FROM panen WHERE panen_date = '${hariini}'`; 
-                var query = `SELECT * FROM panen WHERE 1`;                
+                var query = `SELECT * FROM panen WHERE 1`;
                 // notif(query);
                 $("#htmlupload").html('');
-                tx.executeSql(query, [], function (tx, resultSet) { 
-                    let no=1;
+                tx.executeSql(query, [], function (tx, resultSet) {
+                    let no = 1;
                     // notif(resultSet.rows.length);
-                    for (var x = 0; x < resultSet.rows.length; x++) {                          
-                        let isipicture;                        
+                    for (var x = 0; x < resultSet.rows.length; x++) {
+                        let isipicture;
                         var tph_id = resultSet.rows.item(x)['tph_id'];
-                        bacafileajax(tph_id,x,no,resultSet, function(result,x,no,resultSet) {
-                            finalupload(result,x,no,resultSet);
+                        bacafileajax(tph_id, x, no, resultSet, function (result, x, no, resultSet) {
+                            finalupload(result, x, no, resultSet);
                         });
                         no++;
                     }
@@ -348,11 +361,11 @@
             });
         }
 
-        function cekkartuInput(){
+        function cekkartuInput() {
             let panen_card = $("#panen_card").val();
-            if(panen_card!=""){
+            if (panen_card != "") {
                 cekfield();
-            }else{
+            } else {
                 $("#btnisikartu").hide();
             }
         }
@@ -362,82 +375,95 @@
                 var query = "SELECT * FROM tphnumber";
                 // notif(query);
                 $("#panen_card").html('');
-                var cell ='';
+                var cell = '';
                 tx.executeSql(query, [], function (tx, resultSet) {
-                    let no=1;
+                    let no = 1;
                     // notif(resultSet.rows.length);     
                     cell += '<option value="">Pilih Penomoran</option>';
-                    for (var x = 0; x < resultSet.rows.length; x++) {   
-                        cell += '<option value="'+resultSet.rows.item(x)['tphnumber_card']+'">'+resultSet.rows.item(x)['tphnumber_card']+'</div>';
-                        if(resultSet.rows.length == no){
+                    for (var x = 0; x < resultSet.rows.length; x++) {
+                        cell += '<option value="' + resultSet.rows.item(x)['tphnumber_card'] + '">' + resultSet.rows.item(x)['tphnumber_card'] + '</div>';
+                        if (resultSet.rows.length == no) {
                             $("#panen_card").append(cell);
                         }
                         no++;
-                        
+
                     }
                     if (x < 1) {
                         // notif("Tidak ada data!");
                     }
                 },
-                function (tx, error) {
-                    notif('SELECT error: ' + error.message);   
-                    playAudio('gagal.mp3');
-                });
-                
+                    function (tx, error) {
+                        notif('SELECT error: ' + error.message);
+                        playAudio('gagal.mp3');
+                    });
+
             }, function (error) {
-                notif('transaction error: ' + error.message);   
+                notif('transaction error: ' + error.message);
                 playAudio('gagal.mp3');
             }, function () {
                 // notif('transaction ok');
             });
         }
 
-        function cekdatasemua(){
+        function cekdatasemua() {
             db.transaction(function (tx) {
-                var query = `SELECT * FROM panen WHERE 1`;  
-                tx.executeSql(query, [], function (tx, resultSet) { 
-                    if (resultSet.rows.length>0) { 
+                var query = `SELECT * FROM panen WHERE 1`;
+                tx.executeSql(query, [], function (tx, resultSet) {
+                    if (resultSet.rows.length > 0) {
                         $("#btnupload").show();
-                    } else{
+                    } else {
                         $("#btnupload").hide();
                     }
                 });
             });
         }
-            
 
-        function clearData(){
-            blok();
-            tph(); 
-            tpname();
-            cekdatasemua();
 
-            $("#panen_card").val('');
+        function clearData() {
+
+            // alert(estateid);
+
+
             $("#blok_name").val('');
             $("#tph_name").val('');
             $("#panen_tpname").val('');
-            
-            $("#blok_id").val('');
-            $("#tph_id").val('');
+
             $("#tph_thntanam").val('');
             $("#panen_jml").val('');
-            $("#panen_tp").val('');
             $("#panen_brondol").val('0');
             $("#panen_geo").val('');
             $("#panen_picture").val('');
-            $("#panenPicture").attr('src','res/no_picture.png');
-            
+            $("#panenPicture").attr('src', 'res/no_picture.png');
+
+            $("#panen_card").html("");
+            $("#blok_id").html("");
+            $("#tph_id").html("");
             $("#panen_tp").html("");
+
             $("#panen_brondold").prop("checked", false);
-            $("#btnisikartu").hide();      
-            
-            
-            $('#panen_card').select2('destroy');
+            $("#btnisikartu").hide();
+
+
+            /* $('#panen_card').select2('destroy');
             $("#panen_card").val('');
             $('#panen_card').select2();
+
+            $('#blok_id').select2('destroy');
+            $("#blok_id").val('');
+            $('#blok_id').select2();
             
+            $('#tph_id').select2('destroy');
+            $("#tph_id").val('');
+            $('#tph_id').select2();
             
-            
+            $('#panen_tp').select2('destroy');
+            $("#panen_tp").val('');
+            $('#panen_tp').select2(); */
+
+
+
+
+
             $("#panen_date").val(now());
             $("#user_id").val(userid);
             $("#estate_id").val(estateid);
@@ -448,57 +474,64 @@
             $("#divisi_name").val(divisiname);
             $("#seksi_name").val(seksiname);
 
+            tphnumber();
+            blok();
+            tph();
+            tpname();
+            cekdatasemua();
+
+            if (estateid == '') { location.reload(); }
         }
 
         //gambar 
         function writeToFile(fileName, text) {
-            let fname = fileName+".txt";
-            window.resolveLocalFileSystemURL(cordova.file.externalDataDirectory, function(directoryEntry) {
-                directoryEntry.getFile(fname, { create: true }, function(fileEntry) {
-                    fileEntry.createWriter(function(fileWriter) {
-                        fileWriter.onwriteend = function() {
-                            $("#panenPicture").attr("src", text); 
-                            setTimeout(function(){
+            let fname = fileName + ".txt";
+            window.resolveLocalFileSystemURL(cordova.file.externalDataDirectory, function (directoryEntry) {
+                directoryEntry.getFile(fname, { create: true }, function (fileEntry) {
+                    fileEntry.createWriter(function (fileWriter) {
+                        fileWriter.onwriteend = function () {
+                            $("#panenPicture").attr("src", text);
+                            setTimeout(function () {
                                 cekfield();
-                            },3000);                            
+                            }, 3000);
                         };
 
-                        fileWriter.onerror = function(e) {
+                        fileWriter.onerror = function (e) {
                             notif("Gagal menulis ke file: " + e.toString());
                         };
 
                         var blob = new Blob([text], { type: 'text/plain' });
                         fileWriter.write(blob);
-                    }, function(error) {
+                    }, function (error) {
                         notif("Gagal membuat writer: " + error.toString());
                     });
-                }, function(error) {
+                }, function (error) {
                     notif("Gagal mendapatkan file: " + error.toString());
                 });
-            }, function(error) {
+            }, function (error) {
                 notif("Gagal mengakses direktori: " + error.toString());
             });
-        } 
+        }
         function panenImg(imageURI) {
-            let src =  imageURI;  
-            src =  "data:image/jpeg;base64," + imageURI;          
+            let src = imageURI;
+            src = "data:image/jpeg;base64," + imageURI;
             // $("#panenPicture").attr("src", src);  
             let tph_id = $("#tph_id").val();
-            writeToFile(tph_id, src); 
+            writeToFile(tph_id, src);
         }
         function errorpanenImg(message) {
             notif('Failed because: ' + message);
         }
-        function picturePanen() {            
-            navigator.camera.getPicture(panenImg, errorpanenImg, {quality: 50, destinationType: Camera.DestinationType.DATA_URL});
-            // navigator.camera.getPicture(panenImg, errorpanenImg, {quality: 50, destinationType: Camera.DestinationType.FILE_URI});
+        function picturePanen() {
+            navigator.camera.getPicture(panenImg, errorpanenImg, { quality: 50, destinationType: Camera.DestinationType.DATA_URL, correctOrientation: true });
+            // navigator.camera.getPicture(panenImg, errorpanenImg, {quality: 50, destinationType: Camera.DestinationType.FILE_URI, correctOrientation: true});
         }
 
-        
-        
 
-        function cekfield(){
-                 
+
+
+        function cekfield() {
+
             let blok_id = $("#blok_id").val();
             let panen_tp = $("#panen_tp").val();
             let panen_jml = $("#panen_jml").val();
@@ -507,59 +540,62 @@
             let panen_geo = $("#panen_geo").val();
             var checkbox = document.getElementById("panen_brondold");
 
-            
 
-            let d= 0;
-            if(blok_id!="" && panen_tp!="" && panen_jml!="" &&  panen_geo!=""){
+
+            let d = 0;
+            if (blok_id != "" && panen_tp != "" && panen_jml != "" && panen_geo != "") {
                 d = 1;
             }
-            let cek =blok_id+','+panen_tp+','+panen_jml+','+panen_geo;
+            let cek = blok_id + ',' + panen_tp + ',' + panen_jml + ',' + panen_geo;
             // notif(d+'=='+cek);
             let tph_id = $("#tph_id").val();
-            if(tph_id>0 && d==1){
+            if (tph_id > 0 && d == 1) {
+                $("#btnisikartu").show();
                 $(".panenpctr").show();
                 $("#panen_picture").val(tph_id);
-                d=1;
-            }else{
+                d = 1;
+            } else {
                 $(".panenpctr").hide();
                 $("#panen_picture").val("");
-                d=0;
+                d = 0;
             }
 
             let e = 0;
             let picture = $("#panenPicture").attr("src");
-            if(picture!="res/no_picture.png"){
-                e=1;
+            if (picture != "res/no_picture.png") {
+                e = 1;
                 // notif(d+"="+e);
-            }else{
+            } else {
                 // notif(picture);
             }
 
-            
-            let panen_card = $("#panen_card").val();
-            let f=0;
-            if(panen_card!=""){
-                f=1;
-            }else{
-            }
-            
 
-            if (checkbox.checked && d == 1 && e == 1 && f == 1) {  
-                $("#btnisikartu").show(); 
-            }else{
-                if(d == 1 && e == 1 && f == 1 && tph_thntanam!=""){
-                    $("#btnisikartu").show(); 
-                }else{
-                    $("#btnisikartu").hide(); 
+            let panen_card = $("#panen_card").val();
+            let f = 0;
+            if (panen_card != "") {
+                f = 1;
+            } else {
+            }
+
+
+            // if (checkbox.checked && d == 1 && e == 1 && f == 1) {  
+                if (checkbox.checked && d == 1 && f == 1) {  
+                $("#btnisikartu").show();
+            } else {
+                // if (d == 1 && e == 1 && f == 1 && tph_thntanam != "") {
+                    if (d == 1 && f == 1 && tph_thntanam != "") {
+                    $("#btnisikartu").show();
+                } else {
+                    $("#btnisikartu").hide();
                 }
             }
         }
 
         //geolocation
         var panenGeo = function (position) {
-                let geolo = position.coords.latitude+'|'+position.coords.longitude;
-                $("#panen_geo").val(geolo);
-                cekfield();
+            let geolo = position.coords.latitude + '|' + position.coords.longitude;
+            $("#panen_geo").val(geolo);
+            cekfield();
         };
         function errorGeo(error) {
             notif('code: ' + error.code + '\n' +
@@ -568,7 +604,7 @@
         function geoPanen() {
             navigator.geolocation.getCurrentPosition(panenGeo, errorGeo);
         }
-        
+
         function handleCheckbox() {
             var checkbox = document.getElementById("panen_brondold");
             let thntan = localStorage.getItem('thntnm');
@@ -597,12 +633,12 @@
             resultString = resultString.replace("en", "");
             var kalimatTanpaSpasi = resultString.replace(/\s/g, '');
             // let panencard = cardrandom();
-            if(kalimatTanpaSpasi!=""){
-                notif('Silahkan hapus data kartu terlebih dahulu!');     
-                ambildata('panen','semua','');            
+            if (kalimatTanpaSpasi != "") {
+                notif('Silahkan hapus data kartu terlebih dahulu!');
+                ambildata('panen', 'semua', '');
                 playAudio('kartuterisi.mp3');
                 var kalimatTanpaSpasi1 = kalimatTanpaSpasi.split(',');
-                var nilaiPanenCard='';
+                var nilaiPanenCard = '';
                 for (var i = 0; i < kalimatTanpaSpasi1.length; i++) {
                     if (kalimatTanpaSpasi1[i].includes("panen_card")) {
                         nilaiPanenCard = kalimatTanpaSpasi1[i].split('=')[1].trim();
@@ -610,55 +646,55 @@
                     }
                 }
                 var duaDigitPertama = nilaiPanenCard.substring(0, 2);
-                if (duaDigitPertama==="TP") {                    
+                if (duaDigitPertama === "TP") {
                     $('#panen_card').select2('destroy');
                     $("#panen_card").val(nilaiPanenCard);
                     $('#panen_card').select2();
                     // notif(nilaiPanenCard);
                 } else {
                     // $("#panen_card").val(panencard);
-                }                   
-                
+                }
+
                 let kalimatTanpaSpasi2 = kalimatTanpaSpasi1.join('\n');
-                
-                $("#datanfcjadi").val(kalimatTanpaSpasi2);                
+
+                $("#datanfcjadi").val(kalimatTanpaSpasi2);
                 $("#datanfcjadi").show();
-                setTimeout(function(){
+                setTimeout(function () {
                     $("#datanfcjadi").hide();
-                },60000);
-            }else{
+                }, 60000);
+            } else {
                 // $("#panen_card").val(panencard);
-                $("#datanfcjadi").val('');                
+                $("#datanfcjadi").val('');
                 $("#datanfcjadi").hide();
-                notif('Kartu Telah Kosong.');               
+                notif('Kartu Telah Kosong.');
                 playAudio('kartukosong.mp3');
             }
             cekfield();
-            ambildata(table,'semua','');
+            ambildata(table, 'semua', '');
             // notif(resultString);
         }
         function onNdefcekpanen(nfcEvent) {
             // notif(JSON.stringify(nfcEvent.tag));
-            
+
             var tag = nfcEvent.tag;
             ndefMessage = nfcEvent.tag.ndefMessage;
-                                         
+
             tag.isWritable = !tag.isLocked;
             tag.canMakeReadOnly = tag.isLockable;
-            if(ndefMessage.length>0){ 
+            if (ndefMessage.length > 0) {
                 datanfcjadiPanen(nfcEvent.tag);
                 navigator.notification.vibrate(100);
-            }else{
-                notif('Kartu Tidak Terbaca!');             
+            } else {
+                notif('Kartu Tidak Terbaca!');
                 playAudio('kartutakterbaca.mp3');
-                setTimeout(function(){playAudio("tempelkankartu.mp3")},2000);
+                setTimeout(function () { playAudio("tempelkankartu.mp3") }, 2000);
             }
         }
         function cekkartupanen() {
-            nfc.addNdefListener(onNdefcekpanen, ()=>{}, onFailurebacakartu);
+            nfc.addNdefListener(onNdefcekpanen, () => { }, onFailurebacakartu);
         }
 
-        function isikartu(){
+        function isikartu() {
             let panen_card = $("#panen_card").val();
             let panen_date = $("#panen_date").val();
             let user_id = $("#user_id").val();
@@ -672,7 +708,7 @@
             let blok_name = $("#blok_name").val();
             let tph_name = $("#tph_name").val();
             let panen_tpname = $("#panen_tpname").val();
-            
+
             let blok_id = $("#blok_id").val();
             let tph_id = $("#tph_id").val();
             let tph_thntanam = $("#tph_thntanam").val();
@@ -682,36 +718,36 @@
             let panen_geo = $("#panen_geo").val();
             let panen_picture = $("#panen_picture").val();
 
-            if(panen_card!=""){
-                let data = 'panen_card='+panen_card+
-                ',panen_date='+panen_date+
-                ',user_id='+user_id+
-                ',estate_id='+estate_id+
-                ',divisi_id='+divisi_id+
-                ',seksi_id='+seksi_id+
-                ',user_name='+user_name+
-                ',estate_name='+estate_name+
-                ',divisi_name='+divisi_name+
-                ',seksi_name='+seksi_name+
-                ',blok_name='+blok_name+
-                ',tph_name='+tph_name+
-                ',blok_id='+blok_id+
-                ',tph_id='+tph_id+
-                ',tph_thntanam='+tph_thntanam+
-                ',panen_jml='+panen_jml+
-                ',panen_tp='+panen_tp+
-                ',panen_tpname='+panen_tpname+
-                ',panen_brondol='+panen_brondol+
-                ',panen_geo='+panen_geo+
-                ',panen_picture='+panen_picture;
-                deletepanenwherecard('panen',panen_card);
+            if (panen_card != "") {
+                let data = 'panen_card=' + panen_card +
+                    ',panen_date=' + panen_date +
+                    ',user_id=' + user_id +
+                    ',estate_id=' + estate_id +
+                    ',divisi_id=' + divisi_id +
+                    ',seksi_id=' + seksi_id +
+                    ',user_name=' + user_name +
+                    ',estate_name=' + estate_name +
+                    ',divisi_name=' + divisi_name +
+                    ',seksi_name=' + seksi_name +
+                    ',blok_name=' + blok_name +
+                    ',tph_name=' + tph_name +
+                    ',blok_id=' + blok_id +
+                    ',tph_id=' + tph_id +
+                    ',tph_thntanam=' + tph_thntanam +
+                    ',panen_jml=' + panen_jml +
+                    ',panen_tp=' + panen_tp +
+                    ',panen_tpname=' + panen_tpname +
+                    ',panen_brondol=' + panen_brondol +
+                    ',panen_geo=' + panen_geo +
+                    ',panen_picture=' + panen_picture;
+                deletepanenwherecard('panen', panen_card);
                 // addItemPanen('panen', masterarray, isiarray);
                 inputOrUpdateData('panen', data);
-            }else{
+            } else {
                 notif("Kartu Tak Terbaca!");
-                playAudio('kartutakterbaca.mp3');                
-                setTimeout(function(){playAudio("tempelkankartu.mp3")},2000);
-            }           
+                playAudio('kartutakterbaca.mp3');
+                setTimeout(function () { playAudio("tempelkankartu.mp3") }, 2000);
+            }
 
         }
 
@@ -728,11 +764,11 @@
                     if (pair[0] !== 'panen_id') {
                         columns.push(pair[0]);
                         let isi = (pair[1] === 'null') ? "NULL" : "'" + pair[1].trim() + "'";
-                        values.push(isi);                 
-                        if(pair[0] == 'panen_card'){
-                            panenCardToCheck=isi;   
+                        values.push(isi);
+                        if (pair[0] == 'panen_card') {
+                            panenCardToCheck = isi;
                             // notif(isi);    
-                        }    
+                        }
                     }
                 });
 
@@ -746,9 +782,9 @@
                         // Jika panen_card sudah ada, lakukan UPDATE
                         var updateQuery = "UPDATE " + table + " SET " + columns.join('=?, ') + "=? WHERE panen_card = '" + panenCardToCheck + "'";
                         tx.executeSql(updateQuery, values, function (tx, res) {
-                            ambildata('panen','terakhir','isikartu');  
+                            ambildata('panen', 'terakhir', 'isikartu');
                         }, function (tx, error) {
-                            notif('Kesalahan UPDATE: ' + error.message);            
+                            notif('Kesalahan UPDATE: ' + error.message);
                             playAudio('gagal.mp3');
                         });
                     } else {
@@ -757,19 +793,19 @@
 
                         tx.executeSql(insertQuery, [], function (tx, res) {
                             insertID = res.insertId;
-                            ambildata('panen','terakhir','isikartu');   
+                            ambildata('panen', 'terakhir', 'isikartu');
                         }, function (tx, error) {
-                            notif('Kesalahan INSERT: ' + error.message);      
+                            notif('Kesalahan INSERT: ' + error.message);
                             playAudio('gagal.mp3');
                         });
                     }
-                    
+
                 }, function (tx, error) {
-                    notif('Kesalahan transaksi: ' + error.message);      
+                    notif('Kesalahan transaksi: ' + error.message);
                     playAudio('gagal.mp3');
                 });
             }, function (error) {
-                notif('Transaction Error: ' + error.message);      
+                notif('Transaction Error: ' + error.message);
                 playAudio('gagal.mp3');
             }, function () {
                 // playAudio('berhasil.mp3');
@@ -805,78 +841,78 @@
             });
         } */
 
-        function deletepanenwherecard(table,card){
+        function deletepanenwherecard(table, card) {
             db.transaction(function (tx) {
 
-            var query = "DELETE FROM " + table + " WHERE " + table + "_card = ?";
+                var query = "DELETE FROM " + table + " WHERE " + table + "_card = ?";
 
-            tx.executeSql(query, [card], function (tx, res) {
-                // ambildata(table,'semua','');
-            },
-            function (tx, error) {
-                notif('DELETE error: ' + error.message);      
-                playAudio('gagal.mp3');
-            });
+                tx.executeSql(query, [card], function (tx, res) {
+                    // ambildata(table,'semua','');
+                },
+                    function (tx, error) {
+                        notif('DELETE error: ' + error.message);
+                        playAudio('gagal.mp3');
+                    });
             }, function (error) {
-                notif('transaction error: ' + error.message);      
+                notif('transaction error: ' + error.message);
                 playAudio('gagal.mp3');
             }, function () {
                 // notif('Data Telah Terhapus!');
             });
         }
 
-        function deletedatatph(table,id){
+        function deletedatatph(table, id) {
             db.transaction(function (tx) {
 
-            var query = "DELETE FROM " + table + " WHERE " + table + "_id = ?";
+                var query = "DELETE FROM " + table + " WHERE " + table + "_id = ?";
 
-            tx.executeSql(query, [id], function (tx, res) {
-                ambildata(table,'semua','');
-            },
-            function (tx, error) {
-                notif('DELETE error: ' + error.message);                      
-                playAudio('gagal.mp3');
-            });
+                tx.executeSql(query, [id], function (tx, res) {
+                    ambildata(table, 'semua', '');
+                },
+                    function (tx, error) {
+                        notif('DELETE error: ' + error.message);
+                        playAudio('gagal.mp3');
+                    });
             }, function (error) {
-                notif('transaction error: ' + error.message);      
+                notif('transaction error: ' + error.message);
                 playAudio('gagal.mp3');
             }, function () {
-                notif('Data Telah Terhapus!'); 
-                playAudio('dataterhapus.mp3');   
-                      
-                $("#datanfcjadi").val('');                
+                notif('Data Telah Terhapus!');
+                playAudio('dataterhapus.mp3');
+
+                $("#datanfcjadi").val('');
                 $("#datanfcjadi").hide();
             });
         }
 
-        function onConfirm(pilihannya,table,id) {
-            if(pilihannya=='1'){
-                deletedatatph(table,id);
-            }else{
+        function onConfirm(pilihannya, table, id) {
+            if (pilihannya == '1') {
+                deletedatatph(table, id);
+            } else {
                 // alert('You selected button ' + jenis);
             }
         }
 
-        function confirmdeletetph(message,title,table,id) {
-            let arraynya = ['Delete','Cancel'];
+        function confirmdeletetph(message, title, table, id) {
+            let arraynya = ['Delete', 'Cancel'];
             navigator.notification.confirm(
                 message, // message
-                (buttonIndex) => onConfirm(buttonIndex, table, id),            
+                (buttonIndex) => onConfirm(buttonIndex, table, id),
                 title,           // title
                 arraynya     // buttonLabels
             );
         }
 
         function readFromFile(fileName) {
-            let fname = fileName+".txt";
+            let fname = fileName + ".txt";
             // alert(fileName);
-            window.resolveLocalFileSystemURL(cordova.file.externalDataDirectory, function(directoryEntry) {
-                directoryEntry.getFile(fname, { create: false }, function(fileEntry) {
+            window.resolveLocalFileSystemURL(cordova.file.externalDataDirectory, function (directoryEntry) {
+                directoryEntry.getFile(fname, { create: false }, function (fileEntry) {
                     fileEntry.file(function (file) {
                         var reader = new FileReader();
 
                         reader.onloadend = function () {
-                            $("#"+fileName).attr("src", this.result); 
+                            $("#" + fileName).attr("src", this.result);
                         };
 
                         reader.readAsText(file);
@@ -885,59 +921,59 @@
             }, onErrorReadFile);
         }
 
-        function onErrorReadFile(error){
-            notif(JSON.stringify(error).toString());
+        function onErrorReadFile(error) {
+            // notif(JSON.stringify(error).toString());
         }
 
-        function ambildata(table,status,perintahkartu) {
+        function ambildata(table, status, perintahkartu) {
             db.transaction(function (tx) {
-                var query = "SELECT * FROM " + table+" ORDER BY "+table+"_id DESC";
-                if(status=="terakhir"){
+                var query = "SELECT * FROM " + table + " ORDER BY " + table + "_id DESC";
+                if (status == "terakhir") {
                     query += " LIMIT 1";
-                }else{
+                } else {
                     query += " LIMIT 0";
                 }
                 // notif(query);
-                $("#"+table).html('');
-                var cell ='';
-                tx.executeSql(query, [], function (tx, resultSet) {                    
-                    let no=1;
+                $("#" + table).html('');
+                var cell = '';
+                tx.executeSql(query, [], function (tx, resultSet) {
+                    let no = 1;
                     // notif(resultSet.rows.length);
                     for (var x = 0; x < resultSet.rows.length; x++) {
-                        cell += '<div class="row p-3 ballon">';                        
-                        cell += '<H1 class="col-12 alert alert-success" id="judulpanen">Data Terekam di Handphone</H1>';        
-                        
-                        cell += '<div class="col-5 text-left">Panen Card</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['panen_card']+'</div>';
-                        cell += '<div class="col-5 text-left">SPTBS Card</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['sptbs_card']+'</div>';
-                        cell += '<div class="col-5 text-left">Date</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['panen_date']+'</div>';
-                        cell += '<div class="col-5 text-left">Checker</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['user_name']+'</div>';
-                        cell += '<div class="col-5 text-left">Estate</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['estate_name']+'</div>';
-                        cell += '<div class="col-5 text-left">Divisi</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['divisi_name']+'</div>';
-                        cell += '<div class="col-5 text-left">Seksi</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['seksi_name']+'</div>';
-                        cell += '<div class="col-5 text-left">Blok</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['blok_name']+'</div>';
-                        cell += '<div class="col-5 text-left">TPH</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['tph_name']+'</div>';
-                        cell += '<div class="col-5 text-left">Tenaga Panen</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['panen_tpname']+'</div>';
-                        cell += '<div class="col-5 text-left">Thn Tanam</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['tph_thntanam']+'</div>';
-                        if(resultSet.rows.item(x)['panen_brondol']==1){                            
-                            cell += '<div class="col-5 text-left">Brondolan</div><div class="col-7 text-left">: &nbsp;&nbsp;Ya</div>';               
-                            cell += '<div class="col-5 text-left">Karung</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['panen_jml']+'</div>'; 
-                        }else{
-                            cell += '<div class="col-5 text-left">Jumlah</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['panen_jml']+'</div>'; 
-                        }  
-                        cell += '<div class="col-5 text-left">Geolocation</div><div class="col-7 text-left">: &nbsp;&nbsp;'+resultSet.rows.item(x)['panen_geo']+'</div>';
-                        let srcpic='res/no_picture.png';
-                        cell += '<div class="col-5 text-left">Picture</div><div class="col-7 text-left">: &nbsp;&nbsp;<img id="'+resultSet.rows.item(x)['tph_id']+'" src="'+srcpic+'" class="img-thumbnail"></div>';
-                        if(resultSet.rows.item(x)['panen_picture']!=""){
+                        cell += '<div class="row p-3 ballon">';
+                        cell += '<H1 class="col-12 alert alert-success" id="judulpanen">Data Terekam di Handphone</H1>';
+
+                        cell += '<div class="col-5 text-left">Panen Card</div><div class="col-7 text-left">: &nbsp;&nbsp;' + resultSet.rows.item(x)['panen_card'] + '</div>';
+                        cell += '<div class="col-5 text-left">SPTBS Card</div><div class="col-7 text-left">: &nbsp;&nbsp;' + resultSet.rows.item(x)['sptbs_card'] + '</div>';
+                        cell += '<div class="col-5 text-left">Date</div><div class="col-7 text-left">: &nbsp;&nbsp;' + resultSet.rows.item(x)['panen_date'] + '</div>';
+                        cell += '<div class="col-5 text-left">Checker</div><div class="col-7 text-left">: &nbsp;&nbsp;' + resultSet.rows.item(x)['user_name'] + '</div>';
+                        cell += '<div class="col-5 text-left">Estate</div><div class="col-7 text-left">: &nbsp;&nbsp;' + resultSet.rows.item(x)['estate_name'] + '</div>';
+                        cell += '<div class="col-5 text-left">Divisi</div><div class="col-7 text-left">: &nbsp;&nbsp;' + resultSet.rows.item(x)['divisi_name'] + '</div>';
+                        cell += '<div class="col-5 text-left">Seksi</div><div class="col-7 text-left">: &nbsp;&nbsp;' + resultSet.rows.item(x)['seksi_name'] + '</div>';
+                        cell += '<div class="col-5 text-left">Blok</div><div class="col-7 text-left">: &nbsp;&nbsp;' + resultSet.rows.item(x)['blok_name'] + '</div>';
+                        cell += '<div class="col-5 text-left">TPH</div><div class="col-7 text-left">: &nbsp;&nbsp;' + resultSet.rows.item(x)['tph_name'] + '</div>';
+                        cell += '<div class="col-5 text-left">Tenaga Panen</div><div class="col-7 text-left">: &nbsp;&nbsp;' + resultSet.rows.item(x)['panen_tpname'] + '</div>';
+                        cell += '<div class="col-5 text-left">Thn Tanam</div><div class="col-7 text-left">: &nbsp;&nbsp;' + resultSet.rows.item(x)['tph_thntanam'] + '</div>';
+                        if (resultSet.rows.item(x)['panen_brondol'] == 1) {
+                            cell += '<div class="col-5 text-left">Brondolan</div><div class="col-7 text-left">: &nbsp;&nbsp;Ya</div>';
+                            cell += '<div class="col-5 text-left">Karung</div><div class="col-7 text-left">: &nbsp;&nbsp;' + resultSet.rows.item(x)['panen_jml'] + '</div>';
+                        } else {
+                            cell += '<div class="col-5 text-left">Jumlah</div><div class="col-7 text-left">: &nbsp;&nbsp;' + resultSet.rows.item(x)['panen_jml'] + '</div>';
+                        }
+                        cell += '<div class="col-5 text-left">Geolocation</div><div class="col-7 text-left text-wrap">: &nbsp;&nbsp;' + resultSet.rows.item(x)['panen_geo'] + '</div>';
+                        let srcpic = 'res/no_picture.png';
+                        cell += '<div class="col-5 text-left">Picture</div><div class="col-7 text-left">: &nbsp;&nbsp;<img id="' + resultSet.rows.item(x)['tph_id'] + '" src="' + srcpic + '" class="img-thumbnail"></div>';
+                        if (resultSet.rows.item(x)['panen_picture'] != "") {
                             readFromFile(resultSet.rows.item(x)['panen_picture']);
                         }
 
-                        cell += '<div onclick="confirmdeletetph(\'Yakin di Delete?\',\'Delete Data Panen\',\'panen\','+resultSet.rows.item(x)['panen_id']+')" class="col-12  mt-5 mb-5 text-danger"> >>> &nbsp;&nbsp;<button class="btn btn-danger btn-block"><i class="fas fa-window-close"></i> Delete</button>&nbsp;&nbsp; <<< </div>';             
+                        cell += '<div onclick="confirmdeletetph(\'Yakin di Delete?\',\'Delete Data Panen\',\'panen\',' + resultSet.rows.item(x)['panen_id'] + ')" class="col-12  mt-5 mb-5 text-danger"> >>> &nbsp;&nbsp;<button class="btn btn-danger btn-block"><i class="fas fa-window-close"></i> Delete</button>&nbsp;&nbsp; <<< </div>';
 
-                        cell +='</div>';
-                        if(resultSet.rows.length == no){
-                            $("#"+table).append(cell);   
-                            
-                            if(perintahkartu=='isikartu'){
+                        cell += '</div>';
+                        if (resultSet.rows.length == no) {
+                            $("#" + table).append(cell);
+
+                            if (perintahkartu == 'isikartu') {
                                 //hapus kartu
                                 // nfc.erase(successhapuskartupanen, failurehapuskartupanen);                         
                                 //membuat json
@@ -947,8 +983,8 @@
                                     isidata.push(row);
                                     // notif(row);
                                 }
-                                var textString = isidata.map(function(row) {
-                                    return Object.entries(row).map(function([key, value]) {
+                                var textString = isidata.map(function (row) {
+                                    return Object.entries(row).map(function ([key, value]) {
                                         if (typeof value === 'string' || value instanceof String) {
                                             value = value.replace(/\b\s+\b/g, "_");
                                         }
@@ -956,41 +992,43 @@
                                     }).join(',');
                                 });
                                 // notif(textString);
-                            
+
                                 var message = [
                                     ndef.textRecord(textString)
                                 ];
                                 // notif(message);
-                                nfc.write(message, ()=>{
+                                nfc.write(message, () => {
                                     notif('Penyimpanan Berhasil!');
                                     $("#judulpanen").text("Data Terekam di HP dan Kartu");
                                     playAudio('berhasil.mp3');
                                     clearData();
-                                }, ()=>{                                                                 
+                                }, () => {
                                     playAudio('datadirekam.mp3');
                                     notif('Data Hanya Terekam di HP! Perbaiki Posisi Kartu Panen!');
-                                });                                 
-                      
-                                $("#datanfcjadi").val('');                
+                                });
+
+                                $("#datanfcjadi").val('');
                                 $("#datanfcjadi").hide();
                             }
-                            
+
+                        } else {
+                            clearData();
                         }
                         no++;
-                        
+
                     }
                     if (x < 1) {
                         // notif("Tidak Ada Data di Database!");      
                         // playAudio('datakosong.mp3');
                     }
                 },
-                function (tx, error) {
-                    notif('SELECT error: ' + error.message);    
-                    playAudio('gagal.mp3');
-                });
-                
+                    function (tx, error) {
+                        notif('SELECT error: ' + error.message);
+                        playAudio('gagal.mp3');
+                    });
+
             }, function (error) {
-                notif('transaction error: ' + error.message);   
+                notif('transaction error: ' + error.message);
                 playAudio('gagal.mp3');
             }, function () {
                 // notif('transaction ok');
@@ -999,133 +1037,137 @@
         function failurehapuskartupanen(reason) {
             // alert('failurehapus');
             // notif(reason);
-            notif('Data Gagal Dihapus!');   
-            playAudio('gagal.mp3');            
+            notif('Data Gagal Dihapus!');
+            playAudio('gagal.mp3');
         }
         function successhapuskartupanen() {
             // alert('successhapus');
             // notif('Data Terhapus!');
             $("#datanfcjadi").val('');
-            
+
         }
         function blok() {
             db.transaction(function (tx) {
-                var query = "SELECT * FROM blok WHERE divisi_id='"+divisiid+"' ORDER BY blok_name ASC";
+                var query = "SELECT * FROM blok WHERE divisi_id='" + divisiid + "' ORDER BY blok_name ASC";
                 // notif(query);
                 $("#blok_id").html('');
-                var cell ='';
+                var cell = '';
                 tx.executeSql(query, [], function (tx, resultSet) {
-                    let no=1;
+                    let no = 1;
                     // notif(resultSet.rows.length);     
                     cell += '<option value="">Pilih Blok</option>';
-                    for (var x = 0; x < resultSet.rows.length; x++) {   
-                        cell += '<option blok_name="'+resultSet.rows.item(x)['blok_name']+'" value="'+resultSet.rows.item(x)['blok_id']+'">'+resultSet.rows.item(x)['blok_name']+'</div>';
-                        if(resultSet.rows.length == no){
+                    for (var x = 0; x < resultSet.rows.length; x++) {
+                        cell += '<option blok_name="' + resultSet.rows.item(x)['blok_name'] + '" seksi_name="' + resultSet.rows.item(x)['seksi_name'] + '" value="' + resultSet.rows.item(x)['blok_id'] + '">' + resultSet.rows.item(x)['blok_name'] + '</div>';
+                        if (resultSet.rows.length == no) {
                             $("#blok_id").append(cell);
                         }
                         no++;
-                        
+
                     }
                     if (x < 1) {
                         // notif("Tidak ada data!");
                     }
                 },
-                function (tx, error) {
-                    notif('SELECT error: ' + error.message);   
-                    playAudio('gagal.mp3');
-                });
-                
+                    function (tx, error) {
+                        notif('SELECT error: ' + error.message);
+                        playAudio('gagal.mp3');
+                    });
+
             }, function (error) {
-                notif('transaction error: ' + error.message);   
+                notif('transaction error: ' + error.message);
                 playAudio('gagal.mp3');
             }, function () {
                 // notif('transaction ok');
             });
         }
-        function tph(){            
+        function tph() {
             let blok_name = $("#blok_id").find(':selected').attr('blok_name');
             $("#blok_name").val(blok_name);
 
+            
+            let seksi_name = $("#blok_id").find(':selected').attr('seksi_name');
+            $("#seksi_name").val(seksi_name);
+
             db.transaction(function (tx) {
                 let blok_id = $("#blok_id").val();
-                var query = "SELECT * FROM tph WHERE blok_id='"+blok_id+"' ORDER BY tph_name ASC";
+                var query = "SELECT * FROM tph WHERE blok_id='" + blok_id + "' ORDER BY tph_name ASC";
                 // notif(query);
                 $("#tph_id").html('');
-                var cell ='';
+                var cell = '';
                 tx.executeSql(query, [], function (tx, resultSet) {
-                    let no=1;
+                    let no = 1;
                     // notif(resultSet.rows.length);     
                     cell += '<option value="">Pilih TPH</option>';
-                    for (var x = 0; x < resultSet.rows.length; x++) {   
-                        cell += '<option tph_name="'+resultSet.rows.item(x)['tph_name']+'" thntnm="'+resultSet.rows.item(x)['tph_thntanam']+'" value="'+resultSet.rows.item(x)['tph_id']+'">'+resultSet.rows.item(x)['tph_name']+'</div>';
-                        if(resultSet.rows.length == no){
+                    for (var x = 0; x < resultSet.rows.length; x++) {
+                        cell += '<option tph_name="' + resultSet.rows.item(x)['tph_name'] + '" thntnm="' + resultSet.rows.item(x)['tph_thntanam'] + '" value="' + resultSet.rows.item(x)['tph_id'] + '">' + resultSet.rows.item(x)['tph_name'] + '</div>';
+                        if (resultSet.rows.length == no) {
                             $("#tph_id").append(cell);
                         }
                         no++;
-                        
+
                     }
                     if (no >= resultSet.rows.length) {
-                        localStorage.setItem('thntnm', ''); 
+                        localStorage.setItem('thntnm', '');
                         $('#tph_thntanam').val('');
                     }
                 },
-                function (tx, error) {
-                    notif('SELECT error: ' + error.message);   
-                    playAudio('gagal.mp3');
-                });
-                
+                    function (tx, error) {
+                        notif('SELECT error: ' + error.message);
+                        playAudio('gagal.mp3');
+                    });
+
             }, function (error) {
-                notif('transaction error: ' + error.message);   
+                notif('transaction error: ' + error.message);
                 playAudio('gagal.mp3');
             }, function () {
                 // notif('transaction ok');
                 cekfield();
             });
         }
-        function thntnm(){
-            let tph_name = $("#tph_id").find(':selected').attr('tph_name'); 
+        function thntnm() {
+            let tph_name = $("#tph_id").find(':selected').attr('tph_name');
             $("#tph_name").val(tph_name);
             let thntnm = $("#tph_id").find(':selected').attr('thntnm');
             $("#tph_thntanam").val(thntnm);
-            localStorage.setItem('thntnm', thntnm); 
-            cekfield();            
+            localStorage.setItem('thntnm', thntnm);
+            cekfield();
         }
-        
-        function tpname(){            
+
+        function tpname() {
             db.transaction(function (tx) {
-                var query = "SELECT * FROM tp WHERE divisi_id='"+divisiid+"' ORDER BY panen_tpname ASC";
+                var query = "SELECT * FROM tp WHERE divisi_id='" + divisiid + "' ORDER BY panen_tpname ASC";
                 // notif(query);
                 $("#panen_tp").html('');
-                var cell ='';
+                var cell = '';
                 tx.executeSql(query, [], function (tx, resultSet) {
-                    let no=1;
+                    let no = 1;
                     // notif(resultSet.rows.length);     
                     cell += '<option value="">Pilih Tenaga Panen</option>';
-                    for (var x = 0; x < resultSet.rows.length; x++) {   
-                        cell += '<option panen_tpname="'+resultSet.rows.item(x)['panen_tpname']+'" value="'+resultSet.rows.item(x)['panen_tp']+'">'+resultSet.rows.item(x)['panen_placement']+' - '+resultSet.rows.item(x)['panen_tpname']+' ('+resultSet.rows.item(x)['panen_tpnik']+')</div>';
-                        if(resultSet.rows.length == no){
+                    for (var x = 0; x < resultSet.rows.length; x++) {
+                        cell += '<option panen_tpname="' + resultSet.rows.item(x)['panen_tpname'] + '" value="' + resultSet.rows.item(x)['panen_tp'] + '">' + resultSet.rows.item(x)['panen_placement'] + ' - ' + resultSet.rows.item(x)['panen_tpname'] + ' (' + resultSet.rows.item(x)['panen_tpnik'] + ')</div>';
+                        if (resultSet.rows.length == no) {
                             $("#panen_tp").append(cell);
                         }
                         no++;
-                        
+
                     }
                     if (x < 1) {
                         // notif("Tidak ada data!");
                     }
                 },
-                function (tx, error) {
-                    notif('SELECT error: ' + error.message);   
-                    playAudio('gagal.mp3');
-                });
-                
+                    function (tx, error) {
+                        notif('SELECT error: ' + error.message);
+                        playAudio('gagal.mp3');
+                    });
+
             }, function (error) {
-                notif('transaction error: ' + error.message);   
+                notif('transaction error: ' + error.message);
                 playAudio('gagal.mp3');
             }, function () {
                 // notif('transaction ok');
             });
         }
-        function tp(){            
+        function tp() {
             let panen_tpname = $("#panen_tp").find(':selected').attr('panen_tpname');
             $("#panen_tpname").val(panen_tpname);
             cekfield();

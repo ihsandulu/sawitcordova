@@ -68,7 +68,7 @@
 
                 </select>
             </div>        
-            <div class="col-5 mb-4 text-left">No.Plat</div><div class="col-7 text-left">
+            <div class="col-5 mb-4 text-left">Kendaraan</div><div class="col-7 text-left">
                 <select readonly id="sptbs_plat" class="form-control">
 
                 </select>
@@ -714,9 +714,9 @@
                                 $('#sptbs_card').select2();
                             }                            
                             if(sesi2[0]=='sptbs_id'){$("#sptbsid").val(sesi2[1]);}
-                            if(sesi2[0]=='sptbs_plat'){$("#sptbs_plat").val(sesi2[1]);}
+                            if(sesi2[0]=='wt_name'){$("#sptbs_plat").val(sesi2[1]);}
                             if(sesi2[0]=='sptbs_driver'){$("#sptbs_driver").val(sesi2[1]);}
-                            // alert(sesi1[x]);
+                           
                         }
                         let adadata = $("#btnupladadataoad").val();
                         if(adadata==1 && sptbscardd!=sptbscardf){
@@ -1208,16 +1208,16 @@
 
         function plat() {
             db.transaction(function (tx) {
-                var query = "SELECT * FROM truk";
+                var query = "SELECT * FROM wt WHERE wt_jenis='DT'";
                 // notif(query);
                 $("#sptbs_plat").html('');
                 var cell ='';
                 tx.executeSql(query, [], function (tx, resultSet) {
                     let no=1;
                     // notif(resultSet.rows.length);     
-                    cell += '<option value="">Pilih Plat</option>';
+                    cell += '<option value="">Pilih Kendaraan</option>';
                     for (var x = 0; x < resultSet.rows.length; x++) {   
-                        cell += '<option value="'+resultSet.rows.item(x)['no_polisi']+'">'+resultSet.rows.item(x)['no_polisi']+'</div>';
+                        cell += '<option value="'+resultSet.rows.item(x)['wt_name']+'">'+resultSet.rows.item(x)['wt_name']+'</div>';
                         if(resultSet.rows.length == no){
                             $("#sptbs_plat").append(cell);
                         }

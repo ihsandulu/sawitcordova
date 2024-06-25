@@ -77,6 +77,7 @@
             <img src="res/logo.png"
             style="width: 100px;" alt="logo">
             <h4 class="mt-1 mb-3 pb-1">PT.PAM</h4>
+            <h5 id="text-hijautua">Versi : <span id="versi"></span></h5>
         </div>
 
         <form class="p-0">
@@ -113,6 +114,7 @@
         //device ready  
         document.addEventListener('deviceready', function () {  
             // cekversion();          
+            tulisversi();
             playAudio('selamatdatang.mp3');
             logout()
             db = window.sqlitePlugin.openDatabase({

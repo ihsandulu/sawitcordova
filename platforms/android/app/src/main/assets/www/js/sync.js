@@ -81,6 +81,10 @@ function syncronizing(){
         deleteTable('timbangan');
         deleteTable('apk');
         deleteTable('positionandroid');
+        deleteTable('lr');
+        deleteTable('wtnumber');
+        deleteTable('dh');
+        deleteTable('pruningc');
 
         db.transaction((tx) => {
             /* tx.executeSql('DROP TABLE IF EXISTS user', [], function(tx, result) {
@@ -147,6 +151,7 @@ function syncronizing(){
             ')');
             tx.executeSql('CREATE TABLE IF NOT EXISTS panen (' +
                 'panen_id INTEGER PRIMARY KEY AUTOINCREMENT,' +
+                'panen_tinggal INTEGER,' +
                 'panen_card TEXT,' +
                 'panen_date DATE,' +
                 'tph_thntanam INTEGER,' +
@@ -168,11 +173,34 @@ function syncronizing(){
                 'panen_tpname TEXT,' +
                 'panen_brondol INTEGER,' +
                 'panen_geo TEXT,' +
-                'panen_picture TEXT' +
+                'panen_picture TEXT,' +
+                'wt_card TEXT,' +
+                'wt_driver INTEGER,' +
+                'wt_drivername TEXT,' +
+                'wt_name TEXT,' +
+                'lr_name TEXT,' +
+                'sptbs_nokartu INTEGER' +
+            ')');
+            tx.executeSql('CREATE TABLE IF NOT EXISTS dh (' +
+                'dh_id INTEGER PRIMARY KEY AUTOINCREMENT,' +
+                'dh_date DATE,' +
+                'wt_createdby INTEGER,' +
+                'estate_id INTEGER,' +
+                'divisi_id INTEGER,' +
+                'wt_createdname TEXT,' +
+                'estate_name TEXT,' +
+                'divisi_name TEXT,' +
+                'dh_geo TEXT,' +
+                'wt_card TEXT,' +
+                'wt_driver INTEGER,' +
+                'wt_drivername TEXT,' +
+                'wt_name TEXT,' +
+                'dh_listcard TEXT' +
             ')');
             tx.executeSql('CREATE TABLE IF NOT EXISTS sptbs (' +
                 'sptbs_id INTEGER PRIMARY KEY AUTOINCREMENT,' +
                 'sptbs_card TEXT,' +
+                'sptbs_nokartu INTEGER,' +
                 'sptbs_date DATE,' +
                 'sptbs_vendor INTEGER,' +
                 'sptbs_material INTEGER,' +
@@ -185,8 +213,9 @@ function syncronizing(){
                 'sptbs_drivername TEXT,' +
                 'estate_name TEXT,' +
                 'divisi_name TEXT,' +
-                'sptbs_plat TEXT,' +
-                'sptbs_listcard TEXT' +
+                'sptbs_listcard TEXT,' +
+                'wt_name TEXT,' +
+                'lr_name TEXT' +
             ')'); 
             tx.executeSql('CREATE TABLE IF NOT EXISTS tp (' +
                 'tp_id INTEGER PRIMARY KEY AUTOINCREMENT,' +
@@ -219,7 +248,7 @@ function syncronizing(){
             ')');  
             tx.executeSql('CREATE TABLE IF NOT EXISTS pruning (' +
                 'pruning_id INTEGER PRIMARY KEY AUTOINCREMENT,' +
-                'pruning_baris TEXT,' +
+                // 'pruning_baris TEXT,' +
                 'pruning_tp INTEGER,' +
                 'pruning_pokok INTEGER,' +
                 'pruning_pelepah INTEGER,' +
@@ -234,10 +263,17 @@ function syncronizing(){
                 'pruning_mandorname TEXT,' +
                 'blok_id INTEGER,' +
                 'blok_name TEXT,' +
-                'pruning_geo TEXT' +
+                'pruning_geo TEXT,' +
+                'pruning_thntanam INTEGER,' +
+                'pruning_luas INTEGER,' +
+                'pruningc_id INTEGER,' +
+                'pruning_jml INTEGER' +
             ')');        
             tx.executeSql('CREATE TABLE IF NOT EXISTS tphnumber (' +
                 'tphnumber_card TEXT PRIMARY KEY' +
+            ')');         
+            tx.executeSql('CREATE TABLE IF NOT EXISTS wtnumber (' +
+                'wtnumber_card TEXT PRIMARY KEY' +
             ')');       
             tx.executeSql('CREATE TABLE IF NOT EXISTS sptbsnumber (' +
                 'sptbsnumber_card TEXT PRIMARY KEY' +
@@ -266,6 +302,7 @@ function syncronizing(){
                 'absen_user INTEGER,' +
                 'absen_username TEXT,' +
                 'absen_type TEXT,' +
+                'absen_note TEXT,' +
                 'absen_tpname TEXT,' +
                 'absen_date TEXT,' +
                 'absen_time TEXT,' +
@@ -281,7 +318,10 @@ function syncronizing(){
                 'wt_name TEXT,' +
                 'wt_vendor INTEGER,' +
                 'wt_jenis TEXT,' +
-                'wt_sewa INTEGER' +
+                'wt_sewa INTEGER,' +
+                'wt_idname TEXT,' +
+                'wt_area TEXT,' +
+                'wt_nopol TEXT' +
             ')');    
             tx.executeSql('CREATE TABLE IF NOT EXISTS quarrytype (' +
                 'quarrytype_id  INTEGER PRIMARY KEY AUTOINCREMENT,' +
@@ -327,7 +367,17 @@ function syncronizing(){
             ')');  
             tx.executeSql('CREATE TABLE IF NOT EXISTS positionandroid (' +
             'android_name TEXT,' +
-            'positionandroid_read INTEGER' +
+            'positionandroid_read INTEGER,' +
+            'position_id INTEGER' +
+            ')');  
+            tx.executeSql('CREATE TABLE IF NOT EXISTS lr (' +
+            'lr_name TEXT,' +
+            'lr_geo TEXT,' +
+            'lr_tipebuah TEXT' +
+            ')');   
+            tx.executeSql('CREATE TABLE IF NOT EXISTS pruningc (' +
+            'pruningc_id INTEGER PRIMARY KEY AUTOINCREMENT,' +
+            'pruningc_name TEXT' +
             ')');  
             // notif('Create Table user Sukses');
             
@@ -467,7 +517,8 @@ function syncronizing(){
                 'wt_name',
                 'wt_vendor',
                 'wt_jenis',
-                'wt_sewa'
+                'wt_sewa',
+                'wt_nopol'
             ];
             dataserver('wt', 'wt', masterarray15);
 
@@ -490,9 +541,28 @@ function syncronizing(){
 
             let masterarray19 = [
                 'android_name',
-                'positionandroid_read'
+                'positionandroid_read',
+                'position_id'
             ];
             dataserver('positionandroid?position_id='+positionid, 'positionandroid', masterarray19);
+
+            let masterarray20 = [
+                'lr_name',
+                'lr_geo',
+                'lr_tipebuah'
+            ];
+            dataserver('lr', 'lr', masterarray20);
+
+            let masterarray21 = [
+                'wtnumber_card'
+            ];
+            dataserver('wtnumber', 'wtnumber', masterarray21);
+
+            let masterarray22 = [
+                'pruningc_id',
+                'pruningc_name',
+            ];
+            dataserver('pruningc', 'pruningc', masterarray22);
         });                  
     }else{
         syncfinished();
