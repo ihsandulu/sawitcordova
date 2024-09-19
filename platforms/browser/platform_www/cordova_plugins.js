@@ -477,12 +477,12 @@ module.exports.metadata =
     "cordova-sqlite-storage": "6.1.0",
     "org.apache.cordova.device": "0.2.4",
     "org.apache.cordova.vibration": "0.3.4",
-    "phonegap-nfc": "1.2.0",
     "cordova-plugin-media": "7.0.0",
     "cordova-plugin-file-transfer": "2.0.0",
     "cordova-plugin-tesseract": "0.0.1",
     "cordova-plugin-appinfo": "2.1.2",
-    "cordova-plugin-inappbrowser": "6.0.0"
+    "cordova-plugin-inappbrowser": "6.0.0",
+    "community-cordova-plugin-nfc": "1.4.0"
 }
 // BOTTOM OF METADATA
 });

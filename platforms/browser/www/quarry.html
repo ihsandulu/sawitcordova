@@ -4,8 +4,9 @@
 <head>
     <meta charset="utf-8">
     <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;"> -->
-    <meta http-equiv="Content-Security-Policy" content="default-src * data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src * 'unsafe-inline'; media-src *; img-src * data: content:; script-src * 'unsafe-eval' 'unsafe-inline';">
-    
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src * data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src * 'unsafe-inline'; media-src *; img-src * data: content:; script-src * 'unsafe-eval' 'unsafe-inline';">
+
 
 
 
@@ -16,124 +17,150 @@
 
     <!-- <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> -->
 
-    <link rel="stylesheet" href="css/all.min.css"/>
+    <link rel="stylesheet" href="css/all.min.css" />
     <link rel="stylesheet" href="css/bootstrap.min.css">
-    <link rel="stylesheet" href="css/select2.min.css"/>
+    <link rel="stylesheet" href="css/select2.min.css" />
     <link rel="stylesheet" href="css/umum.css">
 
 
     <title>PT. PAM</title>
-    <style>   
-        #datanfcjadi{
-            height: 300px !important; 
-            width: 300px; 
+    <style>
+        #datanfcjadi {
+            height: 300px !important;
+            width: 300px;
             position: relative;
             left: 50%;
-            top:0px;
-            transform: translate(-50%,0);
-        } 
-        input.inputbox{background-color: antiquewhite!important; color: aliceblue!important; width: 50px!important; height:50px!important;}
-        .titleid{font-size: 20px; font-weight: bold;}
-        .hide{display: none;}
-        .isitext{color: rgba(49, 48, 48, 0.8)!important;}
-    </style> 
+            top: 0px;
+            transform: translate(-50%, 0);
+        }
+
+        input.inputbox {
+            background-color: antiquewhite !important;
+            color: aliceblue !important;
+            width: 50px !important;
+            height: 50px !important;
+        }
+
+        .titleid {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .hide {
+            display: none;
+        }
+
+        .isitext {
+            color: rgba(49, 48, 48, 0.8) !important;
+        }
+    </style>
     <script>
     </script>
 </head>
 
-<body>    
+<body>
     <div id="header">
-        
+
     </div>
-    <div id="frame1" class="text-center " > 
-        <div class="row p-3 ballon">                        
+    <div id="frame1" class="text-center ">
+        <div class="row p-3 ballon">
             <H1 class="col-12 alert alert-success">
-                <button id="btnupload" onclick="confirmupload();" class="btn btn-danger btn-xs text-white"><i class="fas fa-upload"></i></button> Tiket Angkut Matrial Batu
-            </H1>         
-            <div  id="btnreadcard" class="col-12 mb-4  text-center">
+                <button id="btnupload" onclick="confirmupload();" class="btn btn-danger btn-xs text-white"><i
+                        class="fas fa-upload"></i></button> Tiket Angkut Matrial Batu
+            </H1>
+            <div id="btnreadcard" class="col-12 mb-4  text-center">
                 <button onclick="bukaproses();" class="btn btn-danger btn-lg text-white">Baca Kartu</button>
             </div>
             <div id="readcard" class="col-12 text-center hide">
                 <div class="alert alert-warning">
-                    <blink class="blink"> Memproses... </blink><input type="hidden" id="readcardsno" value="0"/>
-                </div> 
+                    <blink class="blink"> Memproses... </blink><input type="hidden" id="readcardsno" value="0" />
+                </div>
                 <div class="col-12 mb-4  text-center">
                     <button onclick="tutupproses();" class="btn btn-danger btn-lg text-white">Tutup Proses</button>
-                </div>               
-            </div>                    
-            <div class="col-5 mb-4 text-left">Nomor Kartu</div><div class="col-7 text-left">                
+                </div>
+            </div>
+            <div class="col-5 mb-4 text-left">Nomor Kartu</div>
+            <div class="col-7 text-left">
                 <select onchange="cekkartuInput()" id="quarry_card" class="form-control select2">
 
                 </select>
-            </div>          
+            </div>
             <div class="col-6 mb-4 d-grid gap-2">
                 <button onclick="pergi();" class="btn btn-info text-white">Pergi</button>
-            </div>  
+            </div>
             <div class="col-6 mb-4 d-grid gap-2">
                 <button onclick="tiba();" class="btn btn-primary text-white">Tiba</button>
-            </div>   
-            <div class="col-5 mb-4 text-left ">Date:</div><div class="col-7 text-left ">
+            </div>
+            <div class="col-5 mb-4 text-left ">Date:</div>
+            <div class="col-7 text-left ">
                 <input id="quarry_date" type="text" class="form-control" readonly>
-            </div> 
-            <div class="col-5 mb-4 text-left pergi hide">Jam Pergi</div><div class="col-7 text-left pergi hide">
+            </div>
+            <div class="col-5 mb-4 text-left pergi hide">Jam Pergi</div>
+            <div class="col-7 text-left pergi hide">
                 <input id="quarry_jampergi" type="text" class="form-control" readonly>
-            </div> 
-            <div class="col-5 mb-4 text-left pergi hide">Vehicle</div><div class="col-7 text-left pergi hide">
+            </div>
+            <div class="col-5 mb-4 text-left pergi hide">Vehicle</div>
+            <div class="col-7 text-left pergi hide">
                 <select id="wt_id" class="form-control pergiinput select2">
 
                 </select>
-            </div>    
-            <div class="col-5 mb-4 text-left pergi hide">Jenis</div><div class="col-7 text-left pergi hide">
+            </div>
+            <div class="col-5 mb-4 text-left pergi hide">Jenis</div>
+            <div class="col-7 text-left pergi hide">
                 <select id="quarrytype_id" class="form-control pergiinput">
 
                 </select>
-            </div>  
-            <div class="col-5 mb-4 text-left pergi hide">Driver</div><div class="col-7 text-left pergi hide">
+            </div>
+            <div class="col-5 mb-4 text-left pergi hide">Driver</div>
+            <div class="col-7 text-left pergi hide">
                 <select onchange="drivername()" id="quarry_driver" class="form-control pergiinput select2">
 
                 </select>
             </div>
-            <div class="col-5 mb-4 text-left pergi hide">Blok Pengirim</div><div class="col-7 text-left pergi hide">
+            <div class="col-5 mb-4 text-left pergi hide">Blok Pengirim</div>
+            <div class="col-7 text-left pergi hide">
                 <select onchange="blokname1()" id="quarry_blok1" class="form-control pergiinput select2">
 
                 </select>
             </div>
-            <div class="col-5 mb-4 text-left tiba hide">Jam Datang</div><div class="col-7 text-left tiba hide">
+            <div class="col-5 mb-4 text-left tiba hide">Jam Datang</div>
+            <div class="col-7 text-left tiba hide">
                 <input id="quarry_jamtiba" type="text" class="form-control" readonly>
             </div>
-            <div class="col-5 mb-4 text-left tiba hide">Blok Penerima</div><div class="col-7 text-left tiba hide">
+            <div class="col-5 mb-4 text-left tiba hide">Blok Penerima</div>
+            <div class="col-7 text-left tiba hide">
                 <select onchange="blokname2()" id="quarry_blok2" class="form-control select2">
 
                 </select>
             </div>
             <button id="btnisikartu" onclick="isikartu()" type="button" class="btn btn-success">Isi Kartu</button>
-            
-           
+
+
             <input id="quarry_checkerpengirim" type="hidden">
             <input id="quarry_checkerpenerima" type="hidden">
-            <input id="quarry_estate1" type="hidden">         
-            <input id="quarry_divisi1" type="hidden">      
-            <input id="quarry_estate2" type="hidden">         
-            <input id="quarry_divisi2" type="hidden">       
-            <input id="quarry_geo1" type="hidden">       
-            <input id="quarry_geo2" type="hidden">         
-            <input id="quarry_estate1name" type="hidden">         
-            <input id="quarry_divisi1name" type="hidden">         
-            <input id="quarry_blok1name" type="hidden">         
-            <input id="quarry_estate2name" type="hidden">         
-            <input id="quarry_divisi2name" type="hidden">         
-            <input id="quarry_blok2name" type="hidden">       
+            <input id="quarry_estate1" type="hidden">
+            <input id="quarry_divisi1" type="hidden">
+            <input id="quarry_estate2" type="hidden">
+            <input id="quarry_divisi2" type="hidden">
+            <input id="quarry_geo1" type="hidden">
+            <input id="quarry_geo2" type="hidden">
+            <input id="quarry_estate1name" type="hidden">
+            <input id="quarry_divisi1name" type="hidden">
+            <input id="quarry_blok1name" type="hidden">
+            <input id="quarry_estate2name" type="hidden">
+            <input id="quarry_divisi2name" type="hidden">
+            <input id="quarry_blok2name" type="hidden">
             <!-- pengirim / penerima           -->
-            <input id="status" type="hidden" value="pengirim">         
+            <input id="status" type="hidden" value="pengirim">
         </div>
         <textarea id="datanfcjadi1" class="form-control col-12 hide" style="height:1500px;"></textarea>
-        <div class="">  
-            <div class="row">  
+        <div class="">
+            <div class="row">
                 <textarea id="datanfcjadi" class="form-control col-12 hide"></textarea>
             </div>
         </div>
-        <div class="mb-5" id="quarry">  
-        
+        <div class="mb-5" id="quarry">
+
         </div>
     </div>
     <div style="height:500px; color: rgba(0,0,0,0);">....
@@ -142,8 +169,8 @@
     <marquee width="100%" direction="left">Pastikan Kartu Telah Kosong!</marquee>
 
     <div id="footer"></div>
-    <script type="text/javascript" src="cordova.js"></script>  
-    <script type="text/javascript" src="js/jquery.min.js"></script>    
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="js/jquery.min.js"></script>
     <script type="text/javascript" src="js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="js/select2.min.js"></script>
     <script type="text/javascript" src="js/umum.js"></script>
@@ -151,52 +178,55 @@
     <script type="text/javascript" src="js/nfc.js"></script>
     <script>
         //device ready 
-        document.addEventListener('deviceready', function () { 
-            if(username==null){
-                window.location.href='login.html';
-            } 
+        document.addEventListener('deviceready', function () {
+            if (username == null) {
+                window.location.href = 'login.html';
+            }
+
+            $("#btnupload").hide();
+            $("#btnreadcard").hide();
             hideisikartu();
-            tutupdatakartu();                     
+            // tutupdatakartu();
             kosongkanfield();
-            setTimeout(function(){
-                quarrynumber();                  
-                driver();              
-                vehicle();              
-                jenis();      
+            setTimeout(function () {
+                quarrynumber();
+                driver();
+                vehicle();
+                jenis();
                 quarrycheck();
-                
+
                 blokpengirim();
                 bloktiba();
                 $("#quarry_date").val(now());
-            
-                cekkartuquarry(); 
-                
+
+                cekkartuquarry();
+
                 // tjampergi();
                 // tjamtiba();
                 cekstatus();
-            },2000);
-              
-        }); 
+            }, 1000);
+
+        });
 
         function confirmupload1(pilihannya) {
-            if(pilihannya=='1'){
+            if (pilihannya == '1') {
                 uploaddata();
-            }else{
+            } else {
                 // alert('You selected button ' + jenis);
             }
         }
 
-        function confirmupload(){
-            let arraynya = ['Upload','Cancel'];
+        function confirmupload() {
+            let arraynya = ['Upload', 'Cancel'];
             navigator.notification.confirm(
                 "Yakin di Upload?", // message
-                (buttonIndex) => confirmupload1(buttonIndex),            
+                (buttonIndex) => confirmupload1(buttonIndex),
                 "Upload",           // title
                 arraynya     // buttonLabels
             );
         }
 
-        function finalupload(x,no,resultSet){
+        function finalupload(x, no, resultSet) {
             var quarry_driver = resultSet.rows.item(x)['quarry_driver'];
             var quarry_jampergi = resultSet.rows.item(x)['quarry_jampergi'];
             var quarry_jamtiba = resultSet.rows.item(x)['quarry_jamtiba'];
@@ -251,7 +281,7 @@
             formData.append('quarry_blok2name', quarry_blok2name);
             formData.append('quarry_kubikasi', quarry_kubikasi);
             formData.append('quarry_jarak', quarry_jarak);
-            
+
             // alert(no+"="+resultSet.rows.length);
             // Melakukan AJAX request
             $.ajax({
@@ -260,60 +290,63 @@
                 data: formData,
                 processData: false,  // Tetapkan ke false agar FormData tidak diproses secara otomatis
                 contentType: false,  // Tetapkan ke false karena FormData sudah berisi tipe konten yang benar
-                success: function(response) {   
-                    if(no==resultSet.rows.length){                                 
+                success: function (response) {
+                    if (no == resultSet.rows.length) {
                         db.transaction(function (tx) {
-                                var query1 = "DELETE FROM quarry WHERE 1";
-                                tx.executeSql(query1, [], function (tx, resultSet1) {                                 
-                                    notif('Sukses Upload Data!');
-                                    kosongkanfield();                   
-                                    playAudio('berhasil.mp3');
-                                    ambildata('quarry','semua','');      
-                                },
+                            var query1 = "DELETE FROM quarry WHERE 1";
+                            tx.executeSql(query1, [], function (tx, resultSet1) {
+                                notif('Sukses Upload Data!');
+                                kosongkanfield();
+                                playAudio('berhasil.mp3');
+                                ambildata('quarry', 'semua', '');
+                            },
                                 function (tx, error) {
-                                    notif('DELETE error: ' + error.message);                      
+                                    notif('DELETE error: ' + error.message);
                                     playAudio('gagal.mp3');
-                                });                             
-                            
+                                });
+
                             // alert(no+"=="+resultSet.rows.length);
-                        });   
-                    }                                         
+                        });
+                    }
                 },
-                error: function(xhr, status, error) {
+                error: function (xhr, status, error) {
                     notif('Error:', error);
                 }
             });
         }
 
-        function uploaddata(){
+        function uploaddata() {
             db.transaction(function (tx) {
                 let hariini = now();
                 // var query = `SELECT * FROM panen WHERE panen_date = '${hariini}'`; 
-                var query = `SELECT * FROM quarry WHERE quarry_blok2name!=''`;                
+                var query = `SELECT * FROM quarry WHERE quarry_blok2name!=''`;
                 // notif(query);
                 $("#htmlupload").html('');
-                tx.executeSql(query, [], function (tx, resultSet) { 
-                    let no=1;
+                tx.executeSql(query, [], function (tx, resultSet) {
+                    let no = 1;
                     // notif(resultSet.rows.length);
-                    for (var x = 0; x < resultSet.rows.length; x++) {  
-                        finalupload(x,no,resultSet);
+                    for (var x = 0; x < resultSet.rows.length; x++) {
+                        finalupload(x, no, resultSet);
                         no++;
                     }
                 });
             });
         }
 
-        function cekdatasemua(){
-            db.transaction(function (tx) {
-                var query = `SELECT * FROM quarry WHERE quarry_blok2>0`;  
-                tx.executeSql(query, [], function (tx, resultSet) { 
-                    if (resultSet.rows.length>0) { 
-                        $("#btnupload").show();
-                    } else{
-                        $("#btnupload").hide();
-                    }
+        function cekdatasemua() {
+            let status = $("#status").val();
+            if (status == "penerima") {
+                db.transaction(function (tx) {
+                    var query = `SELECT * FROM quarry WHERE quarry_blok2>0`;
+                    tx.executeSql(query, [], function (tx, resultSet) {
+                        if (resultSet.rows.length > 0) {
+                            $("#btnupload").show();
+                        } else {
+                            $("#btnupload").hide();
+                        }
+                    });
                 });
-            });
+            }
         }
 
         let intervalPergi;
@@ -322,11 +355,11 @@
         let jam = time();
         function tjampergi() {
             $("#quarry_jampergi").val(jam);
-            
+
             // Menghentikan interval tjamtiba jika sudah berjalan
             clearInterval(intervalTiba);
-            
-            
+
+
             // Memulai interval untuk tjampergi
             intervalPergi = setInterval(function () {
                 jam = time();
@@ -337,12 +370,12 @@
 
         function tjamtiba() {
             $("#quarry_jamtiba").val(jam);
-            
+
             // Menghentikan interval tjampergi jika sudah berjalan
-            
+
             clearInterval(intervalPergi);
-          
-            
+
+
             // Memulai interval untuk tjamtiba
             intervalTiba = setInterval(function () {
                 jam = time();
@@ -352,7 +385,7 @@
         }
 
 
-        function blokname1(){
+        function blokname1() {
             let blokname = $("#quarry_blok1 :selected").attr("blok_name");
             if (typeof blokname !== "undefined") {
                 $("#quarry_blok1name").val(blokname);
@@ -365,39 +398,39 @@
         function blokpengirim() {
             db.transaction(function (tx) {
                 let status = $("#status").val();
-                var query = "SELECT * FROM blok WHERE divisi_id='"+divisiid+"' ORDER BY blok_name ASC";
+                var query = "SELECT * FROM blok WHERE divisi_id='" + divisiid + "' ORDER BY blok_name ASC";
                 $("#quarry_blok1").html('');
                 // notif(query);
-                var cell ='';
+                var cell = '';
                 tx.executeSql(query, [], function (tx, resultSet) {
-                    let no=1;
+                    let no = 1;
                     // notif(resultSet.rows.length);     
                     cell += '<option value="">Pilih Blok</option>';
-                    for (var x = 0; x < resultSet.rows.length; x++) {   
-                        cell += '<option blok_name="'+resultSet.rows.item(x)['blok_name']+'" value="'+resultSet.rows.item(x)['blok_id']+'">'+resultSet.rows.item(x)['blok_name']+' ('+resultSet.rows.item(x)['estate_name']+' - '+resultSet.rows.item(x)['divisi_name']+')</div>';
-                        if(resultSet.rows.length == no){
+                    for (var x = 0; x < resultSet.rows.length; x++) {
+                        cell += '<option blok_name="' + resultSet.rows.item(x)['blok_name'] + '" value="' + resultSet.rows.item(x)['blok_id'] + '">' + resultSet.rows.item(x)['blok_name'] + ' (' + resultSet.rows.item(x)['estate_name'] + ' - ' + resultSet.rows.item(x)['divisi_name'] + ')</div>';
+                        if (resultSet.rows.length == no) {
                             $("#quarry_blok1").append(cell);
                         }
-                        no++;                        
+                        no++;
                     }
                     if (x < 1) {
                         // notif("Tidak ada data!");
                     }
                 },
-                function (tx, error) {
-                    notif('SELECT error: ' + error.message);   
-                    playAudio('gagal.mp3');
-                });
-                
+                    function (tx, error) {
+                        notif('SELECT error: ' + error.message);
+                        playAudio('gagal.mp3');
+                    });
+
             }, function (error) {
-                notif('transaction error: ' + error.message);   
+                notif('transaction error: ' + error.message);
                 playAudio('gagal.mp3');
             }, function () {
                 // notif('transaction ok');
             });
         }
 
-        function blokname2(){
+        function blokname2() {
             let blok_name = $("#quarry_blok2 :selected").attr("blok_name");
             let estate_id = $("#quarry_blok2 :selected").attr("estate_id");
             let estate_name = $("#quarry_blok2 :selected").attr("estate_name");
@@ -425,29 +458,29 @@
                 var query = "SELECT * FROM blok WHERE 1 ORDER BY blok_name ASC";
                 $("#quarry_blok2").html('');
                 // notif(query);
-                var cell ='';
+                var cell = '';
                 tx.executeSql(query, [], function (tx, resultSet) {
-                    let no=1;
+                    let no = 1;
                     // notif(resultSet.rows.length);     
                     cell += '<option value="">Pilih Blok</option>';
-                    for (var x = 0; x < resultSet.rows.length; x++) {   
-                        cell += '<option blok_name="'+resultSet.rows.item(x)['blok_name']+'" estate_id="'+resultSet.rows.item(x)['estate_id']+'" estate_name="'+resultSet.rows.item(x)['estate_name']+'" divisi_id="'+resultSet.rows.item(x)['divisi_id']+'" divisi_name="'+resultSet.rows.item(x)['divisi_name']+'" value="'+resultSet.rows.item(x)['blok_id']+'">'+resultSet.rows.item(x)['blok_name']+' ('+resultSet.rows.item(x)['estate_name']+' - '+resultSet.rows.item(x)['divisi_name']+')</div>';
-                        if(resultSet.rows.length == no){
+                    for (var x = 0; x < resultSet.rows.length; x++) {
+                        cell += '<option blok_name="' + resultSet.rows.item(x)['blok_name'] + '" estate_id="' + resultSet.rows.item(x)['estate_id'] + '" estate_name="' + resultSet.rows.item(x)['estate_name'] + '" divisi_id="' + resultSet.rows.item(x)['divisi_id'] + '" divisi_name="' + resultSet.rows.item(x)['divisi_name'] + '" value="' + resultSet.rows.item(x)['blok_id'] + '">' + resultSet.rows.item(x)['blok_name'] + ' (' + resultSet.rows.item(x)['estate_name'] + ' - ' + resultSet.rows.item(x)['divisi_name'] + ')</div>';
+                        if (resultSet.rows.length == no) {
                             $("#quarry_blok2").append(cell);
                         }
-                        no++;                        
+                        no++;
                     }
                     if (x < 1) {
                         // notif("Tidak ada data!");
                     }
                 },
-                function (tx, error) {
-                    notif('SELECT error: ' + error.message);   
-                    playAudio('gagal.mp3');
-                });
-                
+                    function (tx, error) {
+                        notif('SELECT error: ' + error.message);
+                        playAudio('gagal.mp3');
+                    });
+
             }, function (error) {
-                notif('transaction error: ' + error.message);   
+                notif('transaction error: ' + error.message);
                 playAudio('gagal.mp3');
             }, function () {
                 // notif('transaction ok');
@@ -459,30 +492,30 @@
                 var query = "SELECT * FROM quarrynumber";
                 // notif(query);
                 $("#quarry_card").html('');
-                var cell ='';
+                var cell = '';
                 tx.executeSql(query, [], function (tx, resultSet) {
-                    let no=1;
+                    let no = 1;
                     // notif(resultSet.rows.length);     
                     cell += '<option value="">Pilih Penomoran</option>';
-                    for (var x = 0; x < resultSet.rows.length; x++) {   
-                        cell += '<option value="'+resultSet.rows.item(x)['quarrynumber_card']+'">'+resultSet.rows.item(x)['quarrynumber_card']+'</div>';
-                        if(resultSet.rows.length == no){
+                    for (var x = 0; x < resultSet.rows.length; x++) {
+                        cell += '<option value="' + resultSet.rows.item(x)['quarrynumber_card'] + '">' + resultSet.rows.item(x)['quarrynumber_card'] + '</div>';
+                        if (resultSet.rows.length == no) {
                             $("#quarry_card").append(cell);
                         }
                         no++;
-                        
+
                     }
                     if (x < 1) {
                         // notif("Tidak ada data!");
                     }
                 },
-                function (tx, error) {
-                    notif('SELECT error: ' + error.message);   
-                    playAudio('gagal.mp3');
-                });
-                
+                    function (tx, error) {
+                        notif('SELECT error: ' + error.message);
+                        playAudio('gagal.mp3');
+                    });
+
             }, function (error) {
-                notif('transaction error: ' + error.message);   
+                notif('transaction error: ' + error.message);
                 playAudio('gagal.mp3');
             }, function () {
                 // notif('transaction ok');
@@ -494,8 +527,8 @@
                 var query = "SELECT * FROM quarry";
                 var cell = '';
                 tx.executeSql(query, [], function (tx, resultSet) {
-                    
-                    let no=1;
+
+                    let no = 1;
                     for (var x = 0; x < resultSet.rows.length; x++) {
                         var row = resultSet.rows.item(x);
                         for (var key in row) {
@@ -506,18 +539,18 @@
                         }
                         // Hapus koma terakhir dan tambahkan newline
                         cell = cell.slice(0, -2) + '<br>';
-                        if(resultSet.rows.length == no){
-                            let isi = $("#datanfcjadi1").val() +"\n"+ cell;
+                        if (resultSet.rows.length == no) {
+                            let isi = $("#datanfcjadi1").val() + "\n" + cell;
                             $("#datanfcjadi1").val(isi);
                         }
-                        no++;                        
+                        no++;
                     }
                     if (x < 1) {
                         // notif("Tidak ada data!");
                     }
-                    
+
                 }, function (tx, error) {
-                    notif('SELECT error: ' + error.message);   
+                    notif('SELECT error: ' + error.message);
                     playAudio('gagal.mp3');
                 });
             });
@@ -525,16 +558,16 @@
         }
 
 
-        function cekkartuInput(){
+        function cekkartuInput() {
             let quarry_card = $("#quarry_card").val();
-            if(quarry_card!=""){
+            if (quarry_card != "") {
                 $("#btnisikartu").show();
-            }else{
+            } else {
                 $("#btnisikartu").hide();
             }
         }
 
-        function kosongkanfield(){
+        function kosongkanfield() {
             $("#quarry_driver").val('');
             $("#quarry_jampergi").val('');
             $("#quarry_jamtiba").val('');
@@ -543,30 +576,30 @@
             $("#wt_id").val('');
             $("#quarry_blok1").val('');
             $("#quarry_blok2").val('');
-            
+
             $('#quarry_card').select2('destroy');
             $("#quarry_card").val('');
-            $('#quarry_card').select2();  
+            $('#quarry_card').select2();
 
-            
+
             cekdatasemua();
-            
-            driver();              
+
+            driver();
             vehicle();
-            cekstatus();            
+            cekstatus();
         }
 
         //geolocation
         var panenGeo = function (position) {
-                let geolo = position.coords.latitude+'|'+position.coords.longitude;
-                let status1 = $("#status").val();
-                if(status1=="pengirim"){
-                    $("#quarry_geo1").val(geolo);
-                    $("#quarry_geo2").val("");
-                }else{
-                    $("#quarry_geo1").val("");
-                    $("#quarry_geo2").val(geolo);
-                }
+            let geolo = position.coords.latitude + '|' + position.coords.longitude;
+            let status1 = $("#status").val();
+            if (status1 == "pengirim") {
+                $("#quarry_geo1").val(geolo);
+                $("#quarry_geo2").val("");
+            } else {
+                $("#quarry_geo1").val("");
+                $("#quarry_geo2").val(geolo);
+            }
         };
         function errorGeo(error) {
             notif('code: ' + error.code + '\n' +
@@ -576,9 +609,9 @@
             navigator.geolocation.getCurrentPosition(panenGeo, errorGeo);
         }
 
-        function cekstatus(){
+        function cekstatus() {
             let status = $("#status").val();
-            if(status=="pengirim"){
+            if (status == "pengirim") {
                 $("#quarry_estate1").val(estateid);
                 $("#quarry_divisi1").val(divisiid);
                 $("#quarry_estate1name").val(estatename);
@@ -592,7 +625,7 @@
                 $("#quarry_blok2name").val("");
                 $("#quarry_checkerpenerima").val("");
                 geoPanen();
-            }else{
+            } else {
                 // $("#quarry_estate2").val(estateid);
                 // $("#quarry_divisi2").val(divisiid);
                 // $("#quarry_estate2name").val(estatename);
@@ -609,57 +642,61 @@
             }
         }
 
-        function showisikartu(){
+        function showisikartu() {
             $("#btnisikartu").show();
         }
 
-        function hideisikartu(){
+        function hideisikartu() {
             $("#btnisikartu").hide();
         }
 
-        function pergi(){ 
-            tjampergi();        
+        function pergi() {
+            tjampergi();
             $(".tiba").hide();
             $(".pergi").show();
+            $("#btnupload").hide();
+            $("#btnreadcard").hide();
             $("#status").val("pengirim");
             kosongkanfield();
-            $(".pergiinput").removeAttr("readonly");            
-            ambildata('quarry',0,'');
+            $(".pergiinput").removeAttr("readonly");
+            ambildata('quarry', 0, '');
             $("#btnisikartu").text("Isi Kartu");
         }
 
-        function tiba(){ 
+        function tiba() {
             playAudio('bacakartu.mp3');
-            tjamtiba();   
+            tjamtiba();
             $(".tiba").show();
             $(".pergi").show();
+            $("#btnupload").show();
+            $("#btnreadcard").show();
             $("#status").val("penerima");
             kosongkanfield();
-            $(".pergiinput").attr("readonly","readonly");        
-            ambildata('quarry',0,'');
+            $(".pergiinput").attr("readonly", "readonly");
+            ambildata('quarry', 0, '');
             $("#btnisikartu").text("Save Data");
         }
 
-        
 
-        function bukaproses(){            
+
+        function bukaproses() {
             playAudio('tempelkankartu.mp3');
             $("#btnreadcard").hide();
             $("#readcard").show();
             $("#readcardsno").val(1);
         }
-        function tutupproses(){
+        function tutupproses() {
             $("#btnreadcard").show();
             $("#readcard").hide();
             $("#readcardsno").val(0);
         }
 
-        function tutupdatakartu(){
-            $("#datanfcjadi").val('');                
+        function tutupdatakartu() {
+            $("#datanfcjadi").val('');
             $("#datanfcjadi").hide();
         }
 
-        function inputdataquarry(table,data){
+        function inputdataquarry(table, data) {
             data = data.replace(/[^ -~]/g, '');
             // notif(data);
             db.transaction(function (tx) {
@@ -669,7 +706,7 @@
                 var valuesupdate = [];
 
                 var quarryCardToCheck = '';
-                let quarryCardToCheckUpdate='';
+                let quarryCardToCheckUpdate = '';
                 dataArray.forEach(function (item) {
                     var pair = item.split('=');
                     if (pair[0] !== 'quarry_id') {
@@ -677,20 +714,20 @@
                         let isi;
                         let isiupdate;
                         let pair1 = pair[1];
-                        if(pair[1] === 'null'){
+                        if (pair[1] === 'null') {
                             isi = "NULL";
                             isiupdate = "NULL";
-                        }else{
+                        } else {
                             isi = "'" + pair1.trim() + "' ";
                             isiupdate = pair1.trim();
                         }
                         // let isi = (pair[1] === 'null') ? "NULL" : "'" + pair[1].trim() + "'";
                         // isi = isi.replace(/(?<=\S)_|\b_|\b(?=\S)/g, ' ');
-                        values.push(isi);                 
-                        valuesupdate.push(isiupdate);                 
-                        if(pair[0] == 'quarry_card'){
-                            quarryCardToCheck=isi;   
-                            quarryCardToCheckUpdate=isiupdate;   
+                        values.push(isi);
+                        valuesupdate.push(isiupdate);
+                        if (pair[0] == 'quarry_card') {
+                            quarryCardToCheck = isi;
+                            quarryCardToCheckUpdate = isiupdate;
                             // notif(isi);    
                         }
                     }
@@ -698,25 +735,25 @@
                 });
 
                 // Mengecek apakah quarry_card sudah ada dalam tabel
-                var checkQuery = "SELECT * FROM " + table + " WHERE quarry_card = "+quarryCardToCheck;
+                var checkQuery = "SELECT * FROM " + table + " WHERE quarry_card = " + quarryCardToCheck;
                 // notif(checkQuery); 
-                let idquarry=0;
+                let idquarry = 0;
                 tx.executeSql(checkQuery, [], function (tx, result) {
                     let jmldata = result.rows.length;
                     // notif(quarryCardToCheck); 
                     if (jmldata > 0) {
                         // notif(jmldata);
                         // Jika quarry_card sudah ada, lakukan UPDATE                        
-                        var updateQuery = "UPDATE " + table + " SET " + columns.join('=?, ') + "=? WHERE quarry_card = " + quarryCardToCheck;                               
+                        var updateQuery = "UPDATE " + table + " SET " + columns.join('=?, ') + "=? WHERE quarry_card = " + quarryCardToCheck;
                         // notif(updateQuery);                          
                         // notif(valuesupdate);
                         tx.executeSql(updateQuery, valuesupdate, function (tx, res) {
                             masukinid(result.rows.item(0)['quarry_card']);
-                            ambildata('quarry','semua',''); 
+                            ambildata('quarry', 'semua', '');
                             playAudio('berhasil.mp3');
                             notif('Data Disimpan!');
                         }, function (tx, error) {
-                            notif('Kesalahan UPDATE: ' + error.message);            
+                            notif('Kesalahan UPDATE: ' + error.message);
                             playAudio('gagal.mp3');
                         });
                     } else {
@@ -724,45 +761,45 @@
                         var insertQuery = "INSERT INTO " + table + " (" + columns.join(',') + ") VALUES (" + values.join(',') + ")";
                         // notif(insertQuery);
                         tx.executeSql(insertQuery, [], function (tx, res) {
-                            insertID = res.insertId;    
+                            insertID = res.insertId;
                             // notif(quarryCardToCheckUpdate);                        
                             masukinid(quarryCardToCheckUpdate);
-                            ambildata('quarry','semua',''); 
-                            playAudio('berhasil.mp3');  
+                            ambildata('quarry', 'semua', '');
+                            playAudio('berhasil.mp3');
                             notif('Data Disimpan!');
                         }, function (tx, error) {
-                            notif('Kesalahan INSERT: ' + error.message);      
+                            notif('Kesalahan INSERT: ' + error.message);
                             playAudio('gagal.mp3');
                         });
                     }
                 }, function (tx, error) {
-                    notif('Kesalahan transaksi: ' + error.message);      
+                    notif('Kesalahan transaksi: ' + error.message);
                     playAudio('gagal.mp3');
                 });
             }, function (error) {
-                notif('Transaction Error: ' + error.message);      
+                notif('Transaction Error: ' + error.message);
                 playAudio('gagal.mp3');
             }, function () {
                 // playAudio('berhasil.mp3');
                 // notif('Data Telah Terhapus!');
             });
         }
-        
 
 
-        function onConfirminputquarry(pilihannya,table,data) {
-            if(pilihannya=='1'){
-                inputdataquarry(table,data);
-            }else{
+
+        function onConfirminputquarry(pilihannya, table, data) {
+            if (pilihannya == '1') {
+                inputdataquarry(table, data);
+            } else {
                 // alert('You selected button ' + jenis);
             }
         }
 
-        function confirminputquarry(message,title,table,data) {
-            let arraynya = ['Record','Cancel'];
+        function confirminputquarry(message, title, table, data) {
+            let arraynya = ['Record', 'Cancel'];
             navigator.notification.confirm(
                 message, // message
-                (buttonIndex) => onConfirminputquarry(buttonIndex, table, data),            
+                (buttonIndex) => onConfirminputquarry(buttonIndex, table, data),
                 title,           // title
                 arraynya     // buttonLabels
             );
@@ -779,57 +816,57 @@
             var kalimatTanpaSpasi = resultString.replace(/\s/g, '');
             // notif(kalimatTanpaSpasi);            
 
-            if(kalimatTanpaSpasi!=""){
+            if (kalimatTanpaSpasi != "") {
 
-                
+
                 var kalimatTanpaSpasi3 = kalimatTanpaSpasi.split('*');
                 let kalimatTanpaSpasi4 = kalimatTanpaSpasi3.join('\n\n\n');
 
                 var kalimatTanpaSpasi1 = kalimatTanpaSpasi4.split(',');
                 let kalimatTanpaSpasi2 = kalimatTanpaSpasi1.join('\n');
-                
-                var adaQuarryCard = kalimatTanpaSpasi1.some(function(element) {
+
+                var adaQuarryCard = kalimatTanpaSpasi1.some(function (element) {
                     return element.includes('quarry_driver');
                 });
                 let readcardsno = $("#readcardsno").val();
                 tutupproses();
 
-                if(adaQuarryCard){   
+                if (adaQuarryCard) {
                     let namaf = namafield();
                     let sesi = kalimatTanpaSpasi.split('*');
                     let sesi1 = sesi[0].split(',');
-                    let sesi2 = [];                 
-                    if(readcardsno==1){                        
-                        for(let x=0; x<sesi1.length;x++){
+                    let sesi2 = [];
+                    if (readcardsno == 1) {
+                        for (let x = 0; x < sesi1.length; x++) {
                             sesi2 = sesi1[x].split('=');
                             // notif(sesi2[0]+'='+sesi2[1]);
                             // $('#'+sesi2[0]).val(sesi2[1]);
-                            if(sesi2[0]=='quarry_card'){   
+                            if (sesi2[0] == 'quarry_card') {
                                 // notif(sesi2[1]);                             
                                 $('#quarry_card').select2('destroy');
                                 $("#quarry_card").val(sesi2[1]);
                                 $('#quarry_card').select2();
                             }
-                            if(sesi2[0]=='quarry_driver'){
+                            if (sesi2[0] == 'quarry_driver') {
                                 $("#quarry_driver").select2('destroy');
                                 $("#quarry_driver").val(sesi2[1]);
                                 $("#quarry_driver").select2();
                             }
-                            if(sesi2[0]=='quarry_jampergi'){$("#quarry_jampergi").val(sesi2[1]);}
-                            if(sesi2[0]=='quarry_jamtiba'){$("#quarry_jamtiba").val(sesi2[1]);}
-                            if(sesi2[0]=='quarry_date'){$("#quarry_date").val(sesi2[1]);}
-                            if(sesi2[0]=='quarry_checkerpengirim'){$("#quarry_checkerpengirim").val(sesi2[1]);}
+                            if (sesi2[0] == 'quarry_jampergi') { $("#quarry_jampergi").val(sesi2[1]); }
+                            if (sesi2[0] == 'quarry_jamtiba') { $("#quarry_jamtiba").val(sesi2[1]); }
+                            if (sesi2[0] == 'quarry_date') { $("#quarry_date").val(sesi2[1]); }
+                            if (sesi2[0] == 'quarry_checkerpengirim') { $("#quarry_checkerpengirim").val(sesi2[1]); }
                             // if(sesi2[0]=='quarry_checkerpenerima'){$("#quarry_checkerpenerima").val(sesi2[1]);}
-                            if(sesi2[0]=='quarry_card'){$("#quarry_card").val(sesi2[1]);}
-                            if(sesi2[0]=='quarrytype_id'){$("#quarrytype_id").val(sesi2[1]);}
-                            if(sesi2[0]=='wt_id'){
+                            if (sesi2[0] == 'quarry_card') { $("#quarry_card").val(sesi2[1]); }
+                            if (sesi2[0] == 'quarrytype_id') { $("#quarrytype_id").val(sesi2[1]); }
+                            if (sesi2[0] == 'wt_id') {
                                 $("#wt_id").select2('destroy');
                                 $("#wt_id").val(sesi2[1]);
                                 $("#wt_id").select2();
                             }
-                            if(sesi2[0]=='quarry_estate1'){$("#quarry_estate1").val(sesi2[1]);}
-                            if(sesi2[0]=='quarry_divisi1'){$("#quarry_divisi1").val(sesi2[1]);}
-                            if(sesi2[0]=='quarry_blok1'){                                
+                            if (sesi2[0] == 'quarry_estate1') { $("#quarry_estate1").val(sesi2[1]); }
+                            if (sesi2[0] == 'quarry_divisi1') { $("#quarry_divisi1").val(sesi2[1]); }
+                            if (sesi2[0] == 'quarry_blok1') {
                                 $("#quarry_blok1").select2('destroy');
                                 $("#quarry_blok1").val(sesi2[1]);
                                 $("#quarry_blok1").select2();
@@ -837,11 +874,11 @@
                             // if(sesi2[0]=='quarry_estate2'){$("#quarry_estate2").val(sesi2[1]);}
                             // if(sesi2[0]=='quarry_divisi2'){$("#quarry_divisi2").val(sesi2[1]);}
                             // if(sesi2[0]=='quarry_blok2'){$("#quarry_blok2").val(sesi2[1]);}
-                            if(sesi2[0]=='quarry_geo1'){$("#quarry_geo1").val(sesi2[1]);}
+                            if (sesi2[0] == 'quarry_geo1') { $("#quarry_geo1").val(sesi2[1]); }
                             // if(sesi2[0]=='quarry_geo2'){$("#quarry_geo2").val(sesi2[1]);}
-                            if(sesi2[0]=='quarry_estate1name'){$("#quarry_estate1name").val(sesi2[1]);}
-                            if(sesi2[0]=='quarry_divisi1name'){$("#quarry_divisi1name").val(sesi2[1]);}
-                            if(sesi2[0]=='quarry_blok1name'){$("#quarry_blok1name").val(sesi2[1]);}
+                            if (sesi2[0] == 'quarry_estate1name') { $("#quarry_estate1name").val(sesi2[1]); }
+                            if (sesi2[0] == 'quarry_divisi1name') { $("#quarry_divisi1name").val(sesi2[1]); }
+                            if (sesi2[0] == 'quarry_blok1name') { $("#quarry_blok1name").val(sesi2[1]); }
                             // if(sesi2[0]=='quarry_estate2name'){$("#quarry_estate2name").val(sesi2[1]);}
                             // if(sesi2[0]=='quarry_divisi2name'){$("#quarry_divisi2name").val(sesi2[1]);}
                             // if(sesi2[0]=='quarry_blok2name'){$("#quarry_blok2name").val(sesi2[1]);}
@@ -853,11 +890,11 @@
 
                         // notif('Data Kartu SPTBS akan ditimpa ulang!'); 
                         playAudio('kartuterisi.mp3');
-                        ambildata('quarry','semua','');
-                    }else{  
-                        for(let x=0; x<sesi1.length;x++){
+                        ambildata('quarry', 'semua', '');
+                    } else {
+                        for (let x = 0; x < sesi1.length; x++) {
                             sesi2 = sesi1[x].split('=');
-                            if(sesi2[0].includes("quarry_card")){                
+                            if (sesi2[0].includes("quarry_card")) {
                                 $('#quarry_card').select2('destroy');
                                 $("#quarry_card").val(sesi2[1]);
                                 // alert(sesi2[1]);
@@ -865,75 +902,75 @@
                             }
                         }
                         // notif('Kartu SPTBS Siap Diisi!');
-                    }                    
-                }else if(adaquarryCard) {
-                    confirminputquarry('Record Data dari Kartu?','Data quarry','quarry',kalimatTanpaSpasi);
+                    }
+                } else if (adaquarryCard) {
+                    confirminputquarry('Record Data dari Kartu?', 'Data quarry', 'quarry', kalimatTanpaSpasi);
                 } else {
                     $("#quarry_card").val("");
                     notif("Kartu Tidak Dikenal!");
                 }
-                $("#datanfcjadi").val(kalimatTanpaSpasi2);                
+                $("#datanfcjadi").val(kalimatTanpaSpasi2);
                 $("#datanfcjadi").show();
-                setTimeout(function(){
+                setTimeout(function () {
                     $("#datanfcjadi").hide();
-                },60000);
-                
+                }, 60000);
+
                 let ceksptbscard = $("#quarry_card").val();
-                if(ceksptbscard!=""){showisikartu();}else{hideisikartu();}
-            }else{
-                $("#datanfcjadi").val('');                
+                if (ceksptbscard != "") { showisikartu(); } else { hideisikartu(); }
+            } else {
+                $("#datanfcjadi").val('');
                 $("#datanfcjadi").hide();
                 notif('Tidak Ada Data!');
-                playAudio('kartukosong.mp3'); 
+                playAudio('kartukosong.mp3');
                 // let sptbsCardR = sptbsCardRandom();
                 // // notif(sptbsCardR);
                 // $("#quarry_card").val(sptbsCardR);
                 let ceksptbscard = $("#quarry_card").val();
-                if(ceksptbscard!=""){showisikartu();}else{hideisikartu();}
+                if (ceksptbscard != "") { showisikartu(); } else { hideisikartu(); }
             }
             // notif(resultString);
-            
+
         }
-        function isifield(field, data){
-            var splitResult = data.find(function(element) {
+        function isifield(field, data) {
+            var splitResult = data.find(function (element) {
                 return element.includes(field);
             }).split('=');
             var nilaifield = splitResult[1];
-            $("#"+field).val(nilaifield);
+            $("#" + field).val(nilaifield);
             // notif(field+'='+nilaifield);
         }
         function onNdefcekquarry(nfcEvent) {
             // notif(JSON.stringify(nfcEvent.tag));
-            
+
             var tag = nfcEvent.tag;
             ndefMessage = nfcEvent.tag.ndefMessage;
-            if(ndefMessage.length>0){             
-                     
+            if (ndefMessage.length > 0) {
+
                 tag.id = sptbsCardRandom();
                 tag.isWritable = !tag.isLocked;
-                tag.canMakeReadOnly = tag.isLockable;   
-                if(tag.serialNumber) {
-                    tag.serialNumber = tag.id;            
+                tag.canMakeReadOnly = tag.isLockable;
+                if (tag.serialNumber) {
+                    tag.serialNumber = tag.id;
                 }
                 datanfcjadiquarry(nfcEvent.tag)
                 navigator.notification.vibrate(100);
-            }else{
+            } else {
             }
         }
         function cekkartuquarry() {
             nfc.addNdefListener(onNdefcekquarry, notifbacakartu("Tempelkan Kartu!"), onFailurebacakartu);
         }
 
-        function namafield(){
+        function namafield() {
             // let field = 'quarry_card,sptbs_vendor,sptbs_material,sptbs_kecamatan,sptbs_plat,quarry_driver,sptbsdet,quarry_date,sptbs_createdby,estate_id,divisi_id,quarry_checkerpengirim,quarry_drivername,  estate_name,divisi_name,quarry_card';
             // return field.split(',');
             let field = 'quarry_card,sptbs_vendor,sptbs_material,sptbs_kecamatan,sptbs_plat,quarry_driver,quarry_date,sptbs_createdby,estate_id,divisi_id,quarry_checkerpengirim,quarry_drivername,  estate_name,divisi_name,quarry_card';
             return field.split(',');
         }
 
-        
 
-        function isikartu(){
+
+        function isikartu() {
             //pengirim
             let quarry_driver = $("#quarry_driver").val();
             let quarry_jampergi = $("#quarry_jampergi").val();
@@ -961,61 +998,62 @@
             let quarry_blok2name = $("#quarry_blok2name").val();
             let quarry_geo2 = $("#quarry_geo2").val();
 
-            if(
-                (wt_id>0 &&
-                quarrytype_id>0 &&
-                quarry_driver>0 &&
-                quarry_blok1>0) || 
-                (wt_id>0 &&
-                quarrytype_id>0 &&
-                quarry_driver>0 &&
-                quarry_blok1>0 &&
-                quarry_blok2>0)
-            ){
-                let data = 'quarry_driver='+quarry_driver+
-                    ',quarry_jampergi='+quarry_jampergi+
-                    ',quarry_date='+quarry_date+
-                    ',quarry_checkerpengirim='+quarry_checkerpengirim+
-                    ',quarry_card='+quarry_card+
-                    ',quarrytype_id='+quarrytype_id+
-                    ',wt_id='+wt_id+
-                    ',quarry_estate1='+quarry_estate1+
-                    ',quarry_divisi1='+quarry_divisi1+
-                    ',quarry_blok1='+quarry_blok1+
-                    ',quarry_estate1name='+quarry_estate1name+
-                    ',quarry_divisi1name='+quarry_divisi1name+
-                    ',quarry_blok1name='+quarry_blok1name+
-                    ',quarry_geo1='+quarry_geo1+
-                    ',quarry_jamtiba='+quarry_jamtiba+
-                    ',quarry_checkerpenerima='+quarry_checkerpenerima+
-                    ',quarry_estate2='+quarry_estate2+
-                    ',quarry_divisi2='+quarry_divisi2+
-                    ',quarry_blok2='+quarry_blok2+
-                    ',quarry_estate2name='+quarry_estate2name+
-                    ',quarry_divisi2name='+quarry_divisi2name+
-                    ',quarry_blok2name='+quarry_blok2name+
-                    ',quarry_geo2='+quarry_geo2
+            // alert(wt_id+","+quarrytype_id+","+quarry_driver+","+quarry_blok1);
+            if (
+                (wt_id > 0 &&
+                    quarrytype_id > 0 &&
+                    quarry_driver > 0 &&
+                    quarry_blok1 > 0) ||
+                (wt_id > 0 &&
+                    quarrytype_id > 0 &&
+                    quarry_driver > 0 &&
+                    quarry_blok1 > 0 &&
+                    quarry_blok2 > 0)
+            ) {
+                let data = 'quarry_driver=' + quarry_driver +
+                    ',quarry_jampergi=' + quarry_jampergi +
+                    ',quarry_date=' + quarry_date +
+                    ',quarry_checkerpengirim=' + quarry_checkerpengirim +
+                    ',quarry_card=' + quarry_card +
+                    ',quarrytype_id=' + quarrytype_id +
+                    ',wt_id=' + wt_id +
+                    ',quarry_estate1=' + quarry_estate1 +
+                    ',quarry_divisi1=' + quarry_divisi1 +
+                    ',quarry_blok1=' + quarry_blok1 +
+                    ',quarry_estate1name=' + quarry_estate1name +
+                    ',quarry_divisi1name=' + quarry_divisi1name +
+                    ',quarry_blok1name=' + quarry_blok1name +
+                    ',quarry_geo1=' + quarry_geo1 +
+                    ',quarry_jamtiba=' + quarry_jamtiba +
+                    ',quarry_checkerpenerima=' + quarry_checkerpenerima +
+                    ',quarry_estate2=' + quarry_estate2 +
+                    ',quarry_divisi2=' + quarry_divisi2 +
+                    ',quarry_blok2=' + quarry_blok2 +
+                    ',quarry_estate2name=' + quarry_estate2name +
+                    ',quarry_divisi2name=' + quarry_divisi2name +
+                    ',quarry_blok2name=' + quarry_blok2name +
+                    ',quarry_geo2=' + quarry_geo2
                     ;
                 // deleteQuarrywherecard(quarry_card);
                 inputOrUpdateData(data);
-            }else{
-                notif("Data tidak lengkap!");                
+            } else {
+                notif("Data tidak lengkap!");
                 playAudio('datatidaklengkap.mp3');
             }
-        }        
+        }
 
-        function deleteQuarrywherecard(card){
+        function deleteQuarrywherecard(card) {
             db.transaction(function (tx) {
                 var query = "DELETE FROM quarry WHERE quarry_card = ?";
                 tx.executeSql(query, [card], function (tx, res) {
                     // ambildata(table,'semua','');
                 },
-                function (tx, error) {
-                    notif('DELETE error: ' + error.message);      
-                    playAudio('gagal.mp3');
-                });
+                    function (tx, error) {
+                        notif('DELETE error: ' + error.message);
+                        playAudio('gagal.mp3');
+                    });
             }, function (error) {
-                notif('transaction error: ' + error.message);      
+                notif('transaction error: ' + error.message);
                 playAudio('gagal.mp3');
             }, function () {
                 // notif('Data Telah Terhapus!');
@@ -1039,37 +1077,37 @@
                     if (pair[0] !== 'quarry_id') {
                         columns.push(pair[0]);
                         let isi = (pair[1] === 'null') ? "NULL" : "'" + pair[1].trim() + "'";
-                        values.push(isi);                 
-                        if(pair[0] == 'quarry_card'){
-                            quarryCardToCheck=isi;   
+                        values.push(isi);
+                        if (pair[0] == 'quarry_card') {
+                            quarryCardToCheck = isi;
                             // notif(isi);    
                         }
                     }
                 });
-                               
+
                 var insertQuery = "INSERT INTO quarry (" + columns.join(',') + ") VALUES (" + values.join(',') + ")";
                 // notif(insertQuery);
                 tx.executeSql(insertQuery, [], function (tx, res) {
-                    let insertID = res.insertId;  
+                    let insertID = res.insertId;
                     kosongkanfield();
                     let status = $("#status").val();
-                    if(status=="pengirim"){
-                        ambildata('quarry','terakhir','isikartu'); 
-                    }else{    
+                    if (status == "pengirim") {
+                        ambildata('quarry', 'terakhir', 'isikartu');
+                    } else {
                         playAudio('datadisimpan.mp3');
                         notif("Data Disimpan!");
-                        ambildata('quarry','semua',''); 
+                        ambildata('quarry', 'semua', '');
                     }
-                    
+
                     // $("#datanfcjadi1").val(insertQuery);     
                     // alert(insertID);  
                 }, function (tx, error) {
-                    notif('Kesalahan INSERT: ' + error.message);      
+                    notif('Kesalahan INSERT: ' + error.message);
                     playAudio('gagal.mp3');
-                });                    
-               
+                });
+
             }, function (error) {
-                notif('Transaction Error: ' + error.message);      
+                notif('Transaction Error: ' + error.message);
                 playAudio('gagal.mp3');
             }, function () {
                 // playAudio('berhasil.mp3');
@@ -1077,101 +1115,101 @@
             });
         }
 
-        function deletedatatph(table,id){
+        function deletedatatph(table, id) {
             db.transaction(function (tx) {
                 var query = "DELETE FROM quarry WHERE quarry_id = ?";
                 tx.executeSql(query, [id], function (tx, res) {
-                    ambildata(table,id,'');
+                    ambildata(table, id, '');
                 },
-                function (tx, error) {
-                    notif('DELETE error: ' + error.message);      
-                    playAudio('gagal.mp3');
-                });
+                    function (tx, error) {
+                        notif('DELETE error: ' + error.message);
+                        playAudio('gagal.mp3');
+                    });
             }, function (error) {
-                notif('transaction error: ' + error.message);      
+                notif('transaction error: ' + error.message);
                 playAudio('gagal.mp3');
             }, function () {
                 // notif('Data Telah Terhapus!');
             });
         }
 
-        function onConfirm(pilihannya,table,id) {
-            if(pilihannya=='1'){
-                deletedatatph(table,id);
-            }else{
+        function onConfirm(pilihannya, table, id) {
+            if (pilihannya == '1') {
+                deletedatatph(table, id);
+            } else {
                 // alert('You selected button ' + jenis);
             }
         }
 
-        function confirmdeletequarry(message,title,table,id) {
-            let arraynya = ['Delete','Cancel'];
+        function confirmdeletequarry(message, title, table, id) {
+            let arraynya = ['Delete', 'Cancel'];
             navigator.notification.confirm(
                 message, // message
-                (buttonIndex) => onConfirm(buttonIndex, table, id),            
+                (buttonIndex) => onConfirm(buttonIndex, table, id),
                 title,           // title
                 arraynya     // buttonLabels
             );
         }
 
-        
 
-        function ambildata(table,status,perintahkartu) {
+
+        function ambildata(table, status, perintahkartu) {
             cekdatasemua();
             db.transaction(function (tx) {
                 var query = "SELECT * FROM " + table +
-                " LEFT JOIN wt ON wt.wt_id="+table+".wt_id"+
-                " LEFT JOIN quarrytype ON quarrytype.quarrytype_id="+table+".quarrytype_id"+
-                " LEFT JOIN driverdumptruck ON driverdumptruck.driverdumptruck_id="+table+".quarry_driver";
-                if(status>=0){
-                    query +=" WHERE "+table+"_id="+status;
+                    " LEFT JOIN wt ON wt.wt_id=" + table + ".wt_id" +
+                    " LEFT JOIN quarrytype ON quarrytype.quarrytype_id=" + table + ".quarrytype_id" +
+                    " LEFT JOIN driverdumptruck ON driverdumptruck.driverdumptruck_id=" + table + ".quarry_driver";
+                if (status >= 0) {
+                    query += " WHERE " + table + "_id=" + status;
                 }
-                query +=" ORDER BY "+table+"_id DESC";
-                if(status=="terakhir"){
+                query += " ORDER BY " + table + "_id DESC";
+                if (status == "terakhir") {
                     query += " LIMIT 1";
-                }else{
+                } else {
                     query += " LIMIT 0";
                 }
                 // notif(status);
-                $("#"+table).html('');
-                var cell ='';
-                tx.executeSql(query, [], function (tx, resultSet) {                    
-                    let no=1;
-                    
-                    let vendor = ["","PAM","VF","Sewa"]; 
-                    let sewa = ["","Wong Ganteng","VF","Putri Tunggal","Surya Gemilang"];  
+                $("#" + table).html('');
+                var cell = '';
+                tx.executeSql(query, [], function (tx, resultSet) {
+                    let no = 1;
+
+                    let vendor = ["", "PAM", "VF", "Sewa"];
+                    let sewa = ["", "Wong Ganteng", "VF", "Putri Tunggal", "Surya Gemilang"];
                     // notif(resultSet.rows.length);
                     for (var x = 0; x < resultSet.rows.length; x++) {
-                        cell += '<div class="row p-3 ballon">';                        
-                        cell += '<H1 class="col-12 alert alert-success" id="judulquarry">Data Quarry</H1>';        
-                        
-                        cell += '<div class="col-4 text-left">Date</div><div class="col-8 isitext text-left">'+resultSet.rows.item(x)['quarry_date']+'</div>';  
+                        cell += '<div class="row p-3 ballon">';
+                        cell += '<H1 class="col-12 alert alert-success" id="judulquarry">Data Quarry</H1>';
 
-                        cell += '<H3 class="col-12 alert alert-success" id="judulquarry">Pengirim</H3>';        
-                        cell += '<div class="col-4 text-left">Jam Pergi</div><div class="col-8 isitext text-left">'+resultSet.rows.item(x)['quarry_jampergi']+'</div>';
-                        cell += '<div class="col-4 text-left">Vehicle</div><div class="col-8 isitext text-left">'+resultSet.rows.item(x)['wt_name']+' ('+resultSet.rows.item(x)['wt_jenis']+' '+vendor[resultSet.rows.item(x)['wt_vendor']]+' '+sewa[resultSet.rows.item(x)['wt_sewa']]+')</div>';
-                        cell += '<div class="col-4 text-left">Jenis</div><div class="col-8 isitext text-left">'+resultSet.rows.item(x)['quarrytype_sumber']+' ('+resultSet.rows.item(x)['quarrytype_jenis']+')</div>';
-                        cell += '<div class="col-4 text-left">Driver</div><div class="col-8 isitext text-left">'+resultSet.rows.item(x)['driverdumptruck_name']+' ('+resultSet.rows.item(x)['driverdumptruck_position']+')</div>';
-                        cell += '<div class="col-4 text-left">Blok Pengirim</div><div class="col-8 isitext text-left">'+resultSet.rows.item(x)['quarry_blok1name']+' - '+resultSet.rows.item(x)['quarry_divisi1name']+' - '+resultSet.rows.item(x)['quarry_estate1name']+'</div>';
-                        
-                        cell += '<div class="col-4 text-left">Geolocation</div><div class="col-8 isitext text-left">'+resultSet.rows.item(x)['quarry_geo1']+'</div>';
+                        cell += '<div class="col-4 text-left">Date</div><div class="col-8 isitext text-left">' + resultSet.rows.item(x)['quarry_date'] + '</div>';
 
-                        
+                        cell += '<H3 class="col-12 alert alert-success" id="judulquarry">Pengirim</H3>';
+                        cell += '<div class="col-4 text-left">Jam Pergi</div><div class="col-8 isitext text-left">' + resultSet.rows.item(x)['quarry_jampergi'] + '</div>';
+                        cell += '<div class="col-4 text-left">Vehicle</div><div class="col-8 isitext text-left">' + resultSet.rows.item(x)['wt_name'] + ' (' + resultSet.rows.item(x)['wt_jenis'] + ' ' + vendor[resultSet.rows.item(x)['wt_vendor']] + ' ' + sewa[resultSet.rows.item(x)['wt_sewa']] + ')</div>';
+                        cell += '<div class="col-4 text-left">Jenis</div><div class="col-8 isitext text-left">' + resultSet.rows.item(x)['quarrytype_sumber'] + ' (' + resultSet.rows.item(x)['quarrytype_jenis'] + ')</div>';
+                        cell += '<div class="col-4 text-left">Driver</div><div class="col-8 isitext text-left">' + resultSet.rows.item(x)['driverdumptruck_name'] + ' (' + resultSet.rows.item(x)['driverdumptruck_position'] + ')</div>';
+                        cell += '<div class="col-4 text-left">Blok Pengirim</div><div class="col-8 isitext text-left">' + resultSet.rows.item(x)['quarry_blok1name'] + ' - ' + resultSet.rows.item(x)['quarry_divisi1name'] + ' - ' + resultSet.rows.item(x)['quarry_estate1name'] + '</div>';
+
+                        cell += '<div class="col-4 text-left">Geolocation</div><div class="col-8 isitext text-left text-wrap">' + resultSet.rows.item(x)['quarry_geo1'] + '</div>';
+
+
                         let status = $("#status").val();
-                        if(status=="penerima"){
-                            cell += '<H3 class="col-12 alert alert-success" id="judulquarry">Penerima</H3>'; 
-                            cell += '<div class="col-4 text-left">Blok Penerima</div><div class="col-8 isitext text-left">'+resultSet.rows.item(x)['quarry_blok2name']+' - '+resultSet.rows.item(x)['quarry_divisi2name']+' - '+resultSet.rows.item(x)['quarry_estate2name']+'</div>';
-                            
-                            cell += '<div class="col-4 text-left">Geolocation</div><div class="col-8 isitext text-left">'+resultSet.rows.item(x)['quarry_geo2']+'</div>';   
-                        }    
-                        
+                        if (status == "penerima") {
+                            cell += '<H3 class="col-12 alert alert-success" id="judulquarry">Penerima</H3>';
+                            cell += '<div class="col-4 text-left">Blok Penerima</div><div class="col-8 isitext text-left">' + resultSet.rows.item(x)['quarry_blok2name'] + ' - ' + resultSet.rows.item(x)['quarry_divisi2name'] + ' - ' + resultSet.rows.item(x)['quarry_estate2name'] + '</div>';
 
-                        cell += '<div onclick="confirmdeletequarry(\'Yakin di Delete?\',\'Delete Data quarry\',\'quarry\','+resultSet.rows.item(x)['quarry_id']+')" class="col-12  mt-5 mb-5 text-danger"> >>> &nbsp;&nbsp;<button class="btn btn-danger btn-block"><i class="fas fa-window-close"></i> Delete</button>&nbsp;&nbsp; <<< </div>';             
+                            cell += '<div class="col-4 text-left">Geolocation</div><div class="col-8 isitext text-left">' + resultSet.rows.item(x)['quarry_geo2'] + '</div>';
+                        }
 
-                        cell +='</div>';
-                        if(resultSet.rows.length == no){
-                            $("#"+table).append(cell);   
-                            
-                            if(perintahkartu=='isikartu'){
+
+                        cell += '<div onclick="confirmdeletequarry(\'Yakin di Delete?\',\'Delete Data quarry\',\'quarry\',' + resultSet.rows.item(x)['quarry_id'] + ')" class="col-12  mt-5 mb-5 text-danger"> >>> &nbsp;&nbsp;<button class="btn btn-danger btn-block"><i class="fas fa-window-close"></i> Delete</button>&nbsp;&nbsp; <<< </div>';
+
+                        cell += '</div>';
+                        if (resultSet.rows.length == no) {
+                            $("#" + table).append(cell);
+
+                            if (perintahkartu == 'isikartu') {
                                 //hapus kartu
                                 // nfc.erase(successhapuskartuquarry, failurehapuskartuquarry);                         
                                 //membuat json
@@ -1180,8 +1218,8 @@
                                     var row = resultSet.rows.item(i);
                                     isidata.push(row);
                                 }
-                                var textString = isidata.map(function(row) {
-                                    return Object.entries(row).map(function([key, value]) {
+                                var textString = isidata.map(function (row) {
+                                    return Object.entries(row).map(function ([key, value]) {
                                         if (typeof value === 'string' || value instanceof String) {
                                             value = value.replace(/\b\s+\b/g, "_");
                                         }
@@ -1189,49 +1227,49 @@
                                     }).join(',');
                                 });
                                 // notif(textString);
-                            
+
                                 var message = [
                                     ndef.textRecord(textString)
                                 ];
-                                nfc.write(message, ()=>{
+                                nfc.write(message, () => {
                                     notif('Penyimpanan Berhasil!');
                                     $("#judulquarry").text("Data Terekam pada HP dan Kartu");
                                     playAudio('berhasil.mp3');
                                     kosongkanfield();
-                                }, ()=>{                                                                 
+                                }, () => {
                                     playAudio('datadirekam.mp3');
                                     notif('Data Terekam pada HP!');
-                                });                                 
-                      
-                                $("#datanfcjadi").val('');                
+                                });
+
+                                $("#datanfcjadi").val('');
                                 $("#datanfcjadi").hide();
                             }
-                            
+
                         }
                         no++;
-                        
+
                     }
                     if (x < 1) {
                         // notif("Tidak Ada Data di Database!");      
                         // playAudio('datakosong.mp3');
                     }
                 },
-                function (tx, error) {
-                    notif('SELECT error: ' + error.message);    
-                    playAudio('gagal.mp3');
-                });
-                
+                    function (tx, error) {
+                        notif('SELECT error: ' + error.message);
+                        playAudio('gagal.mp3');
+                    });
+
             }, function (error) {
-                notif('transaction error: ' + error.message);   
+                notif('transaction error: ' + error.message);
                 playAudio('gagal.mp3');
             }, function () {
                 // notif('transaction ok');
             });
         }
-        
-        
 
-        function drivername(){
+
+
+        function drivername() {
             let drivername = $("#quarry_driver :selected").attr("driver_name");
             if (typeof drivername !== "undefined") {
                 $("#quarry_drivername").val(drivername);
@@ -1246,28 +1284,28 @@
                 var query = "SELECT * FROM driverdumptruck";
                 // notif(query);
                 $("#quarry_driver").html('');
-                var cell ='';
+                var cell = '';
                 tx.executeSql(query, [], function (tx, resultSet) {
-                    let no=1;
+                    let no = 1;
                     // notif(resultSet.rows.length);     
                     cell += '<option value="">Pilih Driver</option>';
-                    for (var x = 0; x < resultSet.rows.length; x++) {   
-                        cell += '<option driver_name="'+resultSet.rows.item(x)['driverdumptruck_name']+'" value="'+resultSet.rows.item(x)['driverdumptruck_id']+'">'+resultSet.rows.item(x)['driverdumptruck_name']+' ('+resultSet.rows.item(x)['driverdumptruck_position']+')</div>';
-                        if(resultSet.rows.length == no){
+                    for (var x = 0; x < resultSet.rows.length; x++) {
+                        cell += '<option driver_name="' + resultSet.rows.item(x)['driverdumptruck_name'] + '" value="' + resultSet.rows.item(x)['driverdumptruck_id'] + '">' + resultSet.rows.item(x)['driverdumptruck_name'] + ' (' + resultSet.rows.item(x)['driverdumptruck_position'] + ')</div>';
+                        if (resultSet.rows.length == no) {
                             $("#quarry_driver").append(cell);
                         }
                         no++;
-                        
+
                     }
                     if (x < 1) {
                         // notif("Tidak ada data!");
                     }
                 },
-                function (tx, error) {
-                    notif('SELECT Driver Error: ' + error.message);
-                    playAudio('gagal.mp3');
-                });
-                
+                    function (tx, error) {
+                        notif('SELECT Driver Error: ' + error.message);
+                        playAudio('gagal.mp3');
+                    });
+
             }, function (error) {
                 notif('transaction error: ' + error.message);
             }, function () {
@@ -1280,30 +1318,30 @@
                 var query = "SELECT * FROM wt";
                 // notif(query);
                 $("#wt_id ").html('');
-                var cell ='';
+                var cell = '';
                 tx.executeSql(query, [], function (tx, resultSet) {
-                    let no=1;
+                    let no = 1;
                     // notif(resultSet.rows.length); 
-                    let vendor = ["","PAM","VF","Sewa"]; 
-                    let sewa = ["","Wong Ganteng","VF","Putri Tunggal","Surya Gemilang"];    
+                    let vendor = ["", "PAM", "VF", "Sewa"];
+                    let sewa = ["", "Wong Ganteng", "VF", "Putri Tunggal", "Surya Gemilang"];
                     cell += '<option value="">Pilih Kendaraan</option>';
-                    for (var x = 0; x < resultSet.rows.length; x++) {   
-                        cell += '<option value="'+resultSet.rows.item(x)['wt_id']+'">'+resultSet.rows.item(x)['wt_name']+' ('+resultSet.rows.item(x)['wt_jenis']+' '+vendor[resultSet.rows.item(x)['wt_vendor']]+' '+sewa[resultSet.rows.item(x)['wt_sewa']]+')</div>';
-                        if(resultSet.rows.length == no){
+                    for (var x = 0; x < resultSet.rows.length; x++) {
+                        cell += '<option value="' + resultSet.rows.item(x)['wt_id'] + '">' + resultSet.rows.item(x)['wt_name'] + ' (' + resultSet.rows.item(x)['wt_jenis'] + ' ' + vendor[resultSet.rows.item(x)['wt_vendor']] + ' ' + sewa[resultSet.rows.item(x)['wt_sewa']] + ')</div>';
+                        if (resultSet.rows.length == no) {
                             $("#wt_id ").append(cell);
                         }
                         no++;
-                        
+
                     }
                     if (x < 1) {
                         // notif("Tidak ada data!");
                     }
                 },
-                function (tx, error) {
-                    notif('SELECT Truk Error: ' + error.message);
-                    playAudio('gagal.mp3');
-                });
-                
+                    function (tx, error) {
+                        notif('SELECT Truk Error: ' + error.message);
+                        playAudio('gagal.mp3');
+                    });
+
             }, function (error) {
                 notif('transaction error: ' + error.message);
             }, function () {
@@ -1316,35 +1354,35 @@
                 var query = "SELECT * FROM quarrytype";
                 // notif(query);
                 $("#quarrytype_id ").html('');
-                var cell ='';
+                var cell = '';
                 tx.executeSql(query, [], function (tx, resultSet) {
-                    let no=1;
+                    let no = 1;
                     // notif(resultSet.rows.length);     
                     cell += '<option value="">Pilih Jenis Quarry</option>';
-                    for (var x = 0; x < resultSet.rows.length; x++) {   
-                        cell += '<option value="'+resultSet.rows.item(x)['quarrytype_id']+'">'+resultSet.rows.item(x)['quarrytype_sumber']+' ('+resultSet.rows.item(x)['quarrytype_jenis']+')</div>';
-                        if(resultSet.rows.length == no){
+                    for (var x = 0; x < resultSet.rows.length; x++) {
+                        cell += '<option value="' + resultSet.rows.item(x)['quarrytype_id'] + '">' + resultSet.rows.item(x)['quarrytype_sumber'] + ' (' + resultSet.rows.item(x)['quarrytype_jenis'] + ')</div>';
+                        if (resultSet.rows.length == no) {
                             $("#quarrytype_id ").append(cell);
                         }
                         no++;
-                        
+
                     }
                     if (x < 1) {
                         // notif("Tidak ada data!");
                     }
                 },
-                function (tx, error) {
-                    notif('SELECT Jenis Quarry Error: ' + error.message);
-                    playAudio('gagal.mp3');
-                });
-                
+                    function (tx, error) {
+                        notif('SELECT Jenis Quarry Error: ' + error.message);
+                        playAudio('gagal.mp3');
+                    });
+
             }, function (error) {
                 notif('transaction error: ' + error.message);
             }, function () {
                 // notif('transaction ok');
             });
         }
-       
+
     </script>
 </body>
 

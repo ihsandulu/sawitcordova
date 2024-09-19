@@ -482,10 +482,11 @@
         }
 
         
-        function finalupload(datanya,sptbs_card,sptbs_timbangan,sptbsid,sptbs_date,timbangan_name){
-            let isi = "https://parnaagromas.com/tphdigital/api/datasptbsmentah?datanya="+datanya+"&sptbs_card="+sptbs_card+"&sptbs_timbangan="+sptbs_timbangan+"&sptbsid="+sptbsid+"&sptbs_date="+sptbs_date+"&timbangan_name="+timbangan_name;
-            $("#datanfcjadi1").html(isi);
-            $.get("https://parnaagromas.com/tphdigital/api/datasptbsmentah",{datanya:datanya,sptbs_card:sptbs_card,sptbs_timbangan:sptbs_timbangan,sptbsid:sptbsid,sptbs_date:sptbs_date,timbangan_name:timbangan_name})
+        function finalupload(datanya,sptbs_card,sptbs_timbangan,sptbsid,sptbs_date,timbangan_name,lr_name,sptbs_nokartu){
+            // alert(datanya);
+            let isi = "https://parnaagromas.com/tphdigital/api/datasptbsmentah?datanya="+datanya+"&sptbs_card="+sptbs_card+"&sptbs_timbangan="+sptbs_timbangan+"&sptbsid="+sptbsid+"&sptbs_date="+sptbs_date+"&timbangan_name="+timbangan_name+"&lr_name="+lr_name+"&sptbs_nokartu="+sptbs_nokartu;
+            notifx(isi);
+            $.get("https://parnaagromas.com/tphdigital/api/datasptbsmentah",{datanya:datanya,sptbs_card:sptbs_card,sptbs_timbangan:sptbs_timbangan,sptbsid:sptbsid,sptbs_date:sptbs_date,timbangan_name:timbangan_name,lr_name:lr_name,sptbs_nokartu:sptbs_nokartu})
             .done(function(data){ 
                 notif(data.message)  
                 if(data.status==1){
@@ -500,7 +501,9 @@
                     $(".buah").hide(); 
                 },180000);                                         
             })
-            .fail(function(error){notif('Error:', error);});
+            .fail(function(error){
+                notif('Error:', error);
+            });
         }
 
         function getTimbangan(timbangan_name){
@@ -591,11 +594,13 @@
                         let sptbs_timbangan = "";
                         let sptbsid = "";
                         let sptbs_date = "";
+                        let lr_name = "";
+                        let sptbs_nokartu = "";
 
                         var bintang = kalimatTanpaSpasi.split('*');
                         let bintang0 = bintang[0];
                         var bintang0isi = bintang0.split(',');
-                        
+                        // notif(bintang0isi);
                         for (var i = 0; i < bintang0isi.length; i++) {
                             if (bintang0isi[i].startsWith("sptbs_card=")) {
                                 sptbs_card = bintang0isi[i].substring(11);
@@ -606,12 +611,18 @@
                             if (bintang0isi[i].startsWith("sptbs_date=")) {
                                 sptbs_date = bintang0isi[i].substring(11);
                             }
+                            if (bintang0isi[i].startsWith("lr_name=")) {
+                                lr_name = bintang0isi[i].substring(8);
+                            }
+                            if (bintang0isi[i].startsWith("sptbs_nokartu=")) {
+                                sptbs_nokartu = bintang0isi[i].substring(14);
+                            }
                         }     
                         
                         let timbangan_name = $("#timbangan_name").val();
                         getTimbangan(timbangan_name)
                         .then(function(sptbs_timbangan) {                    
-                            finalupload(datanya, sptbs_card, sptbs_timbangan, sptbsid, sptbs_date, timbangan_name);
+                            finalupload(datanya, sptbs_card, sptbs_timbangan, sptbsid, sptbs_date, timbangan_name,lr_name,sptbs_nokartu);
                         })
                         .catch(function(error) {
                             console.error("Error fetching data:", error);

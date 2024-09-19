@@ -7,7 +7,7 @@ function dataserver(segment, table, masterarray){
         tlsValidation: false,
         ignoreSsl: true 
     };
-    let server = 'https://parnaagromas.com/tphdigital/api/'+segment;
+    let server = 'https://sawit.qithy.com/api/'+segment;
     // alert(server);
     cordova.plugin.http.sendRequest(server, options, function(response) {
         var data = JSON.parse(response.data);

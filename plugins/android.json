@@ -12,6 +12,9 @@
       "ANDROIDX_WEBKIT_VERSION": "1.4.0",
       "PACKAGE_NAME": "com.qithy.tphdigital"
     },
+    "cordova-plugin-appinfo": {
+      "PACKAGE_NAME": "com.qithy.tphdigital"
+    },
     "cordova-plugin-camera": {
       "ANDROIDX_CORE_VERSION": "1.6.+",
       "PACKAGE_NAME": "com.qithy.tphdigital"
@@ -30,6 +33,9 @@
       "GPS_REQUIRED": "true",
       "PACKAGE_NAME": "com.qithy.tphdigital"
     },
+    "cordova-plugin-inappbrowser": {
+      "PACKAGE_NAME": "com.qithy.tphdigital"
+    },
     "cordova-plugin-media": {
       "PACKAGE_NAME": "com.qithy.tphdigital"
     },
@@ -45,13 +51,7 @@
     "cordova-sqlite-storage": {
       "PACKAGE_NAME": "com.qithy.tphdigital"
     },
-    "phonegap-nfc": {
-      "PACKAGE_NAME": "com.qithy.tphdigital"
-    },
-    "cordova-plugin-appinfo": {
-      "PACKAGE_NAME": "com.qithy.tphdigital"
-    },
-    "cordova-plugin-inappbrowser": {
+    "community-cordova-plugin-nfc": {
       "PACKAGE_NAME": "com.qithy.tphdigital"
     }
   },

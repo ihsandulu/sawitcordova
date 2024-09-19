@@ -55,14 +55,6 @@
     "is_top_level": true,
     "variables": {}
   },
-  "phonegap-nfc": {
-    "source": {
-      "type": "registry",
-      "id": "phonegap-nfc@^1.2.0"
-    },
-    "is_top_level": true,
-    "variables": {}
-  },
   "cordova-plugin-splashscreen": {
     "source": {
       "type": "registry",
@@ -107,6 +99,14 @@
     "source": {
       "type": "registry",
       "id": "cordova-plugin-inappbrowser@6.0.0"
+    },
+    "is_top_level": true,
+    "variables": {}
+  },
+  "community-cordova-plugin-nfc": {
+    "source": {
+      "type": "registry",
+      "id": "community-cordova-plugin-nfc@^1.4.0"
     },
     "is_top_level": true,
     "variables": {}

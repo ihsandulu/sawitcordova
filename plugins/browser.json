@@ -33,9 +33,6 @@
     "cordova-sqlite-storage": {
       "PACKAGE_NAME": "com.qithy.tphdigital"
     },
-    "phonegap-nfc": {
-      "PACKAGE_NAME": "com.qithy.tphdigital"
-    },
     "cordova-plugin-media": {
       "PACKAGE_NAME": "com.qithy.tphdigital"
     },
@@ -49,6 +46,9 @@
       "PACKAGE_NAME": "com.qithy.tphdigital"
     },
     "cordova-plugin-inappbrowser": {
+      "PACKAGE_NAME": "com.qithy.tphdigital"
+    },
+    "community-cordova-plugin-nfc": {
       "PACKAGE_NAME": "com.qithy.tphdigital"
     }
   },

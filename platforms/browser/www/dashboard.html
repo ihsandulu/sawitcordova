@@ -49,67 +49,111 @@
     </div>
     <div id="frame1" class="text-center" > 
         <div class="alert alert-success">    
-            <h4 class="">Selamat Datang</h4>
+            <h4 class="">TPH DIGITAL</h4>
             <h5 class="username"></h5>
+            <h5 class="text-hijautua">Versi : <span id="versi"></span></h5>
         </div>   
         <div class="row">
-            <div class="col-6 frame2">
+            <div class="col-6 frame2 halaman hquarry">
                 <div class="frame3">
                     <div class="d-grid gap-2 mx-auto">
                         <button onclick="buka('quarry.html')" class="btn btn-success btn-block"><i class="fas fa-truck text-hijau"></i> Quarry</button>
                     </div>
                 </div>
             </div>
-            <div class="col-6 frame2">
+            <div class="col-6 frame2 halaman hpruning">
                 <div class="frame3">
                     <div class="d-grid gap-2 mx-auto">
-                        <button onclick="buka('pruning.html')" class="btn btn-success btn-block"><i class="fas fa-tree text-hijau"></i> Pruning</button>
+                        <button onclick="buka('pruning.html')" class="btn btn-success btn-block"><i class="fas fa-tree text-hijau"></i> Inspeksi Panen</button>
                     </div>
                 </div>
             </div>
-            <div class="col-6 frame2">
+            <div class="col-6 frame2 halaman hrkh">
                 <div class="frame3">
                     <div class="d-grid gap-2 mx-auto">
                         <button onclick="buka('rkh.html')" class="btn btn-success btn-block"><i class="fas fa-tree text-hijau"></i> RKH</button>
                     </div>
                 </div>
             </div>
-            <div class="col-6 frame2">
+            <div class="col-6 frame2 halaman hpanen">
                 <div class="frame3">
                     <div class="d-grid gap-2 mx-auto">
                         <button onclick="buka('panen.html')" class="btn btn-success btn-block"><i class="fas fa-hand-rock text-kuning"></i> PANEN</button>
                     </div>
                 </div>
             </div>
-            <div class="col-6 frame2">
+            <div class="col-6 frame2 halaman hloading_ramp">
+                <div class="frame3">
+                    <div class="d-grid gap-2 mx-auto">
+                        <button onclick="buka('loadingramp.html')" class="btn btn-success btn-block"><i class="fas fa-hand-rock text-kuning"></i> Loading Ramp</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 frame2 halaman hsptbs">
                 <div class="frame3">
                     <div class="d-grid gap-2 mx-auto">
                         <button onclick="buka('sptbs.html')" class="btn btn-success btn-block"><i class="fas fa-hand-lizard text-biru"></i> SPTBS</button>
                     </div>
                 </div>
             </div>
-            <div class="col-6 frame2">
+            <div class="col-6 frame2 halaman hgrading">
                 <div class="frame3">
                     <div class="d-grid gap-2 mx-auto">
                         <button onclick="buka('grading.html')" class="btn btn-success btn-block text-putih font10"><i class="fas fa-tree text-hijau"></i> GRADING</button>
                     </div>
                 </div>
             </div>
-            <div class="col-6 frame2">
+            <div class="col-6 frame2 halaman habsen">
                 <div class="frame3">
                     <div class="d-grid gap-2 mx-auto">
                         <button onclick="buka('absen.html')" class="btn btn-success btn-block"><i class="fas fa-user text-ungu"></i> ABSEN</button>
                     </div>
                 </div>
             </div>
-            <div class="col-6 frame2">
+            <div class="col-6 frame2 halaman htimbangan">
                 <div class="frame3">
                     <div class="d-grid gap-2 mx-auto">
                         <button onclick="buka('timbangan.html')" class="btn btn-success btn-block"><i class="fas fa-weight-scale text-biru"></i> Timbangan</button>
                     </div>
                 </div>
             </div>
-            <div class="col-6 frame2">
+            <div class="col-6 frame2 halaman htph_card">
+                <div class="frame3">
+                    <div class="d-grid gap-2 mx-auto">
+                        <button onclick="buka('tphcard.html')" class="btn btn-warning btn-block text-merahhitam">TPH CARD</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 frame2 halaman hwt_card">
+                <div class="frame3">
+                    <div class="d-grid gap-2 mx-auto">
+                        <button onclick="buka('wtcard.html')" class="btn btn-warning btn-block text-merahhitam font10">WT CARD</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 frame2 halaman hsptbs_card">
+                <div class="frame3">
+                    <div class="d-grid gap-2 mx-auto">
+                        <button onclick="buka('sptbscard.html')" class="btn btn-warning btn-block text-merahhitam font10">SPTBS CARD</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 frame2 halaman hquarry_card">
+                <div class="frame3">
+                    <div class="d-grid gap-2 mx-auto">
+                        <button onclick="buka('quarrycard.html')" class="btn btn-warning btn-block text-merahhitam font10">QUARRY CARD</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 frame2 halaman hreset_card">
+                <div class="frame3">
+                    <div class="d-grid gap-2 mx-auto p-0">
+                        <button onclick="hapusdatapanen()" class="btn btn-danger btn-block"><i class="fas fa-address-card text-merah text-2"></i> <small class="">RESET CARD</small></button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 mb-5">&nbsp;</div>
+            <div class="col-6 frame2 hsync">
                 <div class="frame3">
                     <div class="d-grid gap-2 mx-auto">
                         <button onclick="konfirmasisingkron()" id="btn-singkron" status="" class="btn btn-warning btn-block fa-lg gradient-custom-3 p-0 progress" style="height:40px" type="button">
@@ -118,34 +162,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-6 frame2">
-                <div class="frame3">
-                    <div class="d-grid gap-2 mx-auto">
-                        <button onclick="buka('tphcard.html')" class="btn btn-warning btn-block text-merahhitam">TPH CARD</button>
-                    </div>
-                </div>
-            </div>
-            <div class="col-6 frame2">
-                <div class="frame3">
-                    <div class="d-grid gap-2 mx-auto">
-                        <button onclick="buka('sptbscard.html')" class="btn btn-warning btn-block text-merahhitam font10">SPTBS CARD</button>
-                    </div>
-                </div>
-            </div>
-            <div class="col-6 frame2">
-                <div class="frame3">
-                    <div class="d-grid gap-2 mx-auto">
-                        <button onclick="buka('quarrycard.html')" class="btn btn-warning btn-block text-merahhitam font10">QUARRY CARD</button>
-                    </div>
-                </div>
-            </div>
-            <div class="col-6 frame2">
-                <div class="frame3">
-                    <div class="d-grid gap-2 mx-auto p-0">
-                        <button onclick="hapusdatapanen()" class="btn btn-danger btn-block"><i class="fas fa-address-card text-merah text-2"></i> <small class="">RESET CARD</small></button>
-                    </div>
-                </div>
-            </div>
+            <div class="col-12 mb-5">&nbsp;</div>
         </div>
     </div>
 
@@ -163,9 +180,9 @@
             
         //device ready 
         document.addEventListener('deviceready', function () { 
-            var url = "https://parnaagromas.com/tphdigital/images/apk_file/PAM1.2.apk";
-            window.open(url, '_blank');
-            cekversion();
+            // cekversion();
+            // cekhalaman();
+            tulisversi();
                        
             if(userName==null){
                 window.location.href='login.html';
@@ -175,23 +192,7 @@
             }                       
         }); 
 
-        function cekversion(){
-            var version = navigator.appInfo.version;
-            db.transaction(function (tx) {
-                var query = "SELECT * FROM apk LIMIT 1";
-                tx.executeSql(query, [], function (tx, resultSet) {
-                    for (var x = 0; x < resultSet.rows.length; x++) {  
-                        let version1 = resultSet.rows.item(x)['apk_version'];
-                        if(version!=version1){
-                            notif('Silahkan download APK terbaru!');
-                            // Buka browser dengan URL tertentu
-                            var url = "https://parnaagromas.com/tphdigital/images/apk_file/"+version1+".apk";
-                            window.location.href=url;
-                        }
-                    }
-                });
-            });
-        }
+        
 
         function buka(url){
             window.location.href=url;
@@ -214,6 +215,8 @@
                 ['OK','Cancel']     // buttonLabels
             );
         }
+
+        
     </script>
 </body>
 

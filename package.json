@@ -14,13 +14,13 @@
       "cordova-plugin-advanced-http": {
         "ANDROIDBLACKLISTSECURESOCKETPROTOCOLS": "SSLv3,TLSv1"
       },
-      "phonegap-nfc": {},
       "cordova-plugin-splashscreen": {},
       "cordova-plugin-media": {},
       "cordova-plugin-file-transfer": {},
       "cordova-plugin-tesseract": {},
       "cordova-plugin-appinfo": {},
-      "cordova-plugin-inappbrowser": {}
+      "cordova-plugin-inappbrowser": {},
+      "community-cordova-plugin-nfc": {}
     }
   },
   "dependencies": {
@@ -33,7 +33,8 @@
     "uuid": "^9.0.1"
   },
   "devDependencies": {
-    "cordova-android": "^12.0.1",
+    "community-cordova-plugin-nfc": "^1.4.0",
+    "cordova-android": "^13.0.0",
     "cordova-browser": "^7.0.0",
     "cordova-plugin-advanced-http": "^3.3.1",
     "cordova-plugin-appinfo": "^2.1.2",
@@ -46,7 +47,6 @@
     "cordova-plugin-media": "^7.0.0",
     "cordova-plugin-network-information": "^3.0.0",
     "cordova-plugin-splashscreen": "^6.0.1",
-    "cordova-plugin-tesseract": "github:gustavomazzoni/cordova-plugin-tesseract",
-    "phonegap-nfc": "^1.2.0"
+    "cordova-plugin-tesseract": "github:gustavomazzoni/cordova-plugin-tesseract"
   }
 }

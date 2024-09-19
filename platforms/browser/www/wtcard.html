@@ -1,0 +1,267 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;"> -->
+    <meta http-equiv="Content-Security-Policy" content="default-src * data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src * 'unsafe-inline'; media-src *; img-src * data: content:; script-src * 'unsafe-eval' 'unsafe-inline';">
+    
+
+
+
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
+    <meta name="color-scheme" content="light dark">
+
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> -->
+
+    <link rel="stylesheet" href="css/all.min.css"/>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/select2.min.css"/>
+    <link rel="stylesheet" href="css/umum.css">
+
+
+    <title>PT. PAM</title>
+    <style>   
+        #datanfcjadi{
+            height: 100px !important; 
+            width: 300px; 
+            position: relative;
+            left: 50%;
+            top:0px;
+            transform: translate(-50%,0);
+        } 
+        .bold{font-weight: bold;}
+    </style>
+    <script>
+    </script>
+</head>
+
+<body>    
+    <div id="header">
+        
+    </div>
+    <div id="frame1" class="text-center " > 
+        <div class="row p-3 ballon">                        
+            <H1 class="col-12 alert alert-success">SET WT CARD</H1>            
+            <div class="col-12 mb-4 text-left">Pilih Nomor Kartu</div>
+            <div class="col-12 mb-4 text-left">
+                <select id="wtnumber_card" class="form-control select2">
+
+                </select>
+            </div>  
+
+            <button onclick="submit()" type="button" class="btn btn-primary">Submit</button>
+        </div>
+        <h3 class="col-12 mt-5 bold">  
+            Isi Kartu : 
+        </h3>
+        <div id="datanfcjadi" class="col-12"></div>
+        <button id="btnkartu" onclick="kosongkan()" type="button" class="btn btn-danger">Kosongkan Kartu</button>
+    </div>
+
+
+    <div id="footer"></div>
+    <script type="text/javascript" src="cordova.js"></script>  
+    <script type="text/javascript" src="js/jquery.min.js"></script>   
+    <script type="text/javascript" src="js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" src="js/select2.min.js"></script>
+    <script type="text/javascript" src="js/umum.js"></script>
+    <script type="text/javascript" src="js/data.js"></script>
+    <script type="text/javascript" src="js/nfc.js"></script>
+    
+    <script>
+        //device ready 
+        document.addEventListener('deviceready', function () { 
+            // notif(username);
+            if(username==null){
+                window.location.href='login.html';
+            }else{
+                $("#btnkartu").hide();
+                $(".username").text(username); 
+                wtnumber();
+                cekkartuwt();
+            }                      
+        }); 
+
+        function kosongkan(){
+            let kartu = $("#datanfcjadi").text();
+            // alert(kartu);
+            $('#wtnumber_card').select2('destroy');
+            $("#wtnumber_card").val(kartu);
+            $('#wtnumber_card').select2();
+            $("#btnkartu").hide();
+            submit();
+        }
+
+        function cekkartuwt() {
+            nfc.addNdefListener(onNdefcekwt, ()=>{}, onFailurebacakartu);
+        }
+
+        function onNdefcekwt(nfcEvent) {
+            // notif(JSON.stringify(nfcEvent.tag));
+            
+            var tag = nfcEvent.tag;
+            ndefMessage = nfcEvent.tag.ndefMessage;
+                                         
+            tag.isWritable = !tag.isLocked;
+            tag.canMakeReadOnly = tag.isLockable;
+            if(ndefMessage.length>0){ 
+                datanfcjadiwt(nfcEvent.tag);
+                navigator.notification.vibrate(100);
+            }else{
+                notif('Kartu Tidak Terbaca!');             
+                playAudio('kartutakterbaca.mp3');
+                setTimeout(function(){playAudio("tempelkankartu.mp3")},2000);
+            }
+        }
+
+        function datanfcjadiwt(nfcData) {
+            var ndefMessage = nfcData.ndefMessage;
+            var resultString = "";
+            for (var i = 0; i < ndefMessage.length; i++) {
+                var payload = ndefMessage[i].payload;
+                var payloadString = String.fromCharCode.apply(null, payload);
+                // notif(payloadString);                
+                resultString += payloadString + "\n";
+            }
+            resultString = resultString.replace("en", "");
+            var kalimatTanpaSpasi = resultString.replace(/\s/g, '');
+            if(kalimatTanpaSpasi!=""){
+                // notif('Silahkan hapus data kartu terlebih dahulu!');     
+                playAudio('kartuterisi.mp3');
+                var kalimatTanpaSpasi1 = kalimatTanpaSpasi.split(',');
+                var nilaiwtCard='';
+                for (var i = 0; i < kalimatTanpaSpasi1.length; i++) {
+                    if (kalimatTanpaSpasi1[i].includes("wt_card")) {
+                        nilaiwtCard = kalimatTanpaSpasi1[i].split('=')[1].trim();
+                        break;
+                    }
+                }
+                var duaDigitPertama = nilaiwtCard.substring(0, 2);
+                if (duaDigitPertama==="WT") {
+                    $("#datanfcjadi").text(nilaiwtCard);                 
+                    $("#btnkartu").show();
+                    // $('#wtnumber_card').select2('destroy');
+                    // $("#wtnumber_card").val(nilaiwtCard);
+                    // $('#wtnumber_card').select2();
+                } else {
+                    notif('Bukan WT Card!');
+                }                   
+                
+                
+                /* setTimeout(function(){
+                    $("#datanfcjadi").text("");  
+                },3000); */
+            }else{
+                $("#wt_card").val(wtcard);
+                $("#datanfcjadi").val('');
+                notif('Kartu Telah Kosong.');               
+                playAudio('kartukosong.mp3');
+            }
+            $("#btnisikartu").show();
+            ambildata(table,'semua','');
+            // notif(resultString);
+        }
+        
+        function clearField(){
+            $("#wtnumber_card").val("");       
+        }
+        
+        function submit(){
+            confirmUpdateCard('Update Kartu?','Konfirmasi');
+        }
+        function updatedataCard(){
+            let wtnumber_card = $("#wtnumber_card").val(); 
+            let data = 'dh_id=,' +
+                'dh_date=,' +
+                'wt_createdby=,' +
+                'estate_id=,' +
+                'divisi_id=,' +
+                'wt_createdname=,' +
+                'estate_name=,' +
+                'divisi_name=,' +
+                'dh_geo=,' +
+                'wt_card='+wtnumber_card+',' +
+                'wt_driver=,' +
+                'wt_drivername=,' +
+                'wt_name=,' +
+                'dh_listcard=';
+
+            var isidata = [];
+            isidata.push(data);
+
+            var message = [
+                ndef.textRecord(isidata)
+            ];
+            nfc.write(message, ()=>{
+                notif('Penyimpanan Berhasil!');
+                $("#judulwt").text("Data Terekam di HP dan Kartu");
+                playAudio('berhasil.mp3');
+                clearData();
+            }, ()=>{                                                                 
+                playAudio('gagal.mp3');
+                notif('Data Hanya Terekam di HP! Perbaiki Posisi Kartu wt!');
+            });                                 
+    
+            $("#datanfcjadi").val(''); 
+        }
+        function onConfirmUpdate(pilihannya) {
+            if(pilihannya=='1'){
+                updatedataCard();
+            }else{
+                // alert('You selected button ' + jenis);
+            }
+        }
+
+        function confirmUpdateCard(message,title) {
+            let arraynya = ['Update','Cancel'];
+            navigator.notification.confirm(
+                message, // message
+                (buttonIndex) => onConfirmUpdate(buttonIndex),            
+                title,           // title
+                arraynya     // buttonLabels
+            );
+        }
+        
+        function wtnumber() {
+            db.transaction(function (tx) {
+                var query = "SELECT * FROM wtnumber";
+                // notif(query);
+                $("#wtnumber_card").html('');
+                var cell ='';
+                tx.executeSql(query, [], function (tx, resultSet) {
+                    let no=1;
+                    // notif(resultSet.rows.length);     
+                    cell += '<option value="">Pilih Penomoran</option>';
+                    for (var x = 0; x < resultSet.rows.length; x++) {   
+                        cell += '<option value="'+resultSet.rows.item(x)['wtnumber_card']+'">'+resultSet.rows.item(x)['wtnumber_card']+'</div>';
+                        if(resultSet.rows.length == no){
+                            $("#wtnumber_card").append(cell);
+                        }
+                        no++;
+                        
+                    }
+                    if (x < 1) {
+                        // notif("Tidak ada data!");
+                    }
+                },
+                function (tx, error) {
+                    notif('SELECT error: ' + error.message);   
+                    playAudio('gagal.mp3');
+                });
+                
+            }, function (error) {
+                notif('transaction error: ' + error.message);   
+                playAudio('gagal.mp3');
+            }, function () {
+                // notif('transaction ok');
+            });
+        }
+        
+        
+    </script>
+</body>
+
+</html>

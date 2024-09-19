@@ -281,9 +281,9 @@ function cekversion(){
             for (var x = 0; x < resultSet.rows.length; x++) {  
                 let version1 = resultSet.rows.item(x)['apk_version'];
                 if(version!=version1){
-                    alert('Silahkan download APK terbaru!');
+                    alert('Silahkan download APK terbaru ('+version1+')!');
                     // Buka browser dengan URL tertentu
-                    var url = "https://parnaagromas.com/tphdigital/images/apk_file/"+version1+".apk";
+                    var url = "https://sawit.qithy.com/images/apk_file/"+version1+".apk";
                     var target = "_system"; // Buka dengan browser sistem
                     var options = "location=yes,hidden=no";
                     cordova.InAppBrowser.open(url, target, options);

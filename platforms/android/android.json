@@ -21,6 +21,10 @@
               "count": 1
             },
             {
+              "xml": "<feature name=\"AppInfo\"><param name=\"android-package\" value=\"org.scriptotek.appinfo.AppInfo\" /></feature>",
+              "count": 1
+            },
+            {
               "xml": "<feature name=\"Camera\"><param name=\"android-package\" value=\"org.apache.cordova.camera.CameraLauncher\" /></feature>",
               "count": 1
             },
@@ -34,6 +38,10 @@
             },
             {
               "xml": "<feature name=\"Geolocation\"><param name=\"android-package\" value=\"org.apache.cordova.geolocation.Geolocation\" /></feature>",
+              "count": 1
+            },
+            {
+              "xml": "<feature name=\"InAppBrowser\"><param name=\"android-package\" value=\"org.apache.cordova.inappbrowser.InAppBrowser\" /></feature>",
               "count": 1
             },
             {
@@ -66,14 +74,6 @@
             },
             {
               "xml": "<feature name=\"NfcPlugin\"><param name=\"android-package\" value=\"com.chariotsolutions.nfc.plugin.NfcPlugin\" /><param name=\"onload\" value=\"true\" /></feature>",
-              "count": 1
-            },
-            {
-              "xml": "<feature name=\"AppInfo\"><param name=\"android-package\" value=\"org.scriptotek.appinfo.AppInfo\" /></feature>",
-              "count": 1
-            },
-            {
-              "xml": "<feature name=\"InAppBrowser\"><param name=\"android-package\" value=\"org.apache.cordova.inappbrowser.InAppBrowser\" /></feature>",
               "count": 1
             }
           ]
@@ -182,6 +182,9 @@
       "ANDROIDX_WEBKIT_VERSION": "1.4.0",
       "PACKAGE_NAME": "com.qithy.tphdigital"
     },
+    "cordova-plugin-appinfo": {
+      "PACKAGE_NAME": "com.qithy.tphdigital"
+    },
     "cordova-plugin-camera": {
       "ANDROIDX_CORE_VERSION": "1.6.+",
       "PACKAGE_NAME": "com.qithy.tphdigital"
@@ -194,6 +197,9 @@
     },
     "cordova-plugin-geolocation": {
       "GPS_REQUIRED": "true",
+      "PACKAGE_NAME": "com.qithy.tphdigital"
+    },
+    "cordova-plugin-inappbrowser": {
       "PACKAGE_NAME": "com.qithy.tphdigital"
     },
     "cordova-plugin-media": {
@@ -217,13 +223,7 @@
     "org.apache.cordova.vibration": {
       "PACKAGE_NAME": "com.qithy.tphdigital"
     },
-    "phonegap-nfc": {
-      "PACKAGE_NAME": "com.qithy.tphdigital"
-    },
-    "cordova-plugin-appinfo": {
-      "PACKAGE_NAME": "com.qithy.tphdigital"
-    },
-    "cordova-plugin-inappbrowser": {
+    "community-cordova-plugin-nfc": {
       "PACKAGE_NAME": "com.qithy.tphdigital"
     }
   },
@@ -492,6 +492,14 @@
       ]
     },
     {
+      "id": "cordova-plugin-appinfo.AppInfo",
+      "file": "plugins/cordova-plugin-appinfo/www/appinfo.js",
+      "pluginId": "cordova-plugin-appinfo",
+      "merges": [
+        "navigator.appInfo"
+      ]
+    },
+    {
       "id": "cordova-plugin-camera.Camera",
       "file": "plugins/cordova-plugin-camera/www/CameraConstants.js",
       "pluginId": "cordova-plugin-camera",
@@ -570,6 +578,14 @@
       "runs": true
     },
     {
+      "id": "cordova-plugin-inappbrowser.inappbrowser",
+      "file": "plugins/cordova-plugin-inappbrowser/www/inappbrowser.js",
+      "pluginId": "cordova-plugin-inappbrowser",
+      "clobbers": [
+        "cordova.InAppBrowser.open"
+      ]
+    },
+    {
       "id": "cordova-plugin-media.MediaError",
       "file": "plugins/cordova-plugin-media/www/MediaError.js",
       "pluginId": "cordova-plugin-media",
@@ -642,36 +658,22 @@
       ]
     },
     {
-      "id": "phonegap-nfc.NFC",
-      "file": "plugins/phonegap-nfc/www/phonegap-nfc.js",
-      "pluginId": "phonegap-nfc",
+      "id": "community-cordova-plugin-nfc.NFC",
+      "file": "plugins/community-cordova-plugin-nfc/www/phonegap-nfc.js",
+      "pluginId": "community-cordova-plugin-nfc",
       "runs": true
-    },
-    {
-      "id": "cordova-plugin-appinfo.AppInfo",
-      "file": "plugins/cordova-plugin-appinfo/www/appinfo.js",
-      "pluginId": "cordova-plugin-appinfo",
-      "merges": [
-        "navigator.appInfo"
-      ]
-    },
-    {
-      "id": "cordova-plugin-inappbrowser.inappbrowser",
-      "file": "plugins/cordova-plugin-inappbrowser/www/inappbrowser.js",
-      "pluginId": "cordova-plugin-inappbrowser",
-      "clobbers": [
-        "cordova.InAppBrowser.open"
-      ]
     }
   ],
   "plugin_metadata": {
     "com.blackberry.invoke": "1.0.0",
     "cordova-plugin-file": "8.0.1",
     "cordova-plugin-advanced-http": "3.3.1",
+    "cordova-plugin-appinfo": "2.1.2",
     "cordova-plugin-camera": "7.0.0",
     "cordova-plugin-dialogs": "2.0.2",
     "cordova-plugin-file-transfer": "2.0.0",
     "cordova-plugin-geolocation": "5.0.0",
+    "cordova-plugin-inappbrowser": "6.0.0",
     "cordova-plugin-media": "7.0.0",
     "cordova-plugin-network-information": "3.0.0",
     "cordova-plugin-splashscreen": "6.0.1",
@@ -679,8 +681,6 @@
     "cordova-sqlite-storage": "6.1.0",
     "org.apache.cordova.device": "0.2.4",
     "org.apache.cordova.vibration": "0.3.4",
-    "phonegap-nfc": "1.2.0",
-    "cordova-plugin-appinfo": "2.1.2",
-    "cordova-plugin-inappbrowser": "6.0.0"
+    "community-cordova-plugin-nfc": "1.4.0"
   }
 }

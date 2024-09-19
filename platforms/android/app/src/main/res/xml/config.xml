@@ -8,6 +8,9 @@
     <feature name="CordovaHttpPlugin">
         <param name="android-package" value="com.silkimen.cordovahttp.CordovaHttpPlugin" />
     </feature>
+    <feature name="AppInfo">
+        <param name="android-package" value="org.scriptotek.appinfo.AppInfo" />
+    </feature>
     <feature name="Camera">
         <param name="android-package" value="org.apache.cordova.camera.CameraLauncher" />
     </feature>
@@ -19,6 +22,9 @@
     </feature>
     <feature name="Geolocation">
         <param name="android-package" value="org.apache.cordova.geolocation.Geolocation" />
+    </feature>
+    <feature name="InAppBrowser">
+        <param name="android-package" value="org.apache.cordova.inappbrowser.InAppBrowser" />
     </feature>
     <feature name="Media">
         <param name="android-package" value="org.apache.cordova.media.AudioHandler" />
@@ -45,12 +51,6 @@
     <feature name="NfcPlugin">
         <param name="android-package" value="com.chariotsolutions.nfc.plugin.NfcPlugin" />
         <param name="onload" value="true" />
-    </feature>
-    <feature name="AppInfo">
-        <param name="android-package" value="org.scriptotek.appinfo.AppInfo" />
-    </feature>
-    <feature name="InAppBrowser">
-        <param name="android-package" value="org.apache.cordova.inappbrowser.InAppBrowser" />
     </feature>
     <name>TPH Digital</name>
     <description>

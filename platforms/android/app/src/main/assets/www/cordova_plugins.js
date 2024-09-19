@@ -263,6 +263,14 @@ cordova.define('cordova/plugin_list', function(require, exports, module) {
       ]
     },
     {
+      "id": "cordova-plugin-appinfo.AppInfo",
+      "file": "plugins/cordova-plugin-appinfo/www/appinfo.js",
+      "pluginId": "cordova-plugin-appinfo",
+      "merges": [
+        "navigator.appInfo"
+      ]
+    },
+    {
       "id": "cordova-plugin-camera.Camera",
       "file": "plugins/cordova-plugin-camera/www/CameraConstants.js",
       "pluginId": "cordova-plugin-camera",
@@ -341,6 +349,14 @@ cordova.define('cordova/plugin_list', function(require, exports, module) {
       "runs": true
     },
     {
+      "id": "cordova-plugin-inappbrowser.inappbrowser",
+      "file": "plugins/cordova-plugin-inappbrowser/www/inappbrowser.js",
+      "pluginId": "cordova-plugin-inappbrowser",
+      "clobbers": [
+        "cordova.InAppBrowser.open"
+      ]
+    },
+    {
       "id": "cordova-plugin-media.MediaError",
       "file": "plugins/cordova-plugin-media/www/MediaError.js",
       "pluginId": "cordova-plugin-media",
@@ -413,36 +429,22 @@ cordova.define('cordova/plugin_list', function(require, exports, module) {
       ]
     },
     {
-      "id": "phonegap-nfc.NFC",
-      "file": "plugins/phonegap-nfc/www/phonegap-nfc.js",
-      "pluginId": "phonegap-nfc",
+      "id": "community-cordova-plugin-nfc.NFC",
+      "file": "plugins/community-cordova-plugin-nfc/www/phonegap-nfc.js",
+      "pluginId": "community-cordova-plugin-nfc",
       "runs": true
-    },
-    {
-      "id": "cordova-plugin-appinfo.AppInfo",
-      "file": "plugins/cordova-plugin-appinfo/www/appinfo.js",
-      "pluginId": "cordova-plugin-appinfo",
-      "merges": [
-        "navigator.appInfo"
-      ]
-    },
-    {
-      "id": "cordova-plugin-inappbrowser.inappbrowser",
-      "file": "plugins/cordova-plugin-inappbrowser/www/inappbrowser.js",
-      "pluginId": "cordova-plugin-inappbrowser",
-      "clobbers": [
-        "cordova.InAppBrowser.open"
-      ]
     }
   ];
   module.exports.metadata = {
     "com.blackberry.invoke": "1.0.0",
     "cordova-plugin-file": "8.0.1",
     "cordova-plugin-advanced-http": "3.3.1",
+    "cordova-plugin-appinfo": "2.1.2",
     "cordova-plugin-camera": "7.0.0",
     "cordova-plugin-dialogs": "2.0.2",
     "cordova-plugin-file-transfer": "2.0.0",
     "cordova-plugin-geolocation": "5.0.0",
+    "cordova-plugin-inappbrowser": "6.0.0",
     "cordova-plugin-media": "7.0.0",
     "cordova-plugin-network-information": "3.0.0",
     "cordova-plugin-splashscreen": "6.0.1",
@@ -450,8 +452,6 @@ cordova.define('cordova/plugin_list', function(require, exports, module) {
     "cordova-sqlite-storage": "6.1.0",
     "org.apache.cordova.device": "0.2.4",
     "org.apache.cordova.vibration": "0.3.4",
-    "phonegap-nfc": "1.2.0",
-    "cordova-plugin-appinfo": "2.1.2",
-    "cordova-plugin-inappbrowser": "6.0.0"
+    "community-cordova-plugin-nfc": "1.4.0"
   };
 });
